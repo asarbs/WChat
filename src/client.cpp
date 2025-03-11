@@ -1,57 +1,41 @@
-#include <iostream>
-#include <thread>
-#include <websocketpp/client.hpp>
-#include <websocketpp/config/asio_client.hpp>
+#include <imgui-SFML.h>
+#include <imgui.h>
 
-typedef websocketpp::client<websocketpp::config::asio_client> client;
-
-void on_message(websocketpp::connection_hdl, client::message_ptr msg) {
-    std::cout << "\n📩 Otrzymano: " << msg->get_payload() << std::endl;
-    std::cout << "Wpisz wiadomość do wysłania: ";
-    std::cout.flush();
-}
+#include <SFML/Graphics.hpp>
 
 int main() {
-    client ws_client;
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML + ImGui");
+    window.setFramerateLimit(60);
 
-    try {
-        ws_client.init_asio();
+    ImGui::SFML::Init(window);
 
-        ws_client.clear_access_channels(websocketpp::log::alevel::all);
-        ws_client.clear_error_channels(websocketpp::log::elevel::all);
+    bool show_demo_window = true;
+    sf::Clock deltaClock;
 
-        ws_client.set_message_handler(&on_message);
+    char input_text[256] = "";  // Tablica na tekst wprowadzony przez użytkownika
 
-        websocketpp::lib::error_code ec;
-        client::connection_ptr con = ws_client.get_connection("ws://localhost:9002", ec);
-
-        if (ec) {
-            std::cerr << "❌ Błąd połączenia: " << ec.message() << std::endl;
-            return 1;
+    // Main loop
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(event);
+            if (event.type == sf::Event::Closed) window.close();
         }
 
-        ws_client.connect(con);
-        std::cout << "✅ Połączono z serwerem WebSocket!\n";
+        ImGui::SFML::Update(window, deltaClock.restart());
+        window.clear();
 
-        // Uruchom pętlę odbiorczą w osobnym wątku
-        std::thread client_thread([&ws_client]() { ws_client.run(); });
+        // Tworzymy pole tekstowe
+        ImGui::InputText("Input", input_text, sizeof(input_text));
 
-        // Pętla wysyłania wiadomości
-        std::string input;
-        while (true) {
-            std::cout << "Wpisz wiadomość do wysłania: ";
-            std::getline(std::cin, input);
-            if (input == "exit") break;
+        // Wyświetlamy tekst, który użytkownik wpisał
+        ImGui::Text("You typed: %s", input_text);
 
-            ws_client.send(con->get_handle(), input, websocketpp::frame::opcode::text);
-        }
-
-        // Zamknięcie połączenia
-        ws_client.close(con->get_handle(), websocketpp::close::status::going_away, "Koniec pracy klienta");
-        client_thread.join();
-    } catch (websocketpp::exception const &e) {
-        std::cerr << "❌ Błąd klienta: " << e.what() << std::endl;
+        ImGui::SFML::Render(window);
+        window.display();
     }
 
+    // Cleanup
+    ImGui::SFML::Shutdown();
     return 0;
 }

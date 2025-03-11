@@ -131,8 +131,8 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 .setup-boost:
 	${SUDO} apt install libboost-all-dev libssl-dev -y
 
-.setup: .setup-clang-format .setup-cpplint .setup-cppcheck .setup-boost
-
+.setup: .setup-clang-format .setup-cpplint .setup-cppcheck .setup-boost .setup-cmake
+	${SUDO} apt-get install libxinerama-dev libopengl-dev libxxf86vm-dev libxi-dev libeigen3-dev libglfw3-dev -y
 
 
 clean:

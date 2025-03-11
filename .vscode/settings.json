@@ -85,4 +85,5 @@
     "clang-format.executable": "/usr/bin/clang-format-18",
     "cpp.creator.headerFileContentPreset": "/*\n * World VTT\n *\n * Copyright (C) 2024, Asar Miniatures\n * All rights reserved.\n *\n * This file is part of the [Project Name] project. It may be used, modified,\n * and distributed under the terms specified by the copyright holder.\n *\n */\n\n#ifndef {{*CLASSNAMEUPPER*}}_H\n#define {{*CLASSNAMEUPPER*}}_H\n\n#pragma once\n\nclass {{*CLASSNAME*}}\n{\n    public:\n        {{*CLASSNAME*}}();\n        ~{{*CLASSNAME*}}();\nprotected:\n\nprivate:\n};\n\n#endif",
     "cpp.creator.sourceFileContentPreset": "/*\n * World VTT\n *\n * Copyright (C) 2024, Asar Miniatures\n * All rights reserved.\n *\n * This file is part of the [Project Name] project. It may be used, modified,\n * and distributed under the terms specified by the copyright holder.\n *\n */\n\n#include \"{{*HEADERFILENAME*}}\"\n\n#include \"logger.h\"\n\n{{*CLASSNAME*}}::{{*CLASSNAME*}}()\n{\n}\n   \n{{*CLASSNAME*}}::~{{*CLASSNAME*}}()\n{\n}\n",
+    "C_Cpp.errorSquiggles": "disabled",
 }
