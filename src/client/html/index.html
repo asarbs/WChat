@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebSocket Client</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+    textarea { width: 100%; height: 300px; resize: none; margin-bottom: 10px; }
+    input[type="text"] { width: 80%; padding: 10px; }
+    button { padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>WebSocket Client</h2>
+  <input id="user_id" value="Asar"><br>
+  <textarea id="messages" readonly></textarea><br>
+  <input type="text" id="messageInput" placeholder="Wpisz wiadomość...">
+  <button id="sendBtn">Wyślij</button>
+
+  <script type="module">
+    import WSClient from './common/wsClient.js';
+
+    const messagesBox = document.getElementById('messages');
+    const user_id_input = document.getElementById('user_id');
+    const message_input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    const setCookie = (name, value, days) => {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+    };
+
+    const getCookie = (name) => {
+      return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]) : r
+      }, '');
+    };
+
+    const savedUserId = getCookie('user_id');
+    if (savedUserId) {
+      user_id_input.value = savedUserId;
+    } else {
+      user_id_input.value = 'Asar'; // domyślna wartość
+    }
+
+    user_id_input.addEventListener('input', () => {
+      setCookie('user_id', user_id_input.value, 30); // 30 dni
+    });
+
+    const client = new WSClient('http://127.0.0.1:9002', (msg) => {
+      messagesBox.value += msg + '\n';
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    });
+
+    async function startChat() {
+      try {
+        await client.connect();  // Poczekaj na otwarcie połączenia
+        client.send_user_register(user_id_input.value.trim());  // Zarejestruj użytkownika
+      } catch (error) {
+        console.error('Błąd podczas łączenia z WebSocket:', error);
+      }
+    }
+
+    startChat();
+
+
+    sendBtn.onclick = () => {
+      const user_id = user_id_input.value.trim();
+      const text = message_input.value.trim();
+      if (text) {
+        client.send_chat_msg(user_id, text);
+        message_input.value = '';
+      }
+    };
+
+    // Opcjonalnie obsługa Entera
+    message_input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        sendBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
