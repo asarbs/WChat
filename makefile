@@ -17,7 +17,7 @@ endif
 
 SUDO ?= sudo
 
-GCC = clang++-18
+GCC = clang++-19
 FORMATTER = clang-format-18
 CPPCHECK = cppcheck
 CPPLINT = cpplint
@@ -163,11 +163,9 @@ compile:
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
 	${Q}cmake --build ${BUILD_DIR}/linux -j8
 
-run: compile
-	${Q} ./build/linux/bin/VoidInvaders --level assets/testLevel.yaml
+run_server: compile
+	${Q} ./build/linux/bin/WChat_SERVER
 
-run-full: compile
-	${Q} ./build/linux/bin/VoidInvaders --level assets/test.yaml
 
 clang-check:
 	${Q}$(FORMATTER) --version
