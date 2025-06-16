@@ -184,7 +184,7 @@ cpplint:
 		--recursive $(SOURCES_DIR)
 
 cppcheck:
-	@echo 'cppcheck'
+	@echo 'cppcheckaa'
 	$(Q)$(CPPCHECK) --version
 	$(Q)$(CPPCHECK) \
 		--platform=native \

@@ -2,14 +2,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": "Launch CLINET",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/linux/bin/VoidInvaders",
+            "program": "${workspaceRoot}/build/linux/bin/WChat_CLIENT",
             "stopAtEntry": true,
             "externalConsole": false,
             "MIMode": "gdb",
-            "args": ["--level","assets/testLevel.yaml"],
+            "args": [],
             "cwd": "${workspaceRoot}",
             "setupCommands": [
               {

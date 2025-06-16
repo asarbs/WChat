@@ -78,7 +78,14 @@
         "ranges": "cpp",
         "regex": "cpp",
         "valarray": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "strstream": "cpp",
+        "complex": "cpp",
+        "coroutine": "cpp",
+        "cuchar": "cpp",
+        "source_location": "cpp",
+        "typeindex": "cpp",
+        "*.ipp": "cpp"
     },
     "editor.acceptSuggestionOnEnter": "on",
     "C_Cpp.clang_format_path": "/usr/bin/clang-format-18",
