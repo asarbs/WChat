@@ -9,6 +9,15 @@ image: gcc:10.2
 
 pipelines:
   default:
+    - step:
+        name: Build Docker image
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - docker build -t myapp-build .
+
     - parallel:
         - step:
             name: Test
