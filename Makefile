@@ -12,9 +12,8 @@ all: build
 $(BIN): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-
 build:
-    @echo "=== Running build ==="
+	@echo "=== Running build ==="
 
 check: build
 	@echo "=== Running tests ==="
