@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:stable
 
 
 USER root
@@ -17,7 +17,6 @@ python3 \
 python3-pip git \
 wget \
 lsb-release \
-software-properties-common \
 gnupg \
 gdb \
 cmake \

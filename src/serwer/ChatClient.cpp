@@ -13,10 +13,8 @@
 
 #include "logger.h"
 
-ChatClient::ChatClient()
-{
+ChatClient::ChatClient() {
 }
 
-ChatClient::~ChatClient()
-{
+ChatClient::~ChatClient() {
 }

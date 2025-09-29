@@ -19,18 +19,24 @@ pipelines:
           - docker build -t myapp-build .
 
     - parallel:
+        # - step:
+        #     name: Test
+        #     script:
+        #       - make test
         - step:
-            name: Test
+            name: clang-check
             script:
-              - make check
+              - make clang-check
         - step:
-            name: Lint
+            name: Cpplint
             script:
-              # apt update && apt -y install cppcheck && cppcheck .
-              - make lint
+              - make cpplint
+        # - step:
+        #     name: Cppcheck
+        #     script:
+        #       - make cppcheck
         - step:
             name: Build and Run
             script:
-              - make build
+              - make compile
               # Execute your C++ application after compilation to check success
-              - make distcheck

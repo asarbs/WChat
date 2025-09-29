@@ -14,10 +14,11 @@
 
 #pragma once
 
+#include <string>
+
 #include <websocketpp/server.hpp>
 
-struct ChatClient: websocketpp::connection_hdl
-{
+struct ChatClient : websocketpp::connection_hdl {
     public:
         ChatClient();
         ~ChatClient();
@@ -25,8 +26,6 @@ struct ChatClient: websocketpp::connection_hdl
         std::string user_id;
 
     protected:
-
-
     private:
 };
 

@@ -3,17 +3,36 @@ FROM debian:stable
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Instalacja GCC, G++, make, cmake, cppcheck, git
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      gcc \
-      g++ \
-      make \
-      cmake \
-      cppcheck \
-      git \
-    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+&& apt-get upgrade -y \
+&& apt-get install -y \
+bash \
+bash-completion \
+python3 \
+python3-pip \
+git \
+wget \
+lsb-release \
+gdb \
+gnupg \
+make \
+libxrandr-dev \
+libxcursor-dev \
+libudev-dev \
+libfreetype-dev \
+libopenal-dev \
+libflac-dev \
+libvorbis-dev \
+libgl1-mesa-dev \
+libegl1-mesa-dev \
+&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY . /app
+
+ENV SUDO=
+RUN make .setup || true
 
 CMD ["/bin/bash"]

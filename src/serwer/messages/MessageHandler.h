@@ -16,16 +16,14 @@
 
 #include <nlohmann/json.hpp>
 
-class MessageHandler
-{
+class MessageHandler {
     public:
         MessageHandler();
-        ~MessageHandler() = default;
+        ~MessageHandler()                                      = default;
         virtual void handle(nlohmann::json::reference payload) = 0;
 
-protected:
-
-private:
+    protected:
+    private:
 };
 
 #endif

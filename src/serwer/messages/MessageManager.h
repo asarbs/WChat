@@ -13,26 +13,24 @@
 #define MESSAGEMANAGER_H
 
 #include <cstdint>
-
+#include <map>
+#include <memory>
 #include <nlohmann/json.hpp>
 
 #include "serwer/messages/MessageHandler.h"
 
 #pragma once
 
-
-
 class MessageManager {
     public:
         MessageManager();
         ~MessageManager();
-        void register_handler(uint32_t message_id,  std::shared_ptr<MessageHandler> handler);
+        void register_handler(uint32_t message_id, std::shared_ptr<MessageHandler> handler);
         void handle(uint32_t message_id, nlohmann::json::reference payload);
+
     protected:
-
     private:
-        std::map<uint32_t , std::shared_ptr<MessageHandler> > _handlers;
-
+        std::map<uint32_t, std::shared_ptr<MessageHandler> > _handlers;
 };
 
 #endif

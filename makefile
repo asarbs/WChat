@@ -17,8 +17,8 @@ endif
 
 SUDO ?= sudo
 
-GCC = clang++-19
-FORMATTER = clang-format-18
+GCC = clang++-20
+FORMATTER = clang-format-19
 CPPCHECK = cppcheck
 CPPLINT = cpplint
 
@@ -28,7 +28,6 @@ TEST_DIR = ${PROJECT_DIR}/test_src
 
 BUILD_DIR = ${PROJECT_DIR}/build
 BUILD_TYPE ?= Debug
-
 
 FIND_CMD = find ${SOURCES_DIR} \( -iname "*.h" -o -iname "*.cpp" -o -iname "*.cppm" \) -and ! -path "*/libs/*" -and ! -path "*ranslation.h"
 
@@ -104,15 +103,18 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 	${SUDO} apt install cppcheck -y
 
 .setup-cmake:
-	$(Q)@echo 'setup-cmake'
-	$(Q)wget https://github.com/Kitware/CMake/releases/download/v3.31.0-rc3/cmake-3.31.0-rc3.tar.gz
-	$(Q)tar -xzf cmake-3.31.0-rc3.tar.gz
-	$(Q)${SUDO} apt install build-essential checkinstall zlib1g-dev libssl-dev -y
-	$(Q)cd cmake-3.31.0-rc3 && ./bootstrap && make -j12
-	$(Q)cd cmake-3.31.0-rc3 && ${SUDO} make install
+# 	$(Q)@echo 'setup-cmake'
+# 	$(Q)wget https://github.com/Kitware/CMake/releases/download/v3.31.0-rc3/cmake-3.31.0-rc3.tar.gz
+# 	$(Q)tar -xzf cmake-3.31.0-rc3.tar.gz
+# 	$(Q)${SUDO} apt install build-essential checkinstall zlib1g-dev libssl-dev -y
+# 	$(Q)cd cmake-3.31.0-rc3 && ./bootstrap && make -j$$(nproc --ignore=2)
+# 	$(Q)cd cmake-3.31.0-rc3 && ${SUDO} make install
+# 	$(Q)cmake --version
+# 	$(Q)rm cmake-3.31.0-rc3.tar.*
+# 	$(Q)rm -rf cmake-3.31.0-rc3
+	$(Q)${SUDO} apt-get update
+	$(Q)${SUDO} apt-get install -y cmake
 	$(Q)cmake --version
-	$(Q)rm cmake-3.31.0-rc3.tar.*
-	$(Q)rm -rf cmake-3.31.0-rc3
 
 
 .setup-clang:
@@ -121,9 +123,11 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 	$(Q) chmod 777 llvm.sh
 	$(Q) ${SUDO} ./llvm.sh
 	$(Q) rm llvm.sh*
+	$(Q) ${SUDO} apt-get update
+	$(Q) ${SUDO} apt-get install -y clang-18 clang-tools-18 clang-format-18 lldb-18 lld-18
 
 .setup-clang-format: .setup-clang
-	${SUDO} apt-get install clang-format-18 -y
+	${SUDO} apt-get install clang-format-19 -y
 
 .setup-mingw:
 	${SUDO} apt install mingw-w64 libx11-dev libxrandr-dev -y
@@ -175,7 +179,6 @@ clang-reformat:
 	${Q} $(FORMATTER) --version
 	${Q} $(FIND_CMD) | xargs $(FORMATTER) --Werror -i --verbose
 
-
 cpplint:
 	@echo 'cpplint'
 	$(Q)${CPPLINT} --version
@@ -191,11 +194,11 @@ cppcheck:
 		--language=c++ \
 		--std=c++23 \
 		--suppressions-list=tools/cppcheck.suppress \
+		--library=std \
 		--enable=all \
 		--inline-suppr \
+		--force \
 		--error-exitcode=1 \
-		--suppress=unmatchedSuppression \
-		--suppress=unusedFunction \
 		-I ${SOURCES_DIR} \
 		${SOURCES_DIR}
 

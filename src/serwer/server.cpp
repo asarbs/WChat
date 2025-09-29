@@ -1,14 +1,25 @@
+/*
+ * World VTT
+ *
+ * Copyright (C) 2024, Asar Miniatures
+ * All rights reserved.
+ *
+ * This file is part of the [Project Name] project. It may be used, modified,
+ * and distributed under the terms specified by the copyright holder.
+ *
+ */
+
+
 #include <iostream>
 #include <set>
 #include <vector>
+#include <nlohmann/json.hpp>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
-#include <nlohmann/json.hpp>
-
-#include "logger.h"
-#include "arguments.h"
 
 #include "ChatClient.h"
+#include "arguments.h"
+#include "logger.h"
 #include "serwer/messages/MessageManager.h"
 
 typedef websocketpp::server<websocketpp::config::asio> server;
@@ -43,41 +54,36 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
         int msg_type_id = data.at("msg_type_id");
         logger::logger << logger::debug << "msg_type_id=" << msg_type_id << logger::endl;
 
-
         __messageManager.handle(msg_type_id, data.at("payload"));
 
-        if(msg_type_id == 1) { // chat msg -> resend to all
+        if (msg_type_id == 1) {  // chat msg -> resend to all
             std::string user_id = data.at("payload").value("user_id", "unknown");
             std::string message = data.at("payload").value("message", "");
             logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
             for (ChatClient it : __chat_clients) {
                 s->send(it.connection, msg->get_payload(), websocketpp::frame::opcode::text);
             }
-        } else if (msg_type_id == 2) { // register user ID
+        } else if (msg_type_id == 2) {  // register user ID
             for (auto it = __chat_clients.begin(); it != __chat_clients.end(); ++it) {
-                if(it->connection == hdl){
+                if (it->connection == hdl) {
                     std::string user_id = data.at("payload").value("user_id", "unknown");
-                    it->user_id = user_id;
-                    logger::logger << logger::debug << "New user registered:" << user_id  << ";" << logger::endl;
+                    it->user_id         = user_id;
+                    logger::logger << logger::debug << "New user registered:" << user_id << ";" << logger::endl;
                 }
             }
         }
-    } catch(nlohmann::json::parse_error& e) {
+    } catch (nlohmann::json::parse_error& e) {
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
     }
-
-
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     logger::logger.setLogLevel(logger::debug);
     server ws_server;
 
-    Argument::ArgumentParser &argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
+    Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
     argpars.parse(argc, argv);
-
-
 
     try {
         ws_server.set_reuse_addr(true);
@@ -91,7 +97,7 @@ int main(int argc, char *argv[]) {
         ws_server.set_close_handler(&on_close);
         // ws_server.set_validate_handler(&validate_handler);
 
-        ws_server.listen(boost::asio::ip::tcp::v4(),9002);
+        ws_server.listen(boost::asio::ip::tcp::v4(), 9002);
         ws_server.start_accept();
 
         logger::logger << logger::debug << "Serwer WebSocket działa na porcie 9002" << logger::endl;
