@@ -42,6 +42,13 @@ cpplint:
     - make cpplint
   allow_failure: true
 
+cppcheck:
+  stage: lint
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+  script:
+    - make cppcheck
+  allow_failure: true
+
 build_app:
   stage: build
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
