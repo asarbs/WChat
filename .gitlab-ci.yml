@@ -3,11 +3,10 @@
 # This template allows you to validate your C++ application.
 # The workflow allows running tests and code linting on the default branch.
 
-image: gcc:10.2
-
 stages:
-  - build
+  - build_image
   - lint
+  - build
   - test
 
 # Krok 1: budowa obrazu
