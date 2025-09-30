@@ -10,61 +10,47 @@ stages:
   - build
   - test
 
-# (opcjonalnie) jeśli masz runner oznaczony tagiem:
-# default:
-#   tags: ["local"]
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
-# 1) Zbuduj obraz narzędziowy (korzystamy z Dockera hosta przez socket)
+# Build i push obrazu
 build_ci_image:
   stage: build_image
   image: docker:20.10
-  # UWAGA: bez services: docker:dind
+  services:
+    - docker:dind
   script:
-    - docker version
-    - docker build -t wchat-ci:latest -f Dockerfile.ci .
-  # gwarantuje, że kolejne joby wystartują dopiero po zbudowaniu obrazu
-  allow_failure: false
-  rules:
-    - changes:
-        - Dockerfile.ci
-        # + ewentualnie inne pliki, które wpływają na obraz
-    - when: manual  # umożliwia ręczne przebudowanie z UI, gdy cache zniknie
+    - echo "Logging into GitLab Container Registry..."
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:wchat-ci-latest -f Dockerfile.ci .
+    - docker push $CI_REGISTRY_IMAGE:wchat-ci-latest
+  only:
+    - master
 
-# Pomocniczy "anchor" z deklaracją obrazu + polityką pull
-.image_local_ci:
-  image:
-    name: wchat-ci:latest
-    pull_policy: if-not-present
+# Szablon dla jobów
+.image_ci:
+  image: $CI_REGISTRY_IMAGE:wchat-ci-latest
+  before_script:
+    - echo "Logging into GitLab Container Registry..."
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
-# 2) Linty działają w naszym obrazie
 clang_check:
   stage: lint
-  extends: .image_local_ci
+  extends: .image_ci
   script:
     - make clang-check
   allow_failure: true
 
 cpplint:
   stage: lint
-  extends: .image_local_ci
+  extends: .image_ci
   script:
     - make cpplint
   allow_failure: true
 
-# 3) Build
 build_app:
   stage: build
-  extends: .image_local_ci
+  extends: .image_ci
   script:
     - make compile
-  artifacts:
-    paths:
-      - build/linux/
-    expire_in: 1 week
-
-# 4) (opcjonalnie) testy uruchamiane w tym samym obrazie
-tests:
-  stage: test
-  extends: .image_local_ci
-  script:
-    - make test
