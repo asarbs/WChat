@@ -2,7 +2,6 @@
 
 # This template allows you to validate your C++ application.
 # The workflow allows running tests and code linting on the default branch.
-
 stages:
   - build_image
   - lint
@@ -10,32 +9,32 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""   # ważne dla docker:dind, żeby nie blokował certyfikatów
+  DOCKER_TLS_CERTDIR: ""   # ważne dla docker:dind, wyłącza TLS
 
+# 1️⃣ Budujemy obraz CI i wrzucamy do registry GitLaba
 build_ci_image:
   stage: build_image
   image: docker:20.10
   services:
     - docker:dind
-  script:
+  before_script:
     - echo "Logging into GitLab Container Registry..."
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
     - docker build -t $CI_REGISTRY_IMAGE/wchat-ci-image:latest -f Dockerfile.ci .
     - docker push $CI_REGISTRY_IMAGE/wchat-ci-image:latest
-  artifacts:
-    expire_in: 1 hour
-    reports:
-      dotenv: build.env
   only:
-    - master
+    - master   # opcjonalnie: ogranicz do gałęzi master/main
 
+# 2️⃣ Analiza kodu – clang-format/clang-check
 clang_check:
   stage: lint
   image: $CI_REGISTRY_IMAGE/wchat-ci-image:latest
   script:
     - make clang-check
-  allow_failure: true
+  allow_failure: true   # nie blokuje pipeline przy błędach stylu
 
+# 3️⃣ Analiza kodu – cpplint
 cpplint:
   stage: lint
   image: $CI_REGISTRY_IMAGE/wchat-ci-image:latest
@@ -43,6 +42,7 @@ cpplint:
     - make cpplint
   allow_failure: true
 
+# 4️⃣ Budowanie aplikacji
 build_app:
   stage: build
   image: $CI_REGISTRY_IMAGE/wchat-ci-image:latest
