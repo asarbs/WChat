@@ -7,35 +7,44 @@ stages:
   - build_image
   - lint
   - build
-  - test
 
-# Krok 1: budowa obrazu
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""   # ważne dla docker:dind, żeby nie blokował certyfikatów
+
 build_ci_image:
   stage: build_image
-  image: docker:20.10 # używamy Dockera zainstalowanego
+  image: docker:20.10
   services:
     - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
   script:
-    - docker build -t wchat-ci-image -f Dockerfile.ci .
+    - echo "Logging into GitLab Container Registry..."
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE/wchat-ci-image:latest -f Dockerfile.ci .
+    - docker push $CI_REGISTRY_IMAGE/wchat-ci-image:latest
+  artifacts:
+    expire_in: 1 hour
+    reports:
+      dotenv: build.env
+  only:
+    - master
 
 clang_check:
   stage: lint
-  image: wchat-ci-image:latest
+  image: $CI_REGISTRY_IMAGE/wchat-ci-image:latest
   script:
     - make clang-check
   allow_failure: true
 
 cpplint:
   stage: lint
-  image: wchat-ci-image:latest
+  image: $CI_REGISTRY_IMAGE/wchat-ci-image:latest
   script:
     - make cpplint
   allow_failure: true
 
 build_app:
-  stage: lint
-  image: wchat-ci-image:latest
+  stage: build
+  image: $CI_REGISTRY_IMAGE/wchat-ci-image:latest
   script:
     - make compile
