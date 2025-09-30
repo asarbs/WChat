@@ -34,21 +34,18 @@ clang_check:
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make clang-check
-  allow_failure: true
 
 cpplint:
   stage: lint
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make cpplint
-  allow_failure: true
 
 cppcheck:
   stage: lint
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make cppcheck
-  allow_failure: true
 
 build_app:
   stage: build
