@@ -15,7 +15,6 @@
 #pragma once
 
 #include <string>
-
 #include <websocketpp/server.hpp>
 
 struct ChatClient : websocketpp::connection_hdl {

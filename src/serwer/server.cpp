@@ -6,14 +6,12 @@
  *
  * This file is part of the [Project Name] project. It may be used, modified,
  * and distributed under the terms specified by the copyright holder.
- *
  */
 
-
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <set>
 #include <vector>
-#include <nlohmann/json.hpp>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
