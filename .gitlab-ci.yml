@@ -35,7 +35,6 @@ cpplint:
   allow_failure: true
 
 build_app:
-cpplint:
   stage: lint
   image: wchat-ci-image:latest
   script:
