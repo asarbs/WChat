@@ -12,3 +12,9 @@
 #include "MessageHandler.h"
 
 #include "logger.h"
+
+MessageHandler::MessageHandler() {
+}
+
+MessageHandler::~MessageHandler() {
+}

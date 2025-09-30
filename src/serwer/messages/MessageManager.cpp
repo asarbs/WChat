@@ -19,21 +19,22 @@ MessageManager::MessageManager() {
 MessageManager::~MessageManager() {
 }
 
-void MessageManager::handle(uint32_t message_id, nlohmann::json::reference payload) {
-    logger::logger << logger::error << "Looking for message_id = `" << message_id << "` handler." << logger::endl;
-    auto f_handler = _handlers.find(message_id);
+void MessageManager::handle(uint32_t message_type_id, nlohmann::json::reference payload) {
+    logger::logger << logger::debug << "Looking for message_type_id = `" << message_type_id << "` handler." << logger::endl;
+    auto f_handler = _handlers.find(message_type_id);
     if (f_handler == _handlers.end()) {
-        logger::logger << logger::error << "Can't find handler for message_id = `" << message_id << "`." << logger::endl;
+        logger::logger << logger::debug << "Can't find handler for message_type_id = `" << message_type_id << "`." << logger::endl;
         return;
     }
-    // f_handler->second->handle(payload);
+    f_handler->second->handle(payload);
 }
 
-void MessageManager::register_handler(uint32_t message_id, std::shared_ptr<MessageHandler> handler) {
-    auto f_handler = _handlers.find(message_id);
+void MessageManager::register_handler(uint32_t message_type_id, std::shared_ptr<MessageHandler> handler) {
+    auto f_handler = _handlers.find(message_type_id);
     if (f_handler == _handlers.end()) {
-        _handlers[message_id] = handler;
+        logger::logger << logger::debug << "Register new handler for message_type_id " << message_type_id << "." << logger::endl;
+        _handlers[message_type_id] = handler;
     } else {
-        logger::logger << logger::error << "Message_id = `" << message_id << "` occupied." << logger::endl;
+        logger::logger << logger::warning << "message_type_id = `" << message_type_id << "` occupied." << logger::endl;
     }
 }
