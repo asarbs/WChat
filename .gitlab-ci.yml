@@ -18,40 +18,25 @@ build_ci_image:
   variables:
     DOCKER_DRIVER: overlay2
   script:
-    - docker build -t my-ci-image -f Dockerfile.ci .
-    - docker save my-ci-image | gzip > my-ci-image.tar.gz
-  artifacts:
-    paths:
-      - my-ci-image.tar.gz
-    expire_in: 1h
-
-# Helper: wczytanie obrazu
-.load_ci_image:
-  before_script:
-    - docker load -i my-ci-image.tar.gz
+    - docker build -t wchat-ci-image -f Dockerfile.ci .
 
 clang_check:
   stage: lint
-  image: docker:20.10
-  services: [docker:dind]
-  extends: .load_ci_image
+  image: wchat-ci-image:latest
   script:
-    - docker run --rm -v $CI_PROJECT_DIR:/app -w /app my-ci-image make clang-check
+    - make clang-check
   allow_failure: true
 
 cpplint:
   stage: lint
-  image: docker:20.10
-  services: [docker:dind]
-  extends: .load_ci_image
+  image: wchat-ci-image:latest
   script:
-    - docker run --rm -v $CI_PROJECT_DIR:/app -w /app my-ci-image make cpplint
+    - make cpplint
   allow_failure: true
 
 build_app:
-  stage: build
-  image: docker:20.10
-  services: [docker:dind]
-  extends: .load_ci_image
+cpplint:
+  stage: lint
+  image: wchat-ci-image:latest
   script:
-    - docker run --rm -v $CI_PROJECT_DIR:/app -w /app my-ci-image make compile
+    - make compile
