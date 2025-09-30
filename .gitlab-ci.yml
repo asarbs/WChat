@@ -1,0 +1,46 @@
+# Template C++ Application
+
+# This template allows you to validate your C++ application.
+# The workflow allows running tests and code linting on the default branch.
+
+image: gcc:10.2
+
+stages:
+  - build
+  - lint
+  - test
+
+build_docker_image:
+  stage: build
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker build -t myapp-build .
+
+clang_check:
+  stage: lint
+  script:
+    - make clang-check
+  allow_failure: true   # żeby nie blokował całego pipeline jeśli padnie
+
+cpplint:
+  stage: lint
+  script:
+    - make cpplint
+  allow_failure: true   # tak samo, jeśli chcesz żeby był "informacyjny"
+
+# cppcheck (odkomentuj, jeśli chcesz go uruchamiać)
+# cppcheck:
+#   stage: lint
+#   script:
+#     - make cppcheck
+#   allow_failure: true
+
+build_and_run:
+  stage: test
+  script:
+    - make compile
+    # uruchomienie aplikacji po kompilacji
+    # - ./build/linux/bin/WChat_SERVER
