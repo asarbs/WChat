@@ -24,10 +24,16 @@ build_ci_image:
     - echo "Logging into GitLab Container Registry..."
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE/wchat-ci:latest || true
-    - docker build --cache-from=$CI_REGISTRY_IMAGE/wchat-ci:latest -t $CI_REGISTRY_IMAGE/wchat-ci:latest -f Dockerfile.ci .
+    - docker build  --cache-from=$CI_REGISTRY_IMAGE/wchat-ci:latest \
+                    -t $CI_REGISTRY_IMAGE/wchat-ci:latest
+                    -t $CI_REGISTRY_IMAGE/wchat-ci:$CI_COMMIT_SHORT_SHA \
+                    -f Dockerfile.ci .
     - docker push $CI_REGISTRY_IMAGE/wchat-ci:latest
-  only:
-    - master
+    - docker push $CI_REGISTRY_IMAGE/wchat-ci:$CI_COMMIT_SHORT_SHA
+rules:
+  - changes:
+      - Dockerfile.ci
+      - .gitlab-ci.yml
 
 clang_check:
   stage: lint
