@@ -10,34 +10,49 @@ stages:
   - lint
   - test
 
-build_docker_image:
-  stage: build
+# Krok 1: budowa obrazu
+build_ci_image:
+  stage: build_image
+  image: docker:20.10 # używamy Dockera zainstalowanego
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
   script:
-    - docker info   # test czy działa połączenie z Dockerem hosta
-    - docker build -t myapp-build .
+    - docker build -t my-ci-image -f Dockerfile.ci .
+    - docker save my-ci-image | gzip > my-ci-image.tar.gz
+  artifacts:
+    paths:
+      - my-ci-image.tar.gz
+    expire_in: 1h
+
+# Helper: wczytanie obrazu
+.load_ci_image:
+  before_script:
+    - docker load -i my-ci-image.tar.gz
 
 clang_check:
   stage: lint
+  image: docker:20.10
+  services: [docker:dind]
+  extends: .load_ci_image
   script:
-    - make clang-check
-  allow_failure: true   # żeby nie blokował całego pipeline jeśli padnie
+    - docker run --rm -v $CI_PROJECT_DIR:/app -w /app my-ci-image make clang-check
+  allow_failure: true
 
 cpplint:
   stage: lint
+  image: docker:20.10
+  services: [docker:dind]
+  extends: .load_ci_image
   script:
-    - make cpplint
-  allow_failure: true   # tak samo, jeśli chcesz żeby był "informacyjny"
+    - docker run --rm -v $CI_PROJECT_DIR:/app -w /app my-ci-image make cpplint
+  allow_failure: true
 
-# cppcheck (odkomentuj, jeśli chcesz go uruchamiać)
-# cppcheck:
-#   stage: lint
-#   script:
-#     - make cppcheck
-#   allow_failure: true
-
-build_and_run:
-  stage: test
+build_app:
+  stage: build
+  image: docker:20.10
+  services: [docker:dind]
+  extends: .load_ci_image
   script:
-    - make compile
-    # uruchomienie aplikacji po kompilacji
-    # - ./build/linux/bin/WChat_SERVER
+    - docker run --rm -v $CI_PROJECT_DIR:/app -w /app my-ci-image make compile
