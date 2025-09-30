@@ -85,7 +85,10 @@
         "cuchar": "cpp",
         "source_location": "cpp",
         "typeindex": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "text_encoding": "cpp"
     },
     "editor.acceptSuggestionOnEnter": "on",
     "C_Cpp.clang_format_path": "/usr/bin/clang-format-18",

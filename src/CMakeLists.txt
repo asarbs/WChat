@@ -62,6 +62,9 @@ endif()
 
 add_executable(${TARGET_NAME_SERVER}
     serwer/ChatClient.cpp
+    serwer/ChatClientDatabase.cpp
+    serwer/messages/MessageHandler_Message.cpp
+    serwer/messages/MessageHandler_RegisterClient.cpp
     serwer/messages/MessageHandler.cpp
     serwer/messages/MessageManager.cpp
     serwer/server.cpp
