@@ -9,18 +9,18 @@
  *
  */
 
-#ifndef MESSAGEHANDLER_H
-#define MESSAGEHANDLER_H
+#ifndef MESSAGEHANDLER_MESSAGE_H
+#define MESSAGEHANDLER_MESSAGE_H
 
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "serwer/messages/MessageHandler.h"
 
-class MessageHandler {
+class MessageHandler_Message : public MessageHandler {
     public:
-        MessageHandler();
-        virtual ~MessageHandler();
-        virtual void handle(nlohmann::json::reference payload) = 0;
+        MessageHandler_Message();
+        ~MessageHandler_Message() override;
+        void handle(nlohmann::json::reference payload) override;
 
     protected:
     private:

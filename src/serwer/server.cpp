@@ -16,14 +16,17 @@
 #include <websocketpp/server.hpp>
 
 #include "ChatClient.h"
+#include "ChatClientDatabase.h"
 #include "arguments.h"
 #include "logger.h"
+#include "serwer/messages/MessageHandler_Message.h"
+#include "serwer/messages/MessageHandler_RegisterClient.h"
 #include "serwer/messages/MessageManager.h"
 
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
-std::vector<ChatClient> __chat_clients;
+
 MessageManager __messageManager;
 
 bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connection_hdl& b) {
@@ -32,19 +35,17 @@ bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connect
 }
 
 void on_open(websocketpp::connection_hdl hdl) {
-    ChatClient cc;
-    cc.connection = hdl;
-    __chat_clients.push_back(cc);
-    logger::logger << logger::debug << "Nowe połączenie! Aktualnie podłączonych klientów: " << __chat_clients.size() << logger::endl;
+    ChatClientDatabase::getInstance().regiserClinet(hdl);
+    logger::logger << logger::debug << "New connection! Currently connected clients: " << ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
 void on_close(websocketpp::connection_hdl hdl) {
     // __chat_clients.erase(hdl);
-    logger::logger << logger::debug << "Rozłączono klienta. Pozostało klientów: " << __chat_clients.size() << logger::endl;
+    logger::logger << logger::debug << "Client disconnected. Clients remaining: " << ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
 void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr msg) {
-    logger::logger << logger::debug << "Raw msg: `" << msg->get_payload() << "`;" << logger::endl;
+    // logger::logger << logger::debug << "Raw msg: `" << msg->get_payload() << "`;" << logger::endl;
 
     try {
         nlohmann::json data = nlohmann::json::parse(msg->get_payload());
@@ -54,22 +55,22 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
 
         __messageManager.handle(msg_type_id, data.at("payload"));
 
-        if (msg_type_id == 1) {  // chat msg -> resend to all
-            std::string user_id = data.at("payload").value("user_id", "unknown");
-            std::string message = data.at("payload").value("message", "");
-            logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
-            for (ChatClient it : __chat_clients) {
-                s->send(it.connection, msg->get_payload(), websocketpp::frame::opcode::text);
-            }
-        } else if (msg_type_id == 2) {  // register user ID
-            for (auto it = __chat_clients.begin(); it != __chat_clients.end(); ++it) {
-                if (it->connection == hdl) {
-                    std::string user_id = data.at("payload").value("user_id", "unknown");
-                    it->user_id         = user_id;
-                    logger::logger << logger::debug << "New user registered:" << user_id << ";" << logger::endl;
-                }
-            }
-        }
+        // if (msg_type_id == 1) {  // chat msg -> resend to all
+        //     std::string user_id = data.at("payload").value("user_id", "unknown");
+        //     std::string message = data.at("payload").value("message", "");
+        //     logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
+        //     for (ChatClient it : __chat_clients) {
+        //         s->send(it.connection, msg->get_payload(), websocketpp::frame::opcode::text);
+        //     }
+        // } else if (msg_type_id == 2) {  // register user ID
+        //     for (auto it = __chat_clients.begin(); it != __chat_clients.end(); ++it) {
+        //         if (it->connection == hdl) {
+        //             std::string user_id = data.at("payload").value("user_id", "unknown");
+        //             it->user_id         = user_id;
+        //             logger::logger << logger::debug << "New user registered:" << user_id << ";" << logger::endl;
+        //         }
+        //     }
+        // }
     } catch (nlohmann::json::parse_error& e) {
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
     }
@@ -82,6 +83,9 @@ int main(int argc, char* argv[]) {
     Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
     argpars.parse(argc, argv);
+
+    __messageManager.register_handler(1, std::make_shared<MessageHandler_Message>());
+    __messageManager.register_handler(2, std::make_shared<MessageHandler_RegisterClient>());
 
     try {
         ws_server.set_reuse_addr(true);
