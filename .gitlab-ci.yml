@@ -34,7 +34,7 @@ build_ci_image:
 .image_local_ci:
   image:
     name: wchat-ci:latest
-    pull_policy: always
+    pull_policy: if-not-present
 
 # 2) Linty działają w naszym obrazie
 clang_check:
