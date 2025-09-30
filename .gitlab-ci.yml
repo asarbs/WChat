@@ -12,9 +12,9 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""
+  DOCKER_TLS_CERTDIR: ""   # ważne dla docker:dind, żeby nie blokował certyfikatów
 
-# Build i push obrazu
+# Budowanie obrazu CI i push do lokalnego GitLab Container Registry
 build_ci_image:
   stage: build_image
   image: docker:20.10
@@ -23,34 +23,27 @@ build_ci_image:
   script:
     - echo "Logging into GitLab Container Registry..."
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:wchat-ci-latest -f Dockerfile.ci .
-    - docker push $CI_REGISTRY_IMAGE:wchat-ci-latest
+    - docker build -t $CI_REGISTRY_IMAGE/wchat-ci:latest -f Dockerfile.ci .
+    - docker push $CI_REGISTRY_IMAGE/wchat-ci:latest
   only:
     - master
 
-# Szablon dla jobów
-.image_ci:
-  image: $CI_REGISTRY_IMAGE:wchat-ci-latest
-  before_script:
-    - echo "Logging into GitLab Container Registry..."
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
 clang_check:
   stage: lint
-  extends: .image_ci
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make clang-check
   allow_failure: true
 
 cpplint:
   stage: lint
-  extends: .image_ci
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make cpplint
   allow_failure: true
 
 build_app:
   stage: build
-  extends: .image_ci
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make compile
