@@ -42,6 +42,9 @@
 			]
 		}
 	},
+	"portsAttributes": {
+  		"9002": { "label": "WebSocket server", "onAutoForward": "openBrowser" }
+	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

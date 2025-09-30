@@ -17,6 +17,7 @@ lsb-release \
 gdb \
 gnupg \
 make \
+docker.io \
 libxrandr-dev \
 libxcursor-dev \
 libudev-dev \

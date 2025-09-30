@@ -33,6 +33,7 @@ libegl1-mesa-dev
 SHELL ["/bin/bash", "-c"]
 
 EXPOSE 3000
+EXPOSE 9002
 
 USER ${USERNAME}
 

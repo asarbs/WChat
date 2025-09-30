@@ -1,0 +1,9 @@
+// This file includes auto generated app_version
+missingInclude:*
+missingIncludeSystem:*
+unusedFunction:*
+
+// unusedFunction:*/lpm.c
+// unusedFunction:*/specific.c
+// unusedFunction:*/fifo_ring.c
+// noValidConfiguration:*/*

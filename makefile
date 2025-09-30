@@ -170,6 +170,9 @@ compile:
 run_server: compile
 	${Q} ./build/linux/bin/WChat_SERVER
 
+run_client:
+	@echo "Starting simple HTTP server at http://localhost:8080"
+	@cd src/client/html && python3 -m http.server 8080
 
 clang-check:
 	${Q}$(FORMATTER) --version
