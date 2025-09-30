@@ -12,11 +12,8 @@ stages:
 
 build_docker_image:
   stage: build
-  services:
-    - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
   script:
+    - docker info   # test czy działa połączenie z Dockerem hosta
     - docker build -t myapp-build .
 
 clang_check:
