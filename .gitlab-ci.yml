@@ -30,10 +30,10 @@ build_ci_image:
                     -f Dockerfile.ci .
     - docker push $CI_REGISTRY_IMAGE/wchat-ci:latest
     - docker push $CI_REGISTRY_IMAGE/wchat-ci:$CI_COMMIT_SHORT_SHA
-rules:
-  - changes:
-      - Dockerfile.ci
-      - .gitlab-ci.yml
+  rules:
+    - changes:
+        - Dockerfile.ci
+        - .gitlab-ci.yml
 
 clang_check:
   stage: lint
