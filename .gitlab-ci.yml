@@ -55,15 +55,21 @@ build_app:
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make compile
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1h
 
 test_unit:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make test-unit
+  needs: ["build_app"]
 
 test_app:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make test-app
+  needs: ["build_app"]
