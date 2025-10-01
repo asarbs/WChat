@@ -14,7 +14,9 @@ RUN apt-get upgrade -y \
 RUN apt-get install -y bash \
 bash-completion \
 python3 \
-python3-pip git \
+python3-pip \
+pytest \
+git \
 wget \
 lsb-release \
 gnupg \
