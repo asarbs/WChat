@@ -15,7 +15,7 @@ RUN apt-get install -y bash \
 bash-completion \
 python3 \
 python3-pip \
-pytest \
+python3-pytest \
 git \
 wget \
 lsb-release \

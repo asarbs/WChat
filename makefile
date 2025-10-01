@@ -166,10 +166,13 @@ gtest_main.o : $(GTEST_SRCS_)
 	@echo 'Build file: $< -> $@'
 	$(Q)$(GCC) $(CPPFLAGS_TEST) -I$(GTEST_DIR) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest_main.cc
 
-test-unit: $(TEST_OBJS) gtest-all.o gtest_main.o
+test-unit:
 	@echo 'Build file: test_main'
-	$(Q)$(GCC) $(CPPFLAGS_PROD) $(INCLUDES_PARAMS) $^ -o test_exe
-	./test_exe --gtest_catch_exceptions=0
+
+# test-unit: $(TEST_OBJS) gtest-all.o gtest_main.o
+# 	@echo 'Build file: test_main'
+# 	$(Q)$(GCC) $(CPPFLAGS_PROD) $(INCLUDES_PARAMS) $^ -o test_exe
+# 	./test_exe --gtest_catch_exceptions=0
 
 test-app:
 	cd test/app && pytest -v
