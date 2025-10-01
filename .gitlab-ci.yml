@@ -66,4 +66,4 @@ test_app:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
-    - make test_app
+    - make test-app
