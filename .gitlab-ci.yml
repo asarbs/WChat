@@ -55,3 +55,15 @@ build_app:
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make compile
+
+test_unit:
+  stage: test
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+  script:
+    - make test-unit
+
+test_app:
+  stage: test
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+  script:
+    - make test_app
