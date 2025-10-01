@@ -20,7 +20,7 @@ class MessageHandler_RegisterClient : public MessageHandler {
     public:
         MessageHandler_RegisterClient();
         ~MessageHandler_RegisterClient() override;
-        void handle(nlohmann::json::reference payload) override;
+        void handle(server* s, const websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) override;
 
     protected:
     private:

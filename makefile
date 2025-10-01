@@ -176,7 +176,7 @@ test-unit:
 # 	./test_exe --gtest_catch_exceptions=0
 
 test-app:
-	cd test/app && pytest -v
+	cd test/app && pytest -v -s
 
 test: test-unit test-app
 
@@ -224,4 +224,4 @@ cppcheck:
 		-I ${SOURCES_DIR} \
 		${SOURCES_DIR}
 
-all: clang-reformat clang-check cpplint cppcheck compile
+all: clang-reformat compile clang-check cpplint cppcheck

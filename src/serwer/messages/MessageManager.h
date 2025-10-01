@@ -26,7 +26,7 @@ class MessageManager {
         MessageManager();
         ~MessageManager();
         void register_handler(uint32_t message_id, std::shared_ptr<MessageHandler> handler);
-        void handle(uint32_t message_id, nlohmann::json::reference payload);
+        void handle(server* s, const websocketpp::connection_hdl& hdl, uint32_t message_id, nlohmann::json::reference payload);
 
     protected:
     private:
