@@ -55,13 +55,18 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
 
         __messageManager.handle(msg_type_id, data.at("payload"));
 
+        std::string user_id = data.at("payload").value("user_id", "unknown");
+        std::string message = data.at("payload").value("message", "");
+        logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
+        s->send(hdl, msg->get_payload(), websocketpp::frame::opcode::text);
+
         // if (msg_type_id == 1) {  // chat msg -> resend to all
-        //     std::string user_id = data.at("payload").value("user_id", "unknown");
-        //     std::string message = data.at("payload").value("message", "");
-        //     logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
-        //     for (ChatClient it : __chat_clients) {
-        //         s->send(it.connection, msg->get_payload(), websocketpp::frame::opcode::text);
-        //     }
+        // std::string user_id = data.at("payload").value("user_id", "unknown");
+        // std::string message = data.at("payload").value("message", "");
+        // logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
+        // for (ChatClient it : __chat_clients) {
+        //     s->send(it.connection, msg->get_payload(), websocketpp::frame::opcode::text);
+        // }
         // } else if (msg_type_id == 2) {  // register user ID
         //     for (auto it = __chat_clients.begin(); it != __chat_clients.end(); ++it) {
         //         if (it->connection == hdl) {

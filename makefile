@@ -140,6 +140,7 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 	${SUDO} pip3 install anyio --break-system-packages
 	${SUDO} pip3 install asyncio --break-system-packages
 	${SUDO} pip3 install pytest-tornasync --break-system-packages
+	${SUDO} pip3 install pytest_asyncio --break-system-packages
 	${SUDO} pip3 install trio --break-system-packages
 	${SUDO} pip3 install twisted --break-system-packages
 
