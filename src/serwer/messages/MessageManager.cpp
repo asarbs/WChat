@@ -19,14 +19,15 @@ MessageManager::MessageManager() {
 MessageManager::~MessageManager() {
 }
 
-void MessageManager::handle(uint32_t message_type_id, nlohmann::json::reference payload) {
+void MessageManager::handle(server* s, websocketpp::connection_hdl& hdl, uint32_t message_type_id, nlohmann::json::reference payload) {
     logger::logger << logger::debug << "Looking for message_type_id = `" << message_type_id << "` handler." << logger::endl;
     auto f_handler = _handlers.find(message_type_id);
     if (f_handler == _handlers.end()) {
         logger::logger << logger::debug << "Can't find handler for message_type_id = `" << message_type_id << "`." << logger::endl;
+        send_nack(s, hdl);
         return;
     }
-    f_handler->second->handle(payload);
+    f_handler->second->handle(s, hdl, payload);
 }
 
 void MessageManager::register_handler(uint32_t message_type_id, std::shared_ptr<MessageHandler> handler) {

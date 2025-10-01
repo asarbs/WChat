@@ -19,6 +19,7 @@ MessageHandler_Message::MessageHandler_Message() {
 MessageHandler_Message::~MessageHandler_Message() {
 }
 
-void MessageHandler_Message::handle(nlohmann::json::reference payload) {
+void MessageHandler_Message::handle(server* s, websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) {
     logger::logger << logger::debug << "MessageHandler_Message::handle" << logger::endl;
+    send_ack(s, hdl);
 }

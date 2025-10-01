@@ -23,8 +23,6 @@
 #include "serwer/messages/MessageHandler_RegisterClient.h"
 #include "serwer/messages/MessageManager.h"
 
-typedef websocketpp::server<websocketpp::config::asio> server;
-
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
 
 MessageManager __messageManager;
@@ -40,7 +38,6 @@ void on_open(websocketpp::connection_hdl hdl) {
 }
 
 void on_close(websocketpp::connection_hdl hdl) {
-    // __chat_clients.erase(hdl);
     logger::logger << logger::debug << "Client disconnected. Clients remaining: " << ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
@@ -53,12 +50,15 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
         int msg_type_id = data.at("msg_type_id");
         logger::logger << logger::debug << "msg_type_id=" << msg_type_id << logger::endl;
 
-        __messageManager.handle(msg_type_id, data.at("payload"));
+        __messageManager.handle(s, hdl, msg_type_id, data.at("payload"));
 
-        std::string user_id = data.at("payload").value("user_id", "unknown");
-        std::string message = data.at("payload").value("message", "");
-        logger::logger << logger::debug << "user_id: " << user_id << ", message: `" << message << "`" << logger::endl;
-        s->send(hdl, msg->get_payload(), websocketpp::frame::opcode::text);
+        // nlohmann::json j;
+        // j["msg_type_id"]       = 0;
+        // j["payload"]["status"] = "ok";
+
+        // std::string msg_str = j.dump();
+        // logger::logger << logger::debug << msg_str << logger::endl;
+        // s->send(hdl, msg_str, websocketpp::frame::opcode::text);
 
         // if (msg_type_id == 1) {  // chat msg -> resend to all
         // std::string user_id = data.at("payload").value("user_id", "unknown");
@@ -78,6 +78,9 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
         // }
     } catch (nlohmann::json::parse_error& e) {
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
+    } catch (nlohmann::json_abi_v3_11_3::detail::out_of_range& e) {
+        logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
+        send_nack(s, hdl);
     }
 }
 
