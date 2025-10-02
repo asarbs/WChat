@@ -86,6 +86,7 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
 
 int main(int argc, char* argv[]) {
     logger::logger.setLogLevel(logger::debug);
+    logger::logger << logger::info << "Start WChat Server" << logger::endl;
     server ws_server;
 
     Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
@@ -116,6 +117,6 @@ int main(int argc, char* argv[]) {
     } catch (websocketpp::exception const& e) {
         logger::logger << logger::error << "Wystąpił błąd: " << e.what() << logger::endl;
     }
-
+    logger::logger << logger::info << "Close WChat Server" << logger::endl;
     return 0;
 }

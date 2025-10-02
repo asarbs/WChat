@@ -20,7 +20,7 @@ SERVER_URL = "ws://localhost:9002/ws"
 PROGRAM_CMD = ["../../build/linux/bin/WChat_SERVER"]
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 def run_server():
     """
     Uruchamia serwer jako subprocess na czas testów.

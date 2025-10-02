@@ -58,7 +58,14 @@ CPPFLAGS_TEST := -g -Wall -Wextra -pthread -isystem $(GTEST_DIR)/include
 
 TEST_SOURCES_C :=
 TEST_SOURCES_CPP := test/unit/test_main.cpp
-# TEST_SOURCES_CPP += arguments.cpp
+TEST_SOURCES_CPP += src/serwer/messages/MessageHandler_RegisterClient.cpp
+TEST_SOURCES_CPP += src/serwer/messages/MessageManager.cpp
+TEST_SOURCES_CPP += src/serwer/messages/MessageHandler.cpp
+TEST_SOURCES_CPP += src/serwer/messages/MessageHandler_Message.cpp
+TEST_SOURCES_CPP += src/serwer/ChatClientDatabase.cpp
+TEST_SOURCES_CPP += src/serwer/ChatClient.cpp
+TEST_SOURCES_CPP += build/linux/_deps/cpp_logger-src/logger.cpp
+TEST_SOURCES_CPP += build/linux/_deps/cpp_arguments-src/arguments.cpp
 
 TEST_OBJS :=
 TEST_OBJS += $(TEST_SOURCES_CPP:%.cpp=%.o)
@@ -66,11 +73,15 @@ TEST_OBJS += $(TEST_SOURCES_C:%.c=%.o)
 
 GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 
-INCLUDES :=
+INCLUDES := src
 INCLUDES += build/linux/_deps/gtest-src/googletest/include
 INCLUDES += build/linux/_deps/gtest-src/googlemock/include
+INCLUDES += build/linux/_deps/nlohmann_json-src/include
+INCLUDES += build/linux/_deps/websocketpp-src
+INCLUDES += build/linux/_deps/cpp_arguments-src
+INCLUDES += build/linux/_deps/cpp_logger-src
 INCLUDES_PARAMS=$(foreach d, $(INCLUDES), -I"${PWD}/$d")
-INCLUDES_PARAMS += -I"/usr/include/clang/18/"
+INCLUDES_PARAMS += -I"/usr/include/clang/20/"
 INCLUDES_PARAMS += -I"/usr/include/x86_64-linux-gnu/c++/11/"
 INCLUDES_PARAMS += -I"/usr/include/c++/11/"
 
