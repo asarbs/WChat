@@ -19,8 +19,8 @@ dist/
 # Log files
 *.log
 
-# Package files
-*.jar
+
+*.o
 
 # Maven
 target/
@@ -43,11 +43,4 @@ Thumbs.db
 *.exe
 *.war
 
-# Large media files
-*.mp4
-*.tiff
-*.avi
-*.flv
-*.mov
-*.wmv
 
