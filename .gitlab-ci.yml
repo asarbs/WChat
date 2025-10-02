@@ -57,7 +57,7 @@ build_app:
     - make compile
   artifacts:
     paths:
-      - build/
+      - build/linux/bin/WChat_SERVER
     expire_in: 1h
 
 test_unit:
