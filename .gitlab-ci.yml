@@ -64,6 +64,7 @@ test_unit:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
+    - make test-unit-conf
     - make test-unit
   needs: ["build_app"]
 
