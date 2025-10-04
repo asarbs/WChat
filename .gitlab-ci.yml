@@ -54,7 +54,7 @@ build_app:
   stage: build
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
-    - make compile
+    - make compile_server
   artifacts:
     paths:
       - build/linux/bin/WChat_SERVER
@@ -64,7 +64,6 @@ test_unit:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
-    - make test-unit-conf
     - make test-unit
   needs: ["build_app"]
 
