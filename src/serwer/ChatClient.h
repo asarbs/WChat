@@ -17,15 +17,25 @@
 #include <string>
 #include <websocketpp/server.hpp>
 
-struct ChatClient : websocketpp::connection_hdl {
+class ChatClient {
     public:
         ChatClient();
+        explicit ChatClient(uint64_t user_id);
+        ChatClient(const ChatClient& other);
+        ChatClient& operator=(const ChatClient& other);
         ~ChatClient();
+        uint64_t get_user_id() {  // cppcheck-suppress unusedFunction
+            return __user_id;
+        }
         websocketpp::connection_hdl connection;
-        std::string user_id;
 
     protected:
     private:
+        // Remove the ability to move
+        ChatClient(ChatClient&&)            = delete;
+        ChatClient& operator=(ChatClient&&) = delete;
+
+        uint64_t __user_id;
 };
 
 #endif

@@ -18,15 +18,33 @@ ChatClientDatabase& ChatClientDatabase::getInstance() {
     return instance;
 }
 
-// ChatClientDatabase::ChatClientDatabase() {
-// }
+ChatClientDatabase::ChatClientDatabase() : __next_free_user_id(0) {
+}
 
 // ChatClientDatabase::~ChatClientDatabase() {
 // }
 
 void ChatClientDatabase::regiserClinet(websocketpp::connection_hdl hdl) {
-    ChatClient cc;
-    cc.connection       = hdl;
-    __chat_clients[hdl] = cc;
-    logger::logger << logger::debug << "ChatClientDatabase::regiserClinet" << logger::endl;
+    ChatClient cc(__next_free_user_id);
+    cc.connection                       = hdl;
+    __chat_clients[__next_free_user_id] = cc;
+    logger::logger << logger::debug << "ChatClientDatabase::regiserClinet with id = " << __next_free_user_id << "." << logger::endl;
+    __next_free_user_id++;
+}
+
+void ChatClientDatabase::unregiserClinet(uint64_t user_id) {  // cppcheck-suppress unusedFunction
+    __chat_clients.extract(user_id);
+}
+
+std::optional<std::reference_wrapper<ChatClient>> ChatClientDatabase::get(uint64_t user_id) {  // cppcheck-suppress unusedFunction
+    std::map<uint64_t, ChatClient>::iterator it = __chat_clients.find(user_id);
+    if (it != __chat_clients.end()) {
+        return it->second;
+    }
+    return std::nullopt;
+}
+
+void ChatClientDatabase::clean() {  // cppcheck-suppress unusedFunction
+    __chat_clients.clear();
+    __next_free_user_id = 0;
 }

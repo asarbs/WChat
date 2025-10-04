@@ -101,12 +101,12 @@ test-app:
 
 test: test-unit test-app
 
-compile_server:
+compile-server:
 	@echo 'Build executable file: $(TARGET_NAME)'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
 	${Q}cmake --build ${BUILD_DIR}/linux -j8 --target WChat_SERVER
 
-run_server: compile_server
+run_server: compile-server
 	${Q} ./build/linux/bin/WChat_SERVER
 
 run_client:
@@ -144,4 +144,4 @@ cppcheck:
 		-I ${SOURCES_DIR} \
 		${SOURCES_DIR}
 
-all: clean clang-check cpplint cpplint compile_server test-unit test-app
+all: clean clang-check cppcheck cpplint cpplint compile-server test-unit test-app

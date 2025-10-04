@@ -14,7 +14,9 @@
 
 #pragma once
 
+#include <functional>
 #include <map>
+#include <optional>
 #include <websocketpp/server.hpp>
 
 #include "ChatClient.h"
@@ -29,6 +31,10 @@ class ChatClientDatabase {
     public:
         static ChatClientDatabase& getInstance();
         void regiserClinet(websocketpp::connection_hdl hdl);
+        void unregiserClinet(uint64_t user_id);
+        std::optional<std::reference_wrapper<ChatClient>> get(uint64_t user_id);
+        void clean();
+
         size_t size() const {
             return __chat_clients.size();
         }
@@ -38,9 +44,10 @@ class ChatClientDatabase {
 
     protected:
     private:
-        ChatClientDatabase()  = default;
+        ChatClientDatabase();
         ~ChatClientDatabase() = default;
-        std::map<websocketpp::connection_hdl, ChatClient, hdl_compare> __chat_clients{};
+        std::map<uint64_t, ChatClient> __chat_clients{};
+        uint64_t __next_free_user_id;
 };
 
 #endif

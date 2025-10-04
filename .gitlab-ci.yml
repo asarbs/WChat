@@ -54,7 +54,7 @@ build_app:
   stage: build
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
-    - make compile_server
+    - make compile-server
   artifacts:
     paths:
       - build/linux/bin/WChat_SERVER

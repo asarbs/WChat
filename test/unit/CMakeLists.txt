@@ -11,7 +11,9 @@ enable_testing()
 file(GLOB TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_SOURCE_DIR}/src/serwer/**/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/serwer/*.cpp
 )
+list(FILTER TEST_SOURCES EXCLUDE REGEX ".*/server\\.cpp$")
 
 add_executable(unit_tests ${TEST_SOURCES})
 
