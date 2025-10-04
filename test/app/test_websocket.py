@@ -19,7 +19,6 @@ async def test_ping(ws_client):
     msg = {"msg_type_id":2,"payload":{"user_id":"Asar"}}
     await ws_client.send(json.dumps(msg))
     response = json.loads(await asyncio.wait_for(ws_client.recv(), timeout=2))
-    print(response)
     assert response['msg_type_id'] == 0
     assert response['payload']['status'] == "ok"
 
@@ -28,7 +27,6 @@ async def test_msg_id_uint32_max(ws_client):
     msg = {"msg_type_id":UINT32_MAX, "payload":{}}
     await ws_client.send(json.dumps(msg))
     response = json.loads(await asyncio.wait_for(ws_client.recv(), timeout=2))
-    print(response)
     assert response['msg_type_id'] == 0
     assert response['payload']['status'] == "not"
 
@@ -37,7 +35,6 @@ async def test_msg_without_payload(ws_client):
     msg = {"msg_type_id":UINT32_MAX}
     await ws_client.send(json.dumps(msg))
     response = json.loads(await asyncio.wait_for(ws_client.recv(), timeout=2))
-    print(response)
     assert response['msg_type_id'] == 0
     assert response['payload']['status'] == "not"
 

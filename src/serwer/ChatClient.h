@@ -22,7 +22,7 @@ struct ChatClient : websocketpp::connection_hdl {
         ChatClient();
         ~ChatClient();
         websocketpp::connection_hdl connection;
-        std::string user_id;
+        uint64_t user_id;
 
     protected:
     private:
