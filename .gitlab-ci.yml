@@ -67,9 +67,13 @@ test_unit:
     - make test-unit
   needs: ["build_app"]
   artifacts:
+    when: always
+    expire_in: 1h
     paths:
       - build/test-unit-results.xml
-    expire_in: 1h
+    reports:
+      junit:
+        - build/test-unit-results.xml
 
 test_app:
   stage: test
@@ -78,6 +82,10 @@ test_app:
     - make test-app
   needs: ["build_app"]
   artifacts:
+    when: always
+    expire_in: 1h
     paths:
       - build/test-app-results.xml
-    expire_in: 1h
+    reports:
+      junit:
+        - build/test-app-results.xml

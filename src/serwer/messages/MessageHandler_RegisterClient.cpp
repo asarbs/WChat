@@ -25,7 +25,7 @@ MessageHandler_RegisterClient::~MessageHandler_RegisterClient() {
 }
 
 void MessageHandler_RegisterClient::handle(server* s, const websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) {
-    std::string user_name = payload["user_name"];
+    std::string user_name = payload.at("user_name").get<std::string>();
     uint64_t new_user_id  = ChatClientDatabase::getInstance().regiserClinet(hdl, user_name);
     logger::logger << logger::debug << "Register new Client: user_name=" << user_name << "; DB ID=" << new_user_id << logger::endl;
     send_user_registration(s, hdl, user_name, new_user_id);

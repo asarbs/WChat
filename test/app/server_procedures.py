@@ -12,9 +12,9 @@ import asyncio
 
 async def register_user(ws_client, user_name:str):
     assert type(user_name) == str
-    msg = {"msg_type_id":2,"payload":{"user_id":user_name}}
+    msg = {"msg_type_id":2,"payload":{"user_name":user_name}}
     await ws_client.send(json.dumps(msg))
     response = json.loads(await asyncio.wait_for(ws_client.recv(), timeout=2))
     assert response['msg_type_id'] == 0
     assert response['payload']['status'] == "ok"
-    return True
+    return response['payload']['user_id']

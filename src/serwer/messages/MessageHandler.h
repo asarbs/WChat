@@ -35,4 +35,6 @@ void send_msg(server* s, websocketpp::connection_hdl hdl, const std::string& msg
 void send_ack(server* s, websocketpp::connection_hdl hdl);
 void send_nack(server* s, websocketpp::connection_hdl hdl);
 void send_user_registration(server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id);
+void send_msg_to_user(server* s, websocketpp::connection_hdl hdl, uint64_t user_id_from, uint64_t user_id_to, const std::string& msg);
+
 #endif

@@ -38,7 +38,7 @@ void ChatClientDatabase::unregiserClinet(uint64_t user_id) {  // cppcheck-suppre
     __chat_clients.extract(user_id);
 }
 
-std::optional<std::reference_wrapper<ChatClient>> ChatClientDatabase::get(uint64_t user_id) {  // cppcheck-suppress unusedFunction
+std::optional<std::reference_wrapper<ChatClient>> ChatClientDatabase::get(uint64_t user_id) {
     std::map<uint64_t, ChatClient>::iterator it = __chat_clients.find(user_id);
     if (it != __chat_clients.end()) {
         return it->second;

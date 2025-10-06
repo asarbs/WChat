@@ -25,12 +25,12 @@ MessageHandler_Message::~MessageHandler_Message() {
 }
 
 void MessageHandler_Message::handle(server* s, const websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) {
-    std::string from    = payload["from"];
-    std::string to      = payload["to"];
-    std::string message = payload["message"];
+    uint64_t from       = payload.at("from").get<uint64_t>();
+    uint64_t to         = payload.at("to").get<uint64_t>();
+    std::string message = payload.at("message").get<std::string>();
 
     logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
     // std::optional<std::reference_wrapper<ChatClient>> to_user = ChatClientDatabase::getInstance().get(to);
 
-    send_ack(s, hdl);
+    send_msg_to_user(s, hdl, from, to, message);
 }
