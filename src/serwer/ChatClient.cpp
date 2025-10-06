@@ -15,7 +15,7 @@
 
 ChatClient::ChatClient() : __user_id(UINT64_MAX) {
 }
-ChatClient::ChatClient(uint64_t user_id) : __user_id(user_id) {
+ChatClient::ChatClient(uint64_t user_id, const std::string& name) : __user_id(user_id), __name(name) {
 }
 ChatClient::ChatClient(const ChatClient& other) {
     this->__user_id  = other.__user_id;

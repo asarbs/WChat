@@ -24,12 +24,14 @@ ChatClientDatabase::ChatClientDatabase() : __next_free_user_id(0) {
 // ChatClientDatabase::~ChatClientDatabase() {
 // }
 
-void ChatClientDatabase::regiserClinet(websocketpp::connection_hdl hdl) {
-    ChatClient cc(__next_free_user_id);
+uint64_t ChatClientDatabase::regiserClinet(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
+    ChatClient cc(__next_free_user_id, new_user_name);
     cc.connection                       = hdl;
     __chat_clients[__next_free_user_id] = cc;
+    uint64_t current_client_id          = __next_free_user_id;
     logger::logger << logger::debug << "ChatClientDatabase::regiserClinet with id = " << __next_free_user_id << "." << logger::endl;
     __next_free_user_id++;
+    return current_client_id;
 }
 
 void ChatClientDatabase::unregiserClinet(uint64_t user_id) {  // cppcheck-suppress unusedFunction

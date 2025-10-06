@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "serwer/ChatClient.h"
+#include "serwer/ChatClientDatabase.h"
 #include "serwer/messages/MessageHandler.h"
 
 class MessageHandler_Message : public MessageHandler {

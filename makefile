@@ -94,10 +94,13 @@ compile-test_unit:
 
 test-unit: compile-test_unit
 	@echo 'Exe: test_main'
-	${Q} ./build/linux/bin/unit_tests
+	${Q} ./build/linux/bin/unit_tests --gtest_output=xml:build/test-unit-results.xml
 
 test-app:
-	cd test/app && pytest -v -s
+	cd test/app && pytest -v -s --junitxml=../../build/test-app-results.xml
+
+test-app-filter: compile-server
+	cd test/app && pytest -v -s -k "$(K)"
 
 test: test-unit test-app
 

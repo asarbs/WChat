@@ -20,13 +20,14 @@
 class ChatClient {
     public:
         ChatClient();
-        explicit ChatClient(uint64_t user_id);
+        explicit ChatClient(uint64_t user_id, const std::string& name);
         ChatClient(const ChatClient& other);
         ChatClient& operator=(const ChatClient& other);
         ~ChatClient();
         uint64_t get_user_id() {  // cppcheck-suppress unusedFunction
             return __user_id;
         }
+
         websocketpp::connection_hdl connection;
 
     protected:
@@ -36,6 +37,7 @@ class ChatClient {
         ChatClient& operator=(ChatClient&&) = delete;
 
         uint64_t __user_id;
+        std::string __name;
 };
 
 #endif

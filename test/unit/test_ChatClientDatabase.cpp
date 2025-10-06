@@ -25,13 +25,14 @@ class ChatClientDatabaseTest : public ::testing::Test {
 
 TEST_F(ChatClientDatabaseTest, add_new_clinet_db) {
     websocketpp::connection_hdl hdl;
-    ChatClientDatabase::getInstance().regiserClinet(hdl);
+    uint32_t user_id = ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 1);
+    ASSERT_EQ(user_id, 0);
 }
 
 TEST_F(ChatClientDatabaseTest, get_clinet_reference_db) {
     websocketpp::connection_hdl hdl;
-    ChatClientDatabase::getInstance().regiserClinet(hdl);
+    ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
     std::optional<std::reference_wrapper<ChatClient>> opt_ref_cc = ChatClientDatabase::getInstance().get(0);
     ASSERT_TRUE(opt_ref_cc);
     std::reference_wrapper<ChatClient> ref_cc = opt_ref_cc.value();
@@ -41,14 +42,14 @@ TEST_F(ChatClientDatabaseTest, get_clinet_reference_db) {
 
 TEST_F(ChatClientDatabaseTest, get_unregistered_clinet) {
     websocketpp::connection_hdl hdl;
-    ChatClientDatabase::getInstance().regiserClinet(hdl);
+    ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
     std::optional<std::reference_wrapper<ChatClient>> opt_ref_cc = ChatClientDatabase::getInstance().get(10);
     ASSERT_FALSE(opt_ref_cc);
 }
 
 TEST_F(ChatClientDatabaseTest, register_and_unregiseter_clinet) {
     websocketpp::connection_hdl hdl;
-    ChatClientDatabase::getInstance().regiserClinet(hdl);
+    ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 1);
     ChatClientDatabase::getInstance().unregiserClinet(0);
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 0);
@@ -57,7 +58,7 @@ TEST_F(ChatClientDatabaseTest, register_and_unregiseter_clinet) {
 TEST_F(ChatClientDatabaseTest, register_10_and_unregiseter_5_clinet) {
     for (uint32_t i = 0; i < 10; i++) {
         websocketpp::connection_hdl hdl;
-        ChatClientDatabase::getInstance().regiserClinet(hdl);
+        ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
     }
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
     ChatClientDatabase::getInstance().unregiserClinet(5);

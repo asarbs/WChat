@@ -17,6 +17,7 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <string>
 #include <websocketpp/server.hpp>
 
 #include "ChatClient.h"
@@ -30,7 +31,7 @@ struct hdl_compare {
 class ChatClientDatabase {
     public:
         static ChatClientDatabase& getInstance();
-        void regiserClinet(websocketpp::connection_hdl hdl);
+        uint64_t regiserClinet(websocketpp::connection_hdl hdl, const std::string& new_user_name);
         void unregiserClinet(uint64_t user_id);
         std::optional<std::reference_wrapper<ChatClient>> get(uint64_t user_id);
         void clean();

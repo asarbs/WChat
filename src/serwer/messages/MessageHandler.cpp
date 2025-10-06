@@ -40,3 +40,14 @@ void send_ack(server* s, websocketpp::connection_hdl hdl) {
 void send_nack(server* s, websocketpp::connection_hdl hdl) {
     send_ack_nack(s, hdl, false);
 }
+
+void send_user_registration(server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id) {
+    nlohmann::json j;
+    j["msg_type_id"]          = 0;
+    j["payload"]["status"]    = "ok";
+    j["payload"]["user_name"] = user_name;
+    j["payload"]["user_id"]   = user_db_id;
+
+    std::string msg_str = j.dump();
+    send_msg(s, hdl, msg_str);
+}

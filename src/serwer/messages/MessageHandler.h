@@ -34,5 +34,5 @@ class MessageHandler {
 void send_msg(server* s, websocketpp::connection_hdl hdl, const std::string& msg);
 void send_ack(server* s, websocketpp::connection_hdl hdl);
 void send_nack(server* s, websocketpp::connection_hdl hdl);
-
+void send_user_registration(server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id);
 #endif

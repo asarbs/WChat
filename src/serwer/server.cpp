@@ -33,7 +33,7 @@ bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connect
 }
 
 void on_open(websocketpp::connection_hdl hdl) {
-    ChatClientDatabase::getInstance().regiserClinet(hdl);
+    // ChatClientDatabase::getInstance().regiserClinet(hdl);
     logger::logger << logger::debug << "New connection! Currently connected clients: " << ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
