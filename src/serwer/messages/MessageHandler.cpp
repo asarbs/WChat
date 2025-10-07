@@ -11,9 +11,12 @@
 
 #include "MessageHandler.h"
 
+#include <google/protobuf/util/json_util.h>
+
 #include <string>
 
 #include "logger.h"
+#include "serwer/proto/messeges.pb.h"
 
 MessageHandler::MessageHandler() {
 }
@@ -27,13 +30,16 @@ void send_msg(server* s, websocketpp::connection_hdl hdl, const std::string& msg
 }
 
 void send_ack_nack(server* s, websocketpp::connection_hdl hdl, bool status) {
-    nlohmann::json j;
-    j["msg_type_id"]       = 0;
-    j["payload"]["status"] = status ? "ok" : "not";
-
-    std::string msg_str = j.dump();
-    send_msg(s, hdl, msg_str);
+    logger::logger << logger::debug << "send_ack_nack called with status=" << (status ? "true" : "false") << logger::endl;
+    WChat::Msg msg;
+    msg.set_version(1);
+    msg.set_type(WChat::MessageType::RESPONSE);
+    msg.set_response(status ? WChat::Response::ACK : WChat::Response::NACK);
+    std::string serialized;
+    msg.SerializeToString(&serialized);
+    s->send(hdl, serialized, websocketpp::frame::opcode::binary);
 }
+
 void send_ack(server* s, websocketpp::connection_hdl hdl) {  // cppcheck-suppress unusedFunction
     send_ack_nack(s, hdl, true);
 }

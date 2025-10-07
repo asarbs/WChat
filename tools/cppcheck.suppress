@@ -2,3 +2,5 @@
 missingInclude:*
 missingIncludeSystem:*
 //unusedFunction:*
+preprocessorErrorDirective:*
+noValidConfiguration:*

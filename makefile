@@ -72,6 +72,7 @@ FIND_CMD = find ${SOURCES_DIR} \( -iname "*.h" -o -iname "*.cpp" -o -iname "*.cp
 	${SUDO} pip3 install pytest_asyncio --break-system-packages
 	${SUDO} pip3 install trio --break-system-packages
 	${SUDO} pip3 install twisted --break-system-packages
+	${SUDO} pip3 install protobuf --break-system-packages
 
 .setup-test: .setup-test-app
 
@@ -100,7 +101,7 @@ test-unit: compile-test_unit
 test-app: compile-proto-python
 	cd test/app && pytest -v -s --junitxml=../../build/test-app-results.xml
 
-test-app-filter: compile-proto-python compile-server
+test-app-filter: compile-proto-python
 	cd test/app && pytest -v -s -k "$(K)"
 
 test: test-unit test-app
@@ -154,7 +155,6 @@ cppcheck:
 		--force \
 		--error-exitcode=1 \
 		-I ${SOURCES_DIR} \
-		-i ${SOURCES_DIR}/serwer/proto \
 		${SOURCES_DIR}
 
 all: clean clang-check cppcheck cpplint cpplint compile-server test-unit test-app

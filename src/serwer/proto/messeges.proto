@@ -2,8 +2,9 @@ syntax = "proto3";
 
 package WChat;
 
-message Response{
-    bool ack_nack = 1;
+enum Response{
+    NACK    = 0;
+    ACK     = 1;
 }
 
 enum MessageType {

@@ -9,6 +9,7 @@
 import json
 import asyncio
 
+import messeges_pb2
 
 async def register_user(ws_client, user_name:str):
     assert type(user_name) == str

@@ -11,6 +11,7 @@ enable_testing()
 file(GLOB TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_SOURCE_DIR}/src/serwer/**/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/serwer/**/*.cc
     ${CMAKE_SOURCE_DIR}/src/serwer/*.cpp
 )
 list(FILTER TEST_SOURCES EXCLUDE REGEX ".*/server\\.cpp$")
@@ -28,6 +29,7 @@ target_link_libraries(unit_tests PRIVATE
     cpp_arguments_lib
     nlohmann_json::nlohmann_json
     pthread
+    protobuf
 )
 
 add_test(NAME unit_tests COMMAND unit_tests --gtest_catch_exceptions=0)
@@ -37,4 +39,5 @@ target_include_directories(unit_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
     ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_logger-src
     ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_arguments-src
+    ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
 )

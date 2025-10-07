@@ -10,28 +10,35 @@
 import pytest
 import asyncio
 import json
+import messeges_pb2
+from google.protobuf.json_format import MessageToJson
 
 from server_procedures import *
 
 UINT32_MAX = (1 << 32) - 1
 
-
-
 @pytest.mark.asyncio
 async def test_msg_id_uint32_max(ws_client):
     msg = {"msg_type_id":UINT32_MAX, "payload":{}}
     await ws_client.send(json.dumps(msg))
-    response = json.loads(await asyncio.wait_for(ws_client.recv(), timeout=2))
-    assert response['msg_type_id'] == 0
-    assert response['payload']['status'] == "not"
+    data = await asyncio.wait_for(ws_client.recv(), timeout=2)
+    msg = messeges_pb2.Msg()
+    msg.ParseFromString(data)
+    assert msg.version  == 1
+    assert msg.type     == messeges_pb2.MessageType.RESPONSE
+    assert msg.response == messeges_pb2.Response.NACK
+
 
 @pytest.mark.asyncio
 async def test_msg_without_payload(ws_client):
     msg = {"msg_type_id":UINT32_MAX}
     await ws_client.send(json.dumps(msg))
-    response = json.loads(await asyncio.wait_for(ws_client.recv(), timeout=2))
-    assert response['msg_type_id'] == 0
-    assert response['payload']['status'] == "not"
+    data = await asyncio.wait_for(ws_client.recv(), timeout=2)
+    msg = messeges_pb2.Msg()
+    msg.ParseFromString(data)
+    assert msg.version  == 1
+    assert msg.type     == messeges_pb2.MessageType.RESPONSE
+    assert msg.response == messeges_pb2.Response.NACK
 
 
 # @pytest.mark.asyncio
