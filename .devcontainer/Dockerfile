@@ -16,6 +16,7 @@ bash-completion \
 python3 \
 python3-pip \
 python3-pytest \
+protobuf-compiler \
 git \
 wget \
 lsb-release \

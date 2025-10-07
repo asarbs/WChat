@@ -30,7 +30,7 @@ void MessageHandler_Message::handle(server* s, const websocketpp::connection_hdl
     std::string message = payload.at("message").get<std::string>();
 
     logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
-    ChatClient& to_user = ChatClientDatabase::getInstance().get(to).value().get();
+    const ChatClient& to_user = ChatClientDatabase::getInstance().get(to).value().get();
 
     send_msg_to_user(s, hdl, from, to, message);
     send_msg_to_user(s, to_user.connection, from, to, message);

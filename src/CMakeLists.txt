@@ -50,6 +50,14 @@ FetchContent_Declare(gtest
     SYSTEM)
 FetchContent_MakeAvailable(gtest)
 
+FetchContent_Declare(protobuf
+    GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
+    GIT_TAG v33.0-rc1
+    GIT_SHALLOW OFF
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(protobuf)
+
 find_package(Boost REQUIRED)
 
 message(STATUS "Application name: ${TARGET_NAME_SERVER} ${TARGET_NAME_CLIENT}")
@@ -74,6 +82,7 @@ add_executable(${TARGET_NAME_SERVER}
     serwer/messages/MessageHandler_RegisterClient.cpp
     serwer/messages/MessageHandler.cpp
     serwer/messages/MessageManager.cpp
+    serwer/proto/messeges.pb.cc
     serwer/server.cpp
 )
 
@@ -85,6 +94,7 @@ target_link_libraries(${TARGET_NAME_SERVER}
         nlohmann_json::nlohmann_json
         cpp_logger_lib
         cpp_arguments_lib
+        protobuf
     )
 
 target_include_directories(${TARGET_NAME_SERVER}
@@ -93,5 +103,6 @@ target_include_directories(${TARGET_NAME_SERVER}
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_logger-src
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_arguments-src
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
+        ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
 )
 

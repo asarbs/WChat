@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package WChat;
+
+message Response{
+    bool ack_nack = 1;
+}
+
+enum MessageType {
+    UNKNOW              = 0;
+    RESPONSE            = 1;
+    REGISTER_SESSION    = 2;
+    SEND_TEXT_MSG       = 3;
+}
+
+message Msg {
+    uint32              version     = 1;
+    MessageType         type        = 2;
+    optional Response   response    = 3;
+}

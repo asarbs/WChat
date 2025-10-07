@@ -24,13 +24,14 @@ CPPLINT = cpplint
 
 PROJECT_DIR := ${PWD}
 SOURCES_DIR := ${PROJECT_DIR}/src
+PROTO_DIR 	:= ${SOURCES_DIR}/serwer/proto
 TEST_DIR = ${PROJECT_DIR}/test/unit
 TEST_BIN_DIR = ${PROJECT_DIR}/build/test
 
 BUILD_DIR = ${PROJECT_DIR}/build
 BUILD_TYPE ?= Debug
 
-FIND_CMD = find ${SOURCES_DIR} \( -iname "*.h" -o -iname "*.cpp" -o -iname "*.cppm" \) -and ! -path "*/libs/*" -and ! -path "*ranslation.h"
+FIND_CMD = find ${SOURCES_DIR} \( -iname "*.h" -o -iname "*.cpp" -o -iname "*.cppm" \) -and ! -path "*/libs/*" -and ! -path "*/proto/*"
 
 .setup-cpplint:
 	$(Q)@echo 'setup-cpplint'
@@ -96,15 +97,23 @@ test-unit: compile-test_unit
 	@echo 'Exe: test_main'
 	${Q} ./build/linux/bin/unit_tests --gtest_output=xml:build/test-unit-results.xml
 
-test-app:
+test-app: compile-proto-python
 	cd test/app && pytest -v -s --junitxml=../../build/test-app-results.xml
 
-test-app-filter: compile-server
+test-app-filter: compile-proto-python compile-server
 	cd test/app && pytest -v -s -k "$(K)"
 
 test: test-unit test-app
 
-compile-server:
+compile-proto-cpp:
+	@echo 'Compile proto-cpp: $(TARGET_NAME)'
+	protoc -I=${PROTO_DIR} --cpp_out=${PROTO_DIR} ${PROTO_DIR}/messeges.proto
+
+compile-proto-python:
+	@echo 'Compile proto-cpp: $(TARGET_NAME)'
+	protoc -I=${PROTO_DIR} --python_out=test/app ${PROTO_DIR}/messeges.proto
+
+compile-server: compile-proto-cpp
 	@echo 'Build executable file: $(TARGET_NAME)'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
 	${Q}cmake --build ${BUILD_DIR}/linux -j8 --target WChat_SERVER
@@ -128,11 +137,11 @@ cpplint:
 	@echo 'cpplint'
 	$(Q)${CPPLINT} --version
 	$(Q)${CPPLINT} \
-		--exclude=src/core/translation.h \
+		--exclude=${SOURCES_DIR}/serwer/proto \
 		--recursive $(SOURCES_DIR)
 
 cppcheck:
-	@echo 'cppcheckaa'
+	@echo 'cppcheck'
 	$(Q)$(CPPCHECK) --version
 	$(Q)$(CPPCHECK) \
 		--platform=native \
@@ -145,6 +154,7 @@ cppcheck:
 		--force \
 		--error-exitcode=1 \
 		-I ${SOURCES_DIR} \
+		-i ${SOURCES_DIR}/serwer/proto \
 		${SOURCES_DIR}
 
 all: clean clang-check cppcheck cpplint cpplint compile-server test-unit test-app

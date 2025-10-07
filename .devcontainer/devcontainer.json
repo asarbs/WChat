@@ -38,7 +38,8 @@
 				"mechatroner.rainbow-csv",
 				"josetr.cmake-language-support-vscode",
 				"afmicc.GetterAndSetterGenerator",
-				"janisdd.vscode-edit-csv"
+				"janisdd.vscode-edit-csv",
+				"zxh404.vscode-proto3"
 			]
 		}
 	},
