@@ -88,6 +88,8 @@ clean:
 	${Q}rm -rf gmon.out
 	${Q}find . -name "*.o" | xargs -r rm
 	${Q}find . -name "*.pcm" | xargs -r rm
+	${Q}find . -name "*.pb.h" | xargs -r rm
+	${Q}find . -name "*.pb.cc" | xargs -r rm
 
 compile-test_unit:
 	@echo 'Build file: test_main'
@@ -141,7 +143,7 @@ cpplint:
 		--exclude=${SOURCES_DIR}/serwer/proto \
 		--recursive $(SOURCES_DIR)
 
-cppcheck:
+cppcheck: clean
 	@echo 'cppcheck'
 	$(Q)$(CPPCHECK) --version
 	$(Q)$(CPPCHECK) \
