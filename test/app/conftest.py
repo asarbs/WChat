@@ -49,3 +49,13 @@ async def ws_client():
     """
     async with websockets.connect(SERVER_URL) as websocket:
         yield websocket
+
+@pytest_asyncio.fixture
+async def ws_client1():
+    async with websockets.connect(SERVER_URL) as ws:
+        yield ws
+
+@pytest_asyncio.fixture
+async def ws_client2():
+    async with websockets.connect(SERVER_URL) as ws:
+        yield ws
