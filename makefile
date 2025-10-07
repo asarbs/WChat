@@ -91,7 +91,7 @@ clean:
 	${Q}find . -name "*.pb.h" | xargs -r rm
 	${Q}find . -name "*.pb.cc" | xargs -r rm
 
-compile-test_unit:
+compile-test_unit: compile-proto-cpp
 	@echo 'Build file: test_main'
 	${Q}cmake -S . -B $(BUILD_DIR)/linux -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
 	${Q}cmake --build $(BUILD_DIR)/linux -j8 --target unit_tests
