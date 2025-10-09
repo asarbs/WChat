@@ -19,13 +19,15 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
+#include "serwer/proto/messeges.pb.h"
+
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 class MessageHandler {
     public:
         MessageHandler();
         virtual ~MessageHandler();
-        virtual void handle(server* s, const websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) = 0;
+        virtual void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) = 0;
 
     protected:
     private:

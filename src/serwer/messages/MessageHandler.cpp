@@ -30,7 +30,6 @@ void send_msg(server* s, websocketpp::connection_hdl hdl, const std::string& msg
 }
 
 void send_ack_nack(server* s, websocketpp::connection_hdl hdl, bool status) {
-    logger::logger << logger::debug << "send_ack_nack called with status=" << (status ? "true" : "false") << logger::endl;
     WChat::Msg msg;
     msg.set_version(1);
     msg.set_type(WChat::MessageType::RESPONSE);
@@ -48,23 +47,27 @@ void send_nack(server* s, websocketpp::connection_hdl hdl) {
 }
 
 void send_user_registration(server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id) {
-    nlohmann::json j;
-    j["msg_type_id"]          = 0;
-    j["payload"]["status"]    = "ok";
-    j["payload"]["user_name"] = user_name;
-    j["payload"]["user_id"]   = user_db_id;
-
-    std::string msg_str = j.dump();
-    send_msg(s, hdl, msg_str);
+    WChat::Msg msg;
+    msg.set_version(1);
+    msg.set_type(WChat::MessageType::REGISTER_SESSION_RES);
+    WChat::RegisterSessionRes* rsr = msg.mutable_registersessionres();
+    rsr->set_user_id(user_db_id);
+    rsr->set_status(WChat::Response::ACK);
+    std::string serialized;
+    msg.SerializeToString(&serialized);
+    s->send(hdl, serialized, websocketpp::frame::opcode::binary);
 }
 
-void send_msg_to_user(server* s, websocketpp::connection_hdl hdl, uint64_t user_id_from, uint64_t user_id_to, const std::string& msg) {
-    nlohmann::json j;
-    j["msg_type_id"]        = 3;
-    j["payload"]["from"]    = user_id_from;
-    j["payload"]["to"]      = user_id_to;
-    j["payload"]["message"] = msg;
+void send_msg_to_user(server* s, websocketpp::connection_hdl hdl, uint64_t user_id_from, uint64_t user_id_to, const std::string& msg_text) {
+    WChat::Msg msg_resp;
+    msg_resp.set_version(1);
+    msg_resp.set_type(WChat::MessageType::SEND_TEXT_MSG);
+    WChat::TextMessage* txtMsg = msg_resp.mutable_textmessage();
+    txtMsg->set_to_user_id(user_id_to);
+    txtMsg->set_from_user_id(user_id_from);
+    txtMsg->set_message(msg_text);
 
-    std::string msg_str = j.dump();
-    send_msg(s, hdl, msg_str);
+    std::string serialized;
+    msg_resp.SerializeToString(&serialized);
+    s->send(hdl, serialized, websocketpp::frame::opcode::binary);
 }

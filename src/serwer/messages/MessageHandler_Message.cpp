@@ -17,6 +17,7 @@
 #include "logger.h"
 #include "serwer/ChatClient.h"
 #include "serwer/ChatClientDatabase.h"
+#include "serwer/ErrorHandlers.h"
 
 MessageHandler_Message::MessageHandler_Message() {
 }
@@ -24,10 +25,13 @@ MessageHandler_Message::MessageHandler_Message() {
 MessageHandler_Message::~MessageHandler_Message() {
 }
 
-void MessageHandler_Message::handle(server* s, const websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) {
-    uint64_t from       = payload.at("from").get<uint64_t>();
-    uint64_t to         = payload.at("to").get<uint64_t>();
-    std::string message = payload.at("message").get<std::string>();
+void MessageHandler_Message::handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+    if (!msg.has_textmessage()) {
+        throw wchat::protocul::ProtoculError("Msg don't contain TxtMsg");
+    }
+    uint64_t from       = msg.textmessage().from_user_id();
+    uint64_t to         = msg.textmessage().to_user_id();
+    std::string message = msg.textmessage().message();
 
     logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
     const ChatClient& to_user = ChatClientDatabase::getInstance().get(to).value().get();
