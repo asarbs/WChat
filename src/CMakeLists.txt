@@ -33,6 +33,12 @@ FetchContent_Declare(websocketpp
     EXCLUDE_FROM_ALL
     SYSTEM)
 FetchContent_MakeAvailable(websocketpp)
+if(NOT websocketpp_POPULATED)
+    FetchContent_Populate(websocketpp)
+    add_library(websocketpp INTERFACE)
+    target_include_directories(websocketpp INTERFACE ${websocketpp_SOURCE_DIR})
+endif()
+
 
 FetchContent_Declare(nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git

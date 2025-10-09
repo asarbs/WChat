@@ -8,9 +8,11 @@
  * and distributed under the terms specified by the copyright holder.
  */
 
+#include <format>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <set>
+#include <stdexcept>
 #include <vector>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
@@ -19,9 +21,11 @@
 #include "ChatClientDatabase.h"
 #include "arguments.h"
 #include "logger.h"
+#include "serwer/ErrorHandlers.h"
 #include "serwer/messages/MessageHandler_Message.h"
 #include "serwer/messages/MessageHandler_RegisterClient.h"
 #include "serwer/messages/MessageManager.h"
+#include "serwer/proto/messeges.pb.h"
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
 
@@ -33,7 +37,6 @@ bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connect
 }
 
 void on_open(websocketpp::connection_hdl hdl) {
-    // ChatClientDatabase::getInstance().regiserClinet(hdl);
     logger::logger << logger::debug << "New connection! Currently connected clients: " << ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
@@ -42,15 +45,24 @@ void on_close(websocketpp::connection_hdl hdl) {
 }
 
 void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr msg) {
-    // logger::logger << logger::debug << "Raw msg: `" << msg->get_payload() << "`;" << logger::endl;
-
     try {
-        nlohmann::json data = nlohmann::json::parse(msg->get_payload());
+        if (msg->get_opcode() != websocketpp::frame::opcode::binary) {
+            throw wchat::protocul::ProtoculError("Received non-binary message");
+        }
 
-        int msg_type_id = data.at("msg_type_id");
-        logger::logger << logger::debug << "msg_type_id=" << msg_type_id << logger::endl;
+        const std::string& payload = msg->get_payload();
 
-        __messageManager.handle(s, hdl, msg_type_id, data.at("payload"));
+        WChat::Msg proto_msg;
+        if (!proto_msg.ParseFromString(payload)) {
+            throw wchat::protocul::ProtoculError("ParseFromString failed");
+        }
+
+        if (proto_msg.type() >= WChat::MessageType::LAST) {
+            std::string error_msg = std::format("Msg type[{}] out of band", uint32_t(proto_msg.type()));
+            throw wchat::protocul::ProtoculWarning(error_msg);
+        }
+
+        __messageManager.handle(s, hdl, proto_msg);
 
         // nlohmann::json j;
         // j["msg_type_id"]       = 0;
@@ -81,6 +93,15 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
     } catch (nlohmann::json_abi_v3_11_3::detail::out_of_range& e) {
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
         send_nack(s, hdl);
+    } catch (wchat::protocul::ProtoculWarning& e) {
+        logger::logger << logger::warning << "Runtime Wargning:" << e.what() << "." << logger::endl;
+        send_nack(s, hdl);
+    } catch (std::runtime_error& e) {
+        logger::logger << logger::critical << "Runtime Error:" << e.what() << "." << logger::endl;
+        send_nack(s, hdl);
+    } catch (...) {
+        logger::logger << logger::critical << "UNKNOW Error" << logger::endl;
+        send_nack(s, hdl);
     }
 }
 
@@ -93,8 +114,8 @@ int main(int argc, char* argv[]) {
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
     argpars.parse(argc, argv);
 
-    __messageManager.register_handler(1, std::make_shared<MessageHandler_Message>());
-    __messageManager.register_handler(2, std::make_shared<MessageHandler_RegisterClient>());
+    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<MessageHandler_Message>());
+    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<MessageHandler_RegisterClient>());
 
     try {
         ws_server.set_reuse_addr(true);

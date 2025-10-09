@@ -18,24 +18,16 @@ from server_procedures import *
 UINT32_MAX = (1 << 32) - 1
 
 @pytest.mark.asyncio
-async def test_msg_id_uint32_max(ws_client):
-    msg = {"msg_type_id":UINT32_MAX, "payload":{}}
-    await ws_client.send(json.dumps(msg))
-    data = await asyncio.wait_for(ws_client.recv(), timeout=2)
-    msg = messeges_pb2.Msg()
-    msg.ParseFromString(data)
-    assert msg.version  == 1
-    assert msg.type     == messeges_pb2.MessageType.RESPONSE
-    assert msg.response == messeges_pb2.Response.NACK
+async def test_invalid_msg(ws_client):
+    registration_msg = messeges_pb2.Msg();
+    registration_msg.version = 1
+    registration_msg.type    = messeges_pb2.MessageType.LAST
+    msg_string = registration_msg.SerializeToString()
+    await ws_client.send(msg_string)
 
-
-@pytest.mark.asyncio
-async def test_msg_without_payload(ws_client):
-    msg = {"msg_type_id":UINT32_MAX}
-    await ws_client.send(json.dumps(msg))
     data = await asyncio.wait_for(ws_client.recv(), timeout=2)
-    msg = messeges_pb2.Msg()
-    msg.ParseFromString(data)
-    assert msg.version  == 1
-    assert msg.type     == messeges_pb2.MessageType.RESPONSE
-    assert msg.response == messeges_pb2.Response.NACK
+    response_msg = messeges_pb2.Msg()
+    response_msg.ParseFromString(data)
+    assert response_msg.version  == 1
+    assert response_msg.type     == messeges_pb2.MessageType.RESPONSE
+    assert response_msg.response == messeges_pb2.Response.NACK

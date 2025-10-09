@@ -22,7 +22,7 @@ class MessageHandler_Message : public MessageHandler {
     public:
         MessageHandler_Message();
         ~MessageHandler_Message() override;
-        void handle(server* s, const websocketpp::connection_hdl& hdl, nlohmann::json::reference payload) override;
+        void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload) override;
 
     protected:
     private:

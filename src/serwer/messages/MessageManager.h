@@ -18,6 +18,7 @@
 #include <nlohmann/json.hpp>
 
 #include "serwer/messages/MessageHandler.h"
+#include "serwer/proto/messeges.pb.h"
 
 #pragma once
 
@@ -25,12 +26,12 @@ class MessageManager {
     public:
         MessageManager();
         ~MessageManager();
-        void register_handler(uint32_t message_id, std::shared_ptr<MessageHandler> handler);
-        void handle(server* s, const websocketpp::connection_hdl& hdl, uint32_t message_id, nlohmann::json::reference payload);
+        void register_handler(WChat::MessageType message_id, std::shared_ptr<MessageHandler> handler);
+        void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload);
 
     protected:
     private:
-        std::map<uint32_t, std::shared_ptr<MessageHandler> > _handlers;
+        std::map<WChat::MessageType, std::shared_ptr<MessageHandler> > _handlers;
 };
 
 #endif

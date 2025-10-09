@@ -19,7 +19,8 @@ MessageManager::MessageManager() {
 MessageManager::~MessageManager() {
 }
 
-void MessageManager::handle(server* s, const websocketpp::connection_hdl& hdl, uint32_t message_type_id, nlohmann::json::reference payload) {
+void MessageManager::handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+    WChat::MessageType message_type_id = msg.type();
     logger::logger << logger::debug << "Looking for message_type_id = `" << message_type_id << "` handler." << logger::endl;
     auto f_handler = _handlers.find(message_type_id);
     if (f_handler == _handlers.end()) {
@@ -27,10 +28,10 @@ void MessageManager::handle(server* s, const websocketpp::connection_hdl& hdl, u
         send_nack(s, hdl);
         return;
     }
-    f_handler->second->handle(s, hdl, payload);
+    f_handler->second->handle(s, hdl, msg);
 }
 
-void MessageManager::register_handler(uint32_t message_type_id, std::shared_ptr<MessageHandler> handler) {
+void MessageManager::register_handler(WChat::MessageType message_type_id, std::shared_ptr<MessageHandler> handler) {
     auto f_handler = _handlers.find(message_type_id);
     if (f_handler == _handlers.end()) {
         logger::logger << logger::debug << "Register new handler for message_type_id " << message_type_id << "." << logger::endl;

@@ -7,15 +7,33 @@ enum Response{
     ACK     = 1;
 }
 
+message RegisterSessionReq {
+    string user_name = 1;
+}
+message RegisterSessionRes {
+    Response  status  = 1;
+    uint64    user_id = 2;
+}
+
+message TextMessage {
+    uint64 from_user_id = 1;
+    uint64 to_user_id = 2;
+    string message  = 3;
+}
+
 enum MessageType {
-    UNKNOW              = 0;
-    RESPONSE            = 1;
-    REGISTER_SESSION    = 2;
-    SEND_TEXT_MSG       = 3;
+    RESPONSE             = 0;
+    REGISTER_SESSION_REQ = 1;
+    REGISTER_SESSION_RES = 2;
+    SEND_TEXT_MSG        = 3;
+    LAST                 = 4;
 }
 
 message Msg {
-    uint32              version     = 1;
-    MessageType         type        = 2;
-    optional Response   response    = 3;
+    uint32                      version            = 1;
+    MessageType                 type               = 2;
+    optional Response           response           = 3;
+    optional RegisterSessionReq registerSessionReq = 4;
+    optional RegisterSessionRes registerSessionRes = 5;
+    optional TextMessage        textMessage        = 6;
 }
