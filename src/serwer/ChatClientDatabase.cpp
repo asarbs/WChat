@@ -26,7 +26,8 @@ ChatClientDatabase::ChatClientDatabase() : __next_free_user_id(0) {
 
 uint64_t ChatClientDatabase::regiserClinet(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
     ChatClient cc(__next_free_user_id, new_user_name);
-    cc.connection                       = hdl;
+    cc.connection = hdl;
+    cc.registerClient();
     __chat_clients[__next_free_user_id] = cc;
     uint64_t current_client_id          = __next_free_user_id;
     logger::logger << logger::debug << "ChatClientDatabase::regiserClinet with id = " << __next_free_user_id << "." << logger::endl;
@@ -34,8 +35,10 @@ uint64_t ChatClientDatabase::regiserClinet(websocketpp::connection_hdl hdl, cons
     return current_client_id;
 }
 
-void ChatClientDatabase::unregiserClinet(uint64_t user_id) {  // cppcheck-suppress unusedFunction
-    __chat_clients.extract(user_id);
+bool ChatClientDatabase::unregiserClinet(uint64_t user_id) {
+    ChatClient& cc = get(user_id).value().get();
+    cc.unregister();
+    return true;
 }
 
 std::optional<std::reference_wrapper<ChatClient>> ChatClientDatabase::get(uint64_t user_id) {

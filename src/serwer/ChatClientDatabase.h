@@ -32,7 +32,8 @@ class ChatClientDatabase {
     public:
         static ChatClientDatabase& getInstance();
         uint64_t regiserClinet(websocketpp::connection_hdl hdl, const std::string& new_user_name);
-        void unregiserClinet(uint64_t user_id);
+        uint64_t regiserClinet(uint64_t user_id);
+        bool unregiserClinet(uint64_t user_id);
         std::optional<std::reference_wrapper<ChatClient>> get(uint64_t user_id);
         void clean();
 

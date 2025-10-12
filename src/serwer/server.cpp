@@ -24,6 +24,7 @@
 #include "serwer/ErrorHandlers.h"
 #include "serwer/messages/MessageHandler_Message.h"
 #include "serwer/messages/MessageHandler_RegisterClient.h"
+#include "serwer/messages/MessageHandler_UnregisterClient.h"
 #include "serwer/messages/MessageManager.h"
 #include "serwer/proto/messeges.pb.h"
 
@@ -100,8 +101,9 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
         logger::logger << logger::critical << "Runtime Error:" << e.what() << "." << logger::endl;
         send_nack(s, hdl);
     } catch (...) {
-        logger::logger << logger::critical << "UNKNOW Error" << logger::endl;
+        logger::logger << logger::critical << "UNKNOWN Error" << logger::endl;
         send_nack(s, hdl);
+        throw;
     }
 }
 
@@ -116,6 +118,7 @@ int main(int argc, char* argv[]) {
 
     __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<MessageHandler_Message>());
     __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<MessageHandler_RegisterClient>());
+    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<MessageHandler_UnregisterClient>());
 
     try {
         ws_server.set_reuse_addr(true);

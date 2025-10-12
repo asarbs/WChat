@@ -52,7 +52,7 @@ TEST_F(ChatClientDatabaseTest, register_and_unregiseter_clinet) {
     ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 1);
     ChatClientDatabase::getInstance().unregiserClinet(0);
-    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 0);
+    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 1);
 }
 
 TEST_F(ChatClientDatabaseTest, register_10_and_unregiseter_5_clinet) {
@@ -62,16 +62,20 @@ TEST_F(ChatClientDatabaseTest, register_10_and_unregiseter_5_clinet) {
     }
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
     ChatClientDatabase::getInstance().unregiserClinet(5);
-    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 9);
+    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
     std::optional<std::reference_wrapper<ChatClient>> opt_ref_cc = ChatClientDatabase::getInstance().get(5);
-    ASSERT_FALSE(opt_ref_cc);
+    ASSERT_TRUE(opt_ref_cc);
+    ASSERT_FALSE(opt_ref_cc.value().get().is_registered());
 
     ChatClient& cc4 = ChatClientDatabase::getInstance().get(4).value().get();
     ASSERT_EQ(cc4.get_user_id(), 4);
+    ASSERT_TRUE(cc4.is_registered());
     ChatClient& cc6 = ChatClientDatabase::getInstance().get(6).value().get();
     ASSERT_EQ(cc6.get_user_id(), 6);
+    ASSERT_TRUE(cc6.is_registered());
 
     ChatClient& cc4a = ChatClientDatabase::getInstance().get(4).value().get();
     ASSERT_EQ(cc4a.get_user_id(), 4);
-    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 9);
+    ASSERT_TRUE(cc4.is_registered());
+    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
 }

@@ -39,7 +39,7 @@ void send_ack_nack(server* s, websocketpp::connection_hdl hdl, bool status) {
     s->send(hdl, serialized, websocketpp::frame::opcode::binary);
 }
 
-void send_ack(server* s, websocketpp::connection_hdl hdl) {  // cppcheck-suppress unusedFunction
+void send_ack(server* s, websocketpp::connection_hdl hdl) {
     send_ack_nack(s, hdl, true);
 }
 void send_nack(server* s, websocketpp::connection_hdl hdl) {

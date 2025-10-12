@@ -22,8 +22,14 @@ class ChatClient {
         ChatClient();
         explicit ChatClient(uint64_t user_id, const std::string& name);
         ChatClient(const ChatClient& other);
-        ChatClient& operator=(const ChatClient& other);
         ~ChatClient();
+        ChatClient& operator=(const ChatClient& other);
+
+        void registerClient();
+        void unregister();
+        bool is_registered() {  // cppcheck-suppress unusedFunction
+            return __is_registered;
+        }
         uint64_t get_user_id() {  // cppcheck-suppress unusedFunction
             return __user_id;
         }
@@ -31,6 +37,7 @@ class ChatClient {
         websocketpp::connection_hdl connection;
 
     protected:
+        //
     private:
         // Remove the ability to move
         ChatClient(ChatClient&&)            = delete;
@@ -38,6 +45,7 @@ class ChatClient {
 
         uint64_t __user_id;
         std::string __name;
+        bool __is_registered;
 };
 
 #endif

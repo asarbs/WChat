@@ -116,6 +116,8 @@ compile-proto-python:
 	@echo 'Compile proto-cpp: $(TARGET_NAME)'
 	protoc -I=${PROTO_DIR} --python_out=test/app ${PROTO_DIR}/messeges.proto
 
+compile-proto: compile-proto-cpp compile-proto-python
+
 compile-server: compile-proto-cpp
 	@echo 'Build executable file: $(TARGET_NAME)'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux

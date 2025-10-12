@@ -15,6 +15,10 @@ message RegisterSessionRes {
     uint64    user_id = 2;
 }
 
+message UnregisterSessionReq {
+    uint64    user_id = 1;
+}
+
 message TextMessage {
     uint64 from_user_id = 1;
     uint64 to_user_id = 2;
@@ -26,14 +30,16 @@ enum MessageType {
     REGISTER_SESSION_REQ = 1;
     REGISTER_SESSION_RES = 2;
     SEND_TEXT_MSG        = 3;
-    LAST                 = 4;
+    UNREGISTER_SESSION   = 4;
+    LAST                 = 5;
 }
 
 message Msg {
-    uint32                      version            = 1;
-    MessageType                 type               = 2;
-    optional Response           response           = 3;
-    optional RegisterSessionReq registerSessionReq = 4;
-    optional RegisterSessionRes registerSessionRes = 5;
-    optional TextMessage        textMessage        = 6;
+    uint32                          version                 = 1;
+    MessageType                     type                    = 2;
+    optional Response               response                = 3;
+    optional RegisterSessionReq     registerSessionReq      = 4;
+    optional RegisterSessionRes     registerSessionRes      = 5;
+    optional UnregisterSessionReq   unregisterSessionReq    = 6;
+    optional TextMessage            textMessage             = 7;
 }

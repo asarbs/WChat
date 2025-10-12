@@ -35,3 +35,9 @@ async def test_register_user(ws_client):
 async def test_register_multiple_users(ws_client1, ws_client2):
     assert await register_user(ws_client1, "Asar1") == 0
     assert await register_user(ws_client2, "Asar2") == 1
+
+@pytest.mark.asyncio
+async def test_register_unregister_users(ws_client1):
+    uid = await register_user(ws_client1, "Asar1")
+    await unregister_user(ws_client1, uid)
+
