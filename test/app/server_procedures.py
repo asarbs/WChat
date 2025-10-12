@@ -34,6 +34,7 @@ async def __expect_response_nack(ws1):
     response = messeges_pb2.Msg()
     response.ParseFromString(raw_data1)
     assert response.version              == 1
+    print(response.type)
     assert response.type                 == messeges_pb2.MessageType.RESPONSE
     assert response.response             == messeges_pb2.Response.NACK
 
@@ -86,4 +87,16 @@ async def send_message_and_expect_nack(ws1, uid1, uid2, msg):
     await __send_text_msg(ws1, uid1, uid2, msg)
     await __expect_response_nack(ws1)
 
+async def send_message_and_expect_ack(ws1, uid1, uid2, msg):
+    await __send_text_msg(ws1, uid1, uid2, msg)
+    await __expect_response_ack(ws1)
 
+async def expect_incoming_message(ws, from_uid, to_uid, msg):
+    raw_data = await asyncio.wait_for(ws.recv(), timeout=2)
+    response = messeges_pb2.Msg()
+    response.ParseFromString(raw_data)
+    assert response.version                  == 1
+    assert response.type                     == messeges_pb2.MessageType.SEND_TEXT_MSG
+    assert response.textMessage.from_user_id == int(from_uid)
+    assert response.textMessage.to_user_id   == int(to_uid)
+    assert response.textMessage.message      == msg

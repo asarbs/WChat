@@ -33,18 +33,16 @@ TEST_F(ChatClientDatabaseTest, add_new_clinet_db) {
 TEST_F(ChatClientDatabaseTest, get_clinet_reference_db) {
     websocketpp::connection_hdl hdl;
     ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
-    std::optional<std::reference_wrapper<ChatClient>> opt_ref_cc = ChatClientDatabase::getInstance().get(0);
-    ASSERT_TRUE(opt_ref_cc);
-    std::reference_wrapper<ChatClient> ref_cc = opt_ref_cc.value();
-    ChatClient& cc                            = ref_cc.get();
-    ASSERT_EQ(cc.get_user_id(), 0);
+    std::shared_ptr<ChatClient> cc = ChatClientDatabase::getInstance().get(0);
+    ASSERT_TRUE(cc);
+    ASSERT_EQ(cc->getUserId(), 0);
 }
 
 TEST_F(ChatClientDatabaseTest, get_unregistered_clinet) {
     websocketpp::connection_hdl hdl;
     ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
-    std::optional<std::reference_wrapper<ChatClient>> opt_ref_cc = ChatClientDatabase::getInstance().get(10);
-    ASSERT_FALSE(opt_ref_cc);
+    std::shared_ptr<ChatClient> cc = ChatClientDatabase::getInstance().get(10);
+    ASSERT_FALSE(cc);
 }
 
 TEST_F(ChatClientDatabaseTest, register_and_unregiseter_clinet) {
@@ -58,24 +56,24 @@ TEST_F(ChatClientDatabaseTest, register_and_unregiseter_clinet) {
 TEST_F(ChatClientDatabaseTest, register_10_and_unregiseter_5_clinet) {
     for (uint32_t i = 0; i < 10; i++) {
         websocketpp::connection_hdl hdl;
-        ChatClientDatabase::getInstance().regiserClinet(hdl, "asar");
+        ChatClientDatabase::getInstance().regiserClinet(hdl, "asar" + std::to_string(i));
     }
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
     ChatClientDatabase::getInstance().unregiserClinet(5);
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
-    std::optional<std::reference_wrapper<ChatClient>> opt_ref_cc = ChatClientDatabase::getInstance().get(5);
-    ASSERT_TRUE(opt_ref_cc);
-    ASSERT_FALSE(opt_ref_cc.value().get().is_registered());
+    std::shared_ptr<ChatClient> cc = ChatClientDatabase::getInstance().get(5);
+    ASSERT_TRUE(cc);
+    ASSERT_FALSE(cc->isRegistered());
 
-    ChatClient& cc4 = ChatClientDatabase::getInstance().get(4).value().get();
-    ASSERT_EQ(cc4.get_user_id(), 4);
-    ASSERT_TRUE(cc4.is_registered());
-    ChatClient& cc6 = ChatClientDatabase::getInstance().get(6).value().get();
-    ASSERT_EQ(cc6.get_user_id(), 6);
-    ASSERT_TRUE(cc6.is_registered());
+    std::shared_ptr<ChatClient> cc4 = ChatClientDatabase::getInstance().get(4);
+    ASSERT_EQ(cc4->getUserId(), 4);
+    ASSERT_TRUE(cc4->isRegistered());
+    std::shared_ptr<ChatClient> cc6 = ChatClientDatabase::getInstance().get(6);
+    ASSERT_EQ(cc6->getUserId(), 6);
+    ASSERT_TRUE(cc6->isRegistered());
 
-    ChatClient& cc4a = ChatClientDatabase::getInstance().get(4).value().get();
-    ASSERT_EQ(cc4a.get_user_id(), 4);
-    ASSERT_TRUE(cc4.is_registered());
+    std::shared_ptr<ChatClient> cc4a = ChatClientDatabase::getInstance().get(4);
+    ASSERT_EQ(cc4a->getUserId(), 4);
+    ASSERT_TRUE(cc4->isRegistered());
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
 }

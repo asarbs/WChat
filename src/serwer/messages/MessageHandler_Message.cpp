@@ -11,7 +11,7 @@
 
 #include "MessageHandler_Message.h"
 
-#include <optional>
+#include <memory>
 #include <string>
 
 #include "logger.h"
@@ -33,13 +33,20 @@ void MessageHandler_Message::handle(server* s, const websocketpp::connection_hdl
     uint64_t to         = msg.textmessage().to_user_id();
     std::string message = msg.textmessage().message();
 
-    try {
-        logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
-        const ChatClient& to_user = ChatClientDatabase::getInstance().get(to).value().get();
-        send_msg_to_user(s, hdl, from, to, message);
-        send_msg_to_user(s, to_user.connection, from, to, message);
-    } catch (std::bad_optional_access& e) {
+    std::shared_ptr<ChatClient> from_user = ChatClientDatabase::getInstance().get(from);
+    if (from_user == nullptr) {
+        send_nack(s, hdl);
+        return;
+    }
+
+    logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
+    std::shared_ptr<ChatClient> to_user = ChatClientDatabase::getInstance().get(to);
+    if (to_user == nullptr) {
         logger::logger << logger::warning << "Can't find addressee user with id `" << to << "`" << logger::endl;
         send_nack(s, hdl);
+        return;
     }
+
+    send_msg_to_user(s, hdl, from, to, message);
+    send_msg_to_user(s, to_user->connection, from, to, message);
 }

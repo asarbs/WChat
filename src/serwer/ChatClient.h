@@ -27,11 +27,15 @@ class ChatClient {
 
         void registerClient();
         void unregister();
-        bool is_registered() {  // cppcheck-suppress unusedFunction
+        bool isRegistered() const {  // cppcheck-suppress unusedFunction
             return __is_registered;
         }
-        uint64_t get_user_id() {  // cppcheck-suppress unusedFunction
+        uint64_t getUserId() const {  // cppcheck-suppress unusedFunction
             return __user_id;
+        }
+
+        const std::string& getName() const {
+            return __name;
         }
 
         websocketpp::connection_hdl connection;

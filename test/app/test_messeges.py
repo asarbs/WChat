@@ -44,6 +44,21 @@ async def test_register_user_and_send_msg(ws_client1, ws_client2):
     assert response.textMessage.to_user_id       == int(user_A2_id)
     assert response.textMessage.message  == "Lorem ipsum dolor sit ac."
 
+@pytest.mark.asyncio
 async def test_send_msg_to_unregistered_user(ws_client1):
     uid1 =  await register_user(ws_client=ws_client1, user_name="A1")
     await send_message_and_expect_nack(ws1=ws_client1, uid1=uid1, uid2=42, msg="Lorem ipsum dolor sit ac.")
+
+@pytest.mark.xfail(reason="Not implemented yet")
+@pytest.mark.asyncio
+async def test_user_get_waiting_msg(ws_client1, ws_client2):
+    uid1 =  await register_user(ws_client=ws_client1, user_name="A1")
+    uid2 =  await register_user(ws_client=ws_client2, user_name="A2")
+    await unregister_user(ws_client1, uid2)
+    await send_message_and_expect_ack(ws1=ws_client1, uid1=uid1, uid2=uid2, msg="Lorem ipsum dolor sit ac.")
+
+    uid2 =  await register_user(ws_client=ws_client2, user_name="A2")
+    await expect_incoming_message(ws_client2, uid1, uid2, "Lorem ipsum dolor sit ac.")
+
+
+

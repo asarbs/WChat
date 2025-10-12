@@ -29,8 +29,6 @@ async def test_register_user(ws_client):
     assert response.registerSessionRes.status  == messeges_pb2.Response.ACK
     assert response.registerSessionRes.user_id == 0
 
-
-
 @pytest.mark.asyncio
 async def test_register_multiple_users(ws_client1, ws_client2):
     assert await register_user(ws_client1, "Asar1") == 0
@@ -40,4 +38,11 @@ async def test_register_multiple_users(ws_client1, ws_client2):
 async def test_register_unregister_users(ws_client1):
     uid = await register_user(ws_client1, "Asar1")
     await unregister_user(ws_client1, uid)
+
+@pytest.mark.asyncio
+async def test_register_reregister_users(ws_client1):
+    uid = await register_user(ws_client1, "Asar1")
+    assert uid == 0
+    await unregister_user(ws_client1, uid)
+    assert await register_user(ws_client1, "Asar1") == 0
 

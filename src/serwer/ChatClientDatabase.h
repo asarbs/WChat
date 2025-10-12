@@ -16,7 +16,7 @@
 
 #include <functional>
 #include <map>
-#include <optional>
+#include <memory>
 #include <string>
 #include <websocketpp/server.hpp>
 
@@ -33,8 +33,9 @@ class ChatClientDatabase {
         static ChatClientDatabase& getInstance();
         uint64_t regiserClinet(websocketpp::connection_hdl hdl, const std::string& new_user_name);
         uint64_t regiserClinet(uint64_t user_id);
+        uint64_t getUserIdByName(const std::string& name);
         bool unregiserClinet(uint64_t user_id);
-        std::optional<std::reference_wrapper<ChatClient>> get(uint64_t user_id);
+        std::shared_ptr<ChatClient> get(uint64_t user_id);
         void clean();
 
         size_t size() const {
@@ -48,7 +49,7 @@ class ChatClientDatabase {
     private:
         ChatClientDatabase();
         ~ChatClientDatabase() = default;
-        std::map<uint64_t, ChatClient> __chat_clients{};
+        std::map<uint64_t, std::shared_ptr<ChatClient>> __chat_clients{};
         uint64_t __next_free_user_id;
 };
 
