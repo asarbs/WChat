@@ -11,6 +11,7 @@
 
 #include "MessageHandler_RegisterClient.h"
 
+#include <memory>
 #include <optional>
 #include <string>
 
@@ -34,4 +35,15 @@ void MessageHandler_RegisterClient::handle(server* s, const websocketpp::connect
     uint64_t new_user_id  = ChatClientDatabase::getInstance().regiserClinet(hdl, user_name);
     logger::logger << logger::debug << "Register new Client: user_name=" << user_name << "; DB ID=" << new_user_id << logger::endl;
     send_user_registration(s, hdl, user_name, new_user_id);
+
+    std::shared_ptr<ChatClient> from_user = ChatClientDatabase::getInstance().get(new_user_id);
+    if (from_user != nullptr) {
+        while (from_user->hasMsg()) {
+            ChatClient::MsgHolder tmpMsg = from_user->popMsg();
+            logger::logger << logger::debug << "Send waiting msg from " << tmpMsg.from << ":" << tmpMsg.message << logger::endl;
+            send_msg_to_user(s, hdl, tmpMsg.from, new_user_id, tmpMsg.message);
+        }
+    } else {
+        logger::logger << logger::warning << "User object for id = " << new_user_id << " is NULL" << logger::endl;
+    }
 }

@@ -35,18 +35,22 @@ void MessageHandler_Message::handle(server* s, const websocketpp::connection_hdl
 
     std::shared_ptr<ChatClient> from_user = ChatClientDatabase::getInstance().get(from);
     if (from_user == nullptr) {
+        logger::logger << logger::warning << "Can't find addressee user with id `" << to << "`" << logger::endl;
         send_nack(s, hdl);
         return;
     }
+    send_msg_to_user(s, hdl, from, to, message);
 
     logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
     std::shared_ptr<ChatClient> to_user = ChatClientDatabase::getInstance().get(to);
     if (to_user == nullptr) {
         logger::logger << logger::warning << "Can't find addressee user with id `" << to << "`" << logger::endl;
-        send_nack(s, hdl);
         return;
     }
 
-    send_msg_to_user(s, hdl, from, to, message);
-    send_msg_to_user(s, to_user->connection, from, to, message);
+    if (to_user->isRegistered()) {
+        send_msg_to_user(s, to_user->connection, from, to, message);
+    } else {
+        to_user->saveMsg(from, message);
+    }
 }
