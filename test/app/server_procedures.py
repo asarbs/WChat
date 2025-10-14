@@ -34,7 +34,6 @@ async def __expect_response_nack(ws1):
     response = messeges_pb2.Msg()
     response.ParseFromString(raw_data1)
     assert response.version              == 1
-    print(response.type)
     assert response.type                 == messeges_pb2.MessageType.RESPONSE
     assert response.response             == messeges_pb2.Response.NACK
 
@@ -48,9 +47,9 @@ async def register_user(ws_client, user_name:str) -> int:
     raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)
     response = messeges_pb2.Msg()
     response.ParseFromString(raw_data)
-    assert response.version  == 1
-    assert response.type     == messeges_pb2.MessageType.REGISTER_SESSION_RES
-    assert response.registerSessionRes.status  == messeges_pb2.Response.ACK
+    assert response.version                     == 1
+    assert response.type                        == messeges_pb2.MessageType.REGISTER_SESSION_RES
+    assert response.registerSessionRes.status   == messeges_pb2.Response.ACK
     return response.registerSessionRes.user_id
 
 async def unregister_user(ws_client, uid:int) -> int:
@@ -87,9 +86,16 @@ async def send_message_and_expect_nack(ws1, uid1, uid2, msg):
     await __send_text_msg(ws1, uid1, uid2, msg)
     await __expect_response_nack(ws1)
 
-async def send_message_and_expect_ack(ws1, uid1, uid2, msg):
+async def send_message_and_expect_response(ws1, uid1, uid2, msg):
     await __send_text_msg(ws1, uid1, uid2, msg)
-    await __expect_response_ack(ws1)
+    raw_data1 = await asyncio.wait_for(ws1.recv(), timeout=2)
+    response = messeges_pb2.Msg()
+    response.ParseFromString(raw_data1)
+    assert response.version              == 1
+    assert response.type                 == messeges_pb2.MessageType.SEND_TEXT_MSG
+    assert response.textMessage.from_user_id     == int(uid1)
+    assert response.textMessage.to_user_id       == int(uid2)
+    assert response.textMessage.message  == msg
 
 async def expect_incoming_message(ws, from_uid, to_uid, msg):
     raw_data = await asyncio.wait_for(ws.recv(), timeout=2)

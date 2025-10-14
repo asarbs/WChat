@@ -14,11 +14,17 @@
 
 #pragma once
 
+#include <list>
 #include <string>
 #include <websocketpp/server.hpp>
 
 class ChatClient {
     public:
+        struct MsgHolder {
+                uint64_t from;
+                std::string message;
+        };
+
         ChatClient();
         explicit ChatClient(uint64_t user_id, const std::string& name);
         ChatClient(const ChatClient& other);
@@ -27,16 +33,12 @@ class ChatClient {
 
         void registerClient();
         void unregister();
-        bool isRegistered() const {  // cppcheck-suppress unusedFunction
-            return __is_registered;
-        }
-        uint64_t getUserId() const {  // cppcheck-suppress unusedFunction
-            return __user_id;
-        }
-
-        const std::string& getName() const {
-            return __name;
-        }
+        void saveMsg(uint64_t from, std::string message);
+        bool isRegistered() const;
+        uint64_t getUserId() const;
+        const std::string& getName() const;
+        bool hasMsg() const;
+        MsgHolder popMsg();
 
         websocketpp::connection_hdl connection;
 
@@ -50,6 +52,7 @@ class ChatClient {
         uint64_t __user_id;
         std::string __name;
         bool __is_registered;
+        std::list<MsgHolder> __savedMsg = {};
 };
 
 #endif
