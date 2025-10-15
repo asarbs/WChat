@@ -16,10 +16,10 @@
 
 #include "server/messages/handlers/MessageHandler.h"
 namespace WChat::ChatServer::messages::handlers {
-    class MessageHandler_RegisterClient : public MessageHandler {
+    class RegisterClient : public Handler {
         public:
-            MessageHandler_RegisterClient();
-            ~MessageHandler_RegisterClient() override;
+            RegisterClient();
+            ~RegisterClient() override;
             void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
 
         protected:

@@ -116,9 +116,9 @@ int main(int argc, char* argv[]) {
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
     argpars.parse(argc, argv);
 
-    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::MessageHandler_Message>());
-    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::MessageHandler_RegisterClient>());
-    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::MessageHandler_UnregisterClient>());
+    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::Message>());
+    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::RegisterClient>());
+    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::UnregisterClient>());
 
     try {
         ws_server.set_reuse_addr(true);

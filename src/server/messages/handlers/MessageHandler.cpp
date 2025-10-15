@@ -19,10 +19,10 @@
 #include "server/proto/messeges.pb.h"
 
 namespace WChat::ChatServer::messages::handlers {
-    MessageHandler::MessageHandler() {
+    Handler::Handler() {
     }
 
-    MessageHandler::~MessageHandler() {
+    Handler::~Handler() {
     }
 
     void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& msg) {  // cppcheck-suppress unusedFunction

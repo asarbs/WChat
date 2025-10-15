@@ -21,13 +21,13 @@
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/handlers/MessageHandler.h"
 namespace WChat::ChatServer::messages::handlers {
-    MessageHandler_RegisterClient::MessageHandler_RegisterClient() {
+    RegisterClient::RegisterClient() {
     }
 
-    MessageHandler_RegisterClient::~MessageHandler_RegisterClient() {
+    RegisterClient::~RegisterClient() {
     }
 
-    void MessageHandler_RegisterClient::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+    void RegisterClient::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
         if (!msg.has_registersessionreq()) {
             throw WChat::ChatServer::errors::ProtoculError("Msg don't contain RegisterSessionReq");
         }

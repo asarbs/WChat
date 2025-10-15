@@ -19,13 +19,13 @@
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 namespace WChat::ChatServer::messages::handlers {
-    MessageHandler_Message::MessageHandler_Message() {
+    Message::Message() {
     }
 
-    MessageHandler_Message::~MessageHandler_Message() {
+    Message::~Message() {
     }
 
-    void MessageHandler_Message::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+    void Message::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
         if (!msg.has_textmessage()) {
             throw WChat::ChatServer::errors::ProtoculError("Msg don't contain TxtMsg");
         }

@@ -18,10 +18,10 @@
 #include "server/client/ChatClientDatabase.h"
 #include "server/messages/handlers/MessageHandler.h"
 namespace WChat::ChatServer::messages::handlers {
-    class MessageHandler_Message : public MessageHandler {
+    class Message : public Handler {
         public:
-            MessageHandler_Message();
-            ~MessageHandler_Message() override;
+            Message();
+            ~Message() override;
             void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload) override;
 
         protected:

@@ -24,10 +24,10 @@
 typedef websocketpp::server<websocketpp::config::asio> websocket_server;
 
 namespace WChat::ChatServer::messages::handlers {
-    class MessageHandler {
+    class Handler {
         public:
-            MessageHandler();
-            virtual ~MessageHandler();
+            Handler();
+            virtual ~Handler();
             virtual void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) = 0;
 
         protected:

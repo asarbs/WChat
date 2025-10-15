@@ -26,12 +26,12 @@ namespace WChat::ChatServer::messages {
         public:
             MessageManager();
             ~MessageManager();
-            void register_handler(WChat::MessageType message_id, std::shared_ptr<handlers::MessageHandler> handler);
+            void register_handler(WChat::MessageType message_id, std::shared_ptr<handlers::Handler> handler);
             void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload);
 
         protected:
         private:
-            std::map<WChat::MessageType, std::shared_ptr<handlers::MessageHandler> > _handlers;
+            std::map<WChat::MessageType, std::shared_ptr<handlers::Handler> > _handlers;
     };
 };  // namespace WChat::ChatServer::messages
 #endif

@@ -32,7 +32,7 @@ namespace WChat::ChatServer::messages {
         f_handler->second->handle(s, hdl, msg);
     }
 
-    void MessageManager::register_handler(WChat::MessageType message_type_id, std::shared_ptr<handlers::MessageHandler> handler) {
+    void MessageManager::register_handler(WChat::MessageType message_type_id, std::shared_ptr<handlers::Handler> handler) {
         auto f_handler = _handlers.find(message_type_id);
         if (f_handler == _handlers.end()) {
             logger::logger << logger::debug << "Register new handler for message_type_id " << message_type_id << "." << logger::endl;
