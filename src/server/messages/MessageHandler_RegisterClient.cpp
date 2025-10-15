@@ -16,10 +16,10 @@
 #include <string>
 
 #include "logger.h"
-#include "serwer/ChatClient.h"
-#include "serwer/ChatClientDatabase.h"
-#include "serwer/ErrorHandlers.h"
-#include "serwer/messages/MessageHandler.h"
+#include "server/client/ChatClient.h"
+#include "server/client/ChatClientDatabase.h"
+#include "server/errors/ErrorHandlers.h"
+#include "server/messages/MessageHandler.h"
 
 MessageHandler_RegisterClient::MessageHandler_RegisterClient() {
 }

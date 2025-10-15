@@ -22,19 +22,12 @@ PROGRAM_CMD = ["../../build/linux/bin/WChat_SERVER"]
 
 @pytest_asyncio.fixture(autouse=True)
 def run_server():
-    """
-    Uruchamia serwer jako subprocess na czas testów.
-    Zamyka go po zakończeniu testów.
-    """
-    # Start serwera
     proc = subprocess.Popen(PROGRAM_CMD, stdout=sys.stdout, stderr=sys.stderr)
 
-    # Poczekaj chwilę aż serwer się podniesie
     time.sleep(2)
 
     yield proc  # testy się odpalą
 
-    # Po testach -> zakończ serwer
     proc.terminate()
     try:
         proc.wait(timeout=5)

@@ -17,16 +17,16 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
-#include "ChatClient.h"
-#include "ChatClientDatabase.h"
 #include "arguments.h"
 #include "logger.h"
-#include "serwer/ErrorHandlers.h"
-#include "serwer/messages/MessageHandler_Message.h"
-#include "serwer/messages/MessageHandler_RegisterClient.h"
-#include "serwer/messages/MessageHandler_UnregisterClient.h"
-#include "serwer/messages/MessageManager.h"
-#include "serwer/proto/messeges.pb.h"
+#include "server/client/ChatClient.h"
+#include "server/client/ChatClientDatabase.h"
+#include "server/errors/ErrorHandlers.h"
+#include "server/messages/MessageHandler_Message.h"
+#include "server/messages/MessageHandler_RegisterClient.h"
+#include "server/messages/MessageHandler_UnregisterClient.h"
+#include "server/messages/MessageManager.h"
+#include "server/proto/messeges.pb.h"
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
 
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
         ws_server.listen(boost::asio::ip::tcp::v4(), 9002);
         ws_server.start_accept();
 
-        logger::logger << logger::debug << "Serwer WebSocket działa na porcie 9002" << logger::endl;
+        logger::logger << logger::debug << "server WebSocket działa na porcie 9002" << logger::endl;
 
         ws_server.run();
     } catch (websocketpp::exception const& e) {

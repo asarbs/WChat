@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "serwer/ChatClient.h"
-#include "serwer/ChatClientDatabase.h"
-#include "serwer/messages/MessageHandler.h"
+#include "server/client/ChatClient.h"
+#include "server/client/ChatClientDatabase.h"
+#include "server/messages/MessageHandler.h"
 
 class MessageHandler_Message : public MessageHandler {
     public:

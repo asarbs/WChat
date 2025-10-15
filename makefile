@@ -24,7 +24,7 @@ CPPLINT = cpplint
 
 PROJECT_DIR := ${PWD}
 SOURCES_DIR := ${PROJECT_DIR}/src
-PROTO_DIR 	:= ${SOURCES_DIR}/serwer/proto
+PROTO_DIR 	:= ${SOURCES_DIR}/server/proto
 TEST_DIR = ${PROJECT_DIR}/test/unit
 TEST_BIN_DIR = ${PROJECT_DIR}/build/test
 
@@ -142,7 +142,7 @@ cpplint:
 	@echo 'cpplint'
 	$(Q)${CPPLINT} --version
 	$(Q)${CPPLINT} \
-		--exclude=${SOURCES_DIR}/serwer/proto \
+		--exclude=${SOURCES_DIR}/server/proto \
 		--recursive $(SOURCES_DIR)
 
 cppcheck: clean

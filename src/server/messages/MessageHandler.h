@@ -19,7 +19,7 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
-#include "serwer/proto/messeges.pb.h"
+#include "server/proto/messeges.pb.h"
 
 typedef websocketpp::server<websocketpp::config::asio> server;
 

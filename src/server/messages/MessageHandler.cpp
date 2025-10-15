@@ -16,7 +16,7 @@
 #include <string>
 
 #include "logger.h"
-#include "serwer/proto/messeges.pb.h"
+#include "server/proto/messeges.pb.h"
 
 MessageHandler::MessageHandler() {
 }

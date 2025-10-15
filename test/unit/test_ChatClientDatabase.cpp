@@ -10,8 +10,8 @@
  */
 
 #include "gtest/gtest.h"
-#include "serwer/ChatClient.h"
-#include "serwer/ChatClientDatabase.h"
+#include "server/client/ChatClient.h"
+#include "server/client/ChatClientDatabase.h"
 
 class ChatClientDatabaseTest : public ::testing::Test {
     protected:

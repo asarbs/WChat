@@ -10,9 +10,9 @@ enable_testing()
 
 file(GLOB TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/serwer/**/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/serwer/**/*.cc
-    ${CMAKE_SOURCE_DIR}/src/serwer/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/server/**/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/server/**/*.cc
+    ${CMAKE_SOURCE_DIR}/src/server/*.cpp
 )
 list(FILTER TEST_SOURCES EXCLUDE REGEX ".*/server\\.cpp$")
 

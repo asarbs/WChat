@@ -15,9 +15,9 @@
 #include <string>
 
 #include "logger.h"
-#include "serwer/ChatClient.h"
-#include "serwer/ChatClientDatabase.h"
-#include "serwer/ErrorHandlers.h"
+#include "server/client/ChatClient.h"
+#include "server/client/ChatClientDatabase.h"
+#include "server/errors/ErrorHandlers.h"
 
 MessageHandler_Message::MessageHandler_Message() {
 }

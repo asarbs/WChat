@@ -17,8 +17,8 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 
-#include "serwer/messages/MessageHandler.h"
-#include "serwer/proto/messeges.pb.h"
+#include "server/messages/MessageHandler.h"
+#include "server/proto/messeges.pb.h"
 
 #pragma once
 

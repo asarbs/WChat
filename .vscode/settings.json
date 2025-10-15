@@ -89,7 +89,8 @@
         "charconv": "cpp",
         "format": "cpp",
         "text_encoding": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "*.inc": "cpp"
     },
     "editor.acceptSuggestionOnEnter": "on",
     "C_Cpp.clang_format_path": "/usr/bin/clang-format-18",
