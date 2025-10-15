@@ -161,4 +161,10 @@ cppcheck: clean
 		-I ${SOURCES_DIR} \
 		${SOURCES_DIR}
 
+sync-github:
+	git remote remove github 2>/dev/null || true
+	git remote add github git@github.com:asarbs/WChat.git
+	if [ -f .git/shallow ]; then git fetch --unshallow; fi
+	git push --force github master --tags
+
 all: clean clang-check cppcheck cpplint cpplint compile-server test-unit test-app
