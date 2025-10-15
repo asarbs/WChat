@@ -31,7 +31,7 @@ build_ci_image:
   rules:
     - changes:
         - Dockerfile.ci
-        - .gitlab-ci.yml
+        # - .gitlab-ci.yml
 
 clang_check:
   stage: lint
@@ -100,6 +100,8 @@ sync_to_github:
   variables:
     GIT_DEPTH: 0            # zapewnia pełną historię (potrzebne do push --mirror)
   before_script:
+    - apt-get update -qq
+    - apt-get install -y openssh-client git
     - mkdir -p ~/.ssh
     - echo "$GITHUB_SSH_KEY" > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
