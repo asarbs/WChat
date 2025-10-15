@@ -30,7 +30,7 @@
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
 
-MessageManager __messageManager;
+WChat::ChatServer::messages::MessageManager __messageManager;
 
 bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connection_hdl& b) {
     // Porównanie connection_hdl na podstawie shared_ptr
@@ -38,29 +38,29 @@ bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connect
 }
 
 void on_open(websocketpp::connection_hdl hdl) {
-    logger::logger << logger::debug << "New connection! Currently connected clients: " << ChatClientDatabase::getInstance().size() << logger::endl;
+    logger::logger << logger::debug << "New connection! Currently connected clients: " << WChat::ChatServer::client::ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
 void on_close(websocketpp::connection_hdl hdl) {
-    logger::logger << logger::debug << "Client disconnected. Clients remaining: " << ChatClientDatabase::getInstance().size() << logger::endl;
+    logger::logger << logger::debug << "Client disconnected. Clients remaining: " << WChat::ChatServer::client::ChatClientDatabase::getInstance().size() << logger::endl;
 }
 
-void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr msg) {
+void on_message(websocket_server* s, websocketpp::connection_hdl hdl, websocket_server::message_ptr msg) {
     try {
         if (msg->get_opcode() != websocketpp::frame::opcode::binary) {
-            throw wchat::protocul::ProtoculError("Received non-binary message");
+            throw WChat::ChatServer::errors::ProtoculError("Received non-binary message");
         }
 
         const std::string& payload = msg->get_payload();
 
         WChat::Msg proto_msg;
         if (!proto_msg.ParseFromString(payload)) {
-            throw wchat::protocul::ProtoculError("ParseFromString failed");
+            throw WChat::ChatServer::errors::ProtoculError("ParseFromString failed");
         }
 
         if (proto_msg.type() >= WChat::MessageType::LAST) {
             std::string error_msg = std::format("Msg type[{}] out of band", uint32_t(proto_msg.type()));
-            throw wchat::protocul::ProtoculWarning(error_msg);
+            throw WChat::ChatServer::errors::ProtoculWarning(error_msg);
         }
 
         __messageManager.handle(s, hdl, proto_msg);
@@ -93,16 +93,16 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
     } catch (nlohmann::json_abi_v3_11_3::detail::out_of_range& e) {
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
-        send_nack(s, hdl);
-    } catch (wchat::protocul::ProtoculWarning& e) {
+        WChat::ChatServer::messages::send_nack(s, hdl);
+    } catch (WChat::ChatServer::errors::ProtoculWarning& e) {
         logger::logger << logger::warning << "Runtime Wargning:" << e.what() << "." << logger::endl;
-        send_nack(s, hdl);
+        WChat::ChatServer::messages::send_nack(s, hdl);
     } catch (std::runtime_error& e) {
         logger::logger << logger::critical << "Runtime Error:" << e.what() << "." << logger::endl;
-        send_nack(s, hdl);
+        WChat::ChatServer::messages::send_nack(s, hdl);
     } catch (...) {
         logger::logger << logger::critical << "UNKNOWN Error" << logger::endl;
-        send_nack(s, hdl);
+        WChat::ChatServer::messages::send_nack(s, hdl);
         throw;
     }
 }
@@ -110,15 +110,15 @@ void on_message(server* s, websocketpp::connection_hdl hdl, server::message_ptr 
 int main(int argc, char* argv[]) {
     logger::logger.setLogLevel(logger::debug);
     logger::logger << logger::info << "Start WChat Server" << logger::endl;
-    server ws_server;
+    websocket_server ws_server;
 
     Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
     argpars.parse(argc, argv);
 
-    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<MessageHandler_Message>());
-    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<MessageHandler_RegisterClient>());
-    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<MessageHandler_UnregisterClient>());
+    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::MessageHandler_Message>());
+    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::MessageHandler_RegisterClient>());
+    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::MessageHandler_UnregisterClient>());
 
     try {
         ws_server.set_reuse_addr(true);

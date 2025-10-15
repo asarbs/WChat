@@ -17,7 +17,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace wchat::protocul {
+namespace WChat::ChatServer::errors {
     // class ErrorHandlers {
     //     public:
     //         ErrorHandlers();
@@ -41,6 +41,5 @@ namespace wchat::protocul {
             explicit ProtoculWarning(const char* what_arg) : std::runtime_error(what_arg) {
             }
     };
-}  // namespace wchat::protocul
-
+};  // namespace WChat::ChatServer::errors
 #endif

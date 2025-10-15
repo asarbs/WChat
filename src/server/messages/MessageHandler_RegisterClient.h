@@ -15,15 +15,15 @@
 #pragma once
 
 #include "server/messages/MessageHandler.h"
+namespace WChat::ChatServer::messages {
+    class MessageHandler_RegisterClient : public MessageHandler {
+        public:
+            MessageHandler_RegisterClient();
+            ~MessageHandler_RegisterClient() override;
+            void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
 
-class MessageHandler_RegisterClient : public MessageHandler {
-    public:
-        MessageHandler_RegisterClient();
-        ~MessageHandler_RegisterClient() override;
-        void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
-
-    protected:
-    private:
-};
-
+        protected:
+        private:
+    };
+};  // namespace WChat::ChatServer::messages
 #endif

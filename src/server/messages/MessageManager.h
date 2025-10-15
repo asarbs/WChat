@@ -21,17 +21,17 @@
 #include "server/proto/messeges.pb.h"
 
 #pragma once
+namespace WChat::ChatServer::messages {
+    class MessageManager {
+        public:
+            MessageManager();
+            ~MessageManager();
+            void register_handler(WChat::MessageType message_id, std::shared_ptr<MessageHandler> handler);
+            void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload);
 
-class MessageManager {
-    public:
-        MessageManager();
-        ~MessageManager();
-        void register_handler(WChat::MessageType message_id, std::shared_ptr<MessageHandler> handler);
-        void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload);
-
-    protected:
-    private:
-        std::map<WChat::MessageType, std::shared_ptr<MessageHandler> > _handlers;
-};
-
+        protected:
+        private:
+            std::map<WChat::MessageType, std::shared_ptr<MessageHandler> > _handlers;
+    };
+};  // namespace WChat::ChatServer::messages
 #endif

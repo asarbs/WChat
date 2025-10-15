@@ -14,13 +14,14 @@
 
 #pragma once
 
-class Config {
-    public:
-        Config();
-        ~Config();
+namespace WChat::ChatServer::core {
+    class Config {
+        public:
+            Config();
+            ~Config();
 
-    protected:
-    private:
-};
-
+        protected:
+        private:
+    };
+};  // namespace WChat::ChatServer::core
 #endif

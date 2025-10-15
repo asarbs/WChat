@@ -17,15 +17,15 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/messages/MessageHandler.h"
+namespace WChat::ChatServer::messages {
+    class MessageHandler_Message : public MessageHandler {
+        public:
+            MessageHandler_Message();
+            ~MessageHandler_Message() override;
+            void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload) override;
 
-class MessageHandler_Message : public MessageHandler {
-    public:
-        MessageHandler_Message();
-        ~MessageHandler_Message() override;
-        void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg payload) override;
-
-    protected:
-    private:
-};
-
+        protected:
+        private:
+    };
+};  // namespace WChat::ChatServer::messages
 #endif

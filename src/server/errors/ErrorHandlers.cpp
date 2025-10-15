@@ -13,6 +13,8 @@
 
 #include "logger.h"
 
+namespace WChat::ChatServer::errors {};
+
 // ErrorHandlers::ErrorHandlers()
 // {
 // }

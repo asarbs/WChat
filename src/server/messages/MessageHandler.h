@@ -21,22 +21,23 @@
 
 #include "server/proto/messeges.pb.h"
 
-typedef websocketpp::server<websocketpp::config::asio> server;
+typedef websocketpp::server<websocketpp::config::asio> websocket_server;
 
-class MessageHandler {
-    public:
-        MessageHandler();
-        virtual ~MessageHandler();
-        virtual void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) = 0;
+namespace WChat::ChatServer::messages {
+    class MessageHandler {
+        public:
+            MessageHandler();
+            virtual ~MessageHandler();
+            virtual void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) = 0;
 
-    protected:
-    private:
-};
+        protected:
+        private:
+    };
 
-void send_msg(server* s, websocketpp::connection_hdl hdl, const std::string& msg);
-void send_ack(server* s, websocketpp::connection_hdl hdl);
-void send_nack(server* s, websocketpp::connection_hdl hdl);
-void send_user_registration(server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id);
-void send_msg_to_user(server* s, websocketpp::connection_hdl hdl, uint64_t user_id_from, uint64_t user_id_to, const std::string& msg);
-
+    void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& msg);
+    void send_ack(websocket_server* s, websocketpp::connection_hdl hdl);
+    void send_nack(websocket_server* s, websocketpp::connection_hdl hdl);
+    void send_user_registration(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id);
+    void send_msg_to_user(websocket_server* s, websocketpp::connection_hdl hdl, uint64_t user_id_from, uint64_t user_id_to, const std::string& msg);
+};  // namespace WChat::ChatServer::messages
 #endif

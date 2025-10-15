@@ -13,6 +13,8 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 
+using namespace WChat::ChatServer::client;
+
 class ChatClientDatabaseTest : public ::testing::Test {
     protected:
         void SetUp() override {

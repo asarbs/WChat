@@ -16,21 +16,22 @@
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/MessageHandler.h"
-
-MessageHandler_UnregisterClient::MessageHandler_UnregisterClient() {
-}
-
-MessageHandler_UnregisterClient::~MessageHandler_UnregisterClient() {
-}
-
-void MessageHandler_UnregisterClient::handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
-    if (!msg.has_unregistersessionreq()) {
-        throw wchat::protocul::ProtoculError("Msg don't contain UnregisterSessionReq");
+namespace WChat::ChatServer::messages {
+    MessageHandler_UnregisterClient::MessageHandler_UnregisterClient() {
     }
-    uint64_t user_id = msg.unregistersessionreq().user_id();
-    if (ChatClientDatabase::getInstance().unregiserClinet(user_id)) {
-        send_ack(s, hdl);
-    } else {
-        send_nack(s, hdl);
+
+    MessageHandler_UnregisterClient::~MessageHandler_UnregisterClient() {
     }
-}
+
+    void MessageHandler_UnregisterClient::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+        if (!msg.has_unregistersessionreq()) {
+            throw WChat::ChatServer::errors::ProtoculError("Msg don't contain UnregisterSessionReq");
+        }
+        uint64_t user_id = msg.unregistersessionreq().user_id();
+        if (WChat::ChatServer::client::ChatClientDatabase::getInstance().unregiserClinet(user_id)) {
+            send_ack(s, hdl);
+        } else {
+            send_nack(s, hdl);
+        }
+    }
+};  // namespace WChat::ChatServer::messages

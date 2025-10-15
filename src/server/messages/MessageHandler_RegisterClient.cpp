@@ -20,30 +20,31 @@
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/MessageHandler.h"
-
-MessageHandler_RegisterClient::MessageHandler_RegisterClient() {
-}
-
-MessageHandler_RegisterClient::~MessageHandler_RegisterClient() {
-}
-
-void MessageHandler_RegisterClient::handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
-    if (!msg.has_registersessionreq()) {
-        throw wchat::protocul::ProtoculError("Msg don't contain RegisterSessionReq");
+namespace WChat::ChatServer::messages {
+    MessageHandler_RegisterClient::MessageHandler_RegisterClient() {
     }
-    std::string user_name = msg.registersessionreq().user_name();
-    uint64_t new_user_id  = ChatClientDatabase::getInstance().regiserClinet(hdl, user_name);
-    logger::logger << logger::debug << "Register new Client: user_name=" << user_name << "; DB ID=" << new_user_id << logger::endl;
-    send_user_registration(s, hdl, user_name, new_user_id);
 
-    std::shared_ptr<ChatClient> from_user = ChatClientDatabase::getInstance().get(new_user_id);
-    if (from_user != nullptr) {
-        while (from_user->hasMsg()) {
-            ChatClient::MsgHolder tmpMsg = from_user->popMsg();
-            logger::logger << logger::debug << "Send waiting msg from " << tmpMsg.from << ":" << tmpMsg.message << logger::endl;
-            send_msg_to_user(s, hdl, tmpMsg.from, new_user_id, tmpMsg.message);
+    MessageHandler_RegisterClient::~MessageHandler_RegisterClient() {
+    }
+
+    void MessageHandler_RegisterClient::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+        if (!msg.has_registersessionreq()) {
+            throw WChat::ChatServer::errors::ProtoculError("Msg don't contain RegisterSessionReq");
         }
-    } else {
-        logger::logger << logger::warning << "User object for id = " << new_user_id << " is NULL" << logger::endl;
+        std::string user_name = msg.registersessionreq().user_name();
+        uint64_t new_user_id  = WChat::ChatServer::client::ChatClientDatabase::getInstance().regiserClinet(hdl, user_name);
+        logger::logger << logger::debug << "Register new Client: user_name=" << user_name << "; DB ID=" << new_user_id << logger::endl;
+        send_user_registration(s, hdl, user_name, new_user_id);
+
+        std::shared_ptr<WChat::ChatServer::client::ChatClient> from_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(new_user_id);
+        if (from_user != nullptr) {
+            while (from_user->hasMsg()) {
+                WChat::ChatServer::client::ChatClient::MsgHolder tmpMsg = from_user->popMsg();
+                logger::logger << logger::debug << "Send waiting msg from " << tmpMsg.from << ":" << tmpMsg.message << logger::endl;
+                send_msg_to_user(s, hdl, tmpMsg.from, new_user_id, tmpMsg.message);
+            }
+        } else {
+            logger::logger << logger::warning << "User object for id = " << new_user_id << " is NULL" << logger::endl;
+        }
     }
-}
+};  // namespace WChat::ChatServer::messages

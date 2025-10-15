@@ -16,14 +16,16 @@
 
 #include "server/messages/MessageHandler.h"
 
-class MessageHandler_UnregisterClient : public MessageHandler {
-    public:
-        MessageHandler_UnregisterClient();
-        ~MessageHandler_UnregisterClient() override;
-        void handle(server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
+namespace WChat::ChatServer::messages {
 
-    protected:
-    private:
-};
+    class MessageHandler_UnregisterClient : public MessageHandler {
+        public:
+            MessageHandler_UnregisterClient();
+            ~MessageHandler_UnregisterClient() override;
+            void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
 
+        protected:
+        private:
+    };
+};  // namespace WChat::ChatServer::messages
 #endif

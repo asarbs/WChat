@@ -13,8 +13,10 @@
 
 #include "logger.h"
 
-Config::Config() {
-}
+namespace WChat::ChatServer::core {
+    Config::Config() {
+    }
 
-Config::~Config() {
-}
+    Config::~Config() {
+    }
+};  // namespace WChat::ChatServer::core
