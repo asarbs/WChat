@@ -23,7 +23,7 @@
 
 typedef websocketpp::server<websocketpp::config::asio> websocket_server;
 
-namespace WChat::ChatServer::messages {
+namespace WChat::ChatServer::messages::handlers {
     class MessageHandler {
         public:
             MessageHandler();
@@ -39,5 +39,5 @@ namespace WChat::ChatServer::messages {
     void send_nack(websocket_server* s, websocketpp::connection_hdl hdl);
     void send_user_registration(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& user_name, uint64_t user_db_id);
     void send_msg_to_user(websocket_server* s, websocketpp::connection_hdl hdl, uint64_t user_id_from, uint64_t user_id_to, const std::string& msg);
-};  // namespace WChat::ChatServer::messages
+};  // namespace WChat::ChatServer::messages::handlers
 #endif

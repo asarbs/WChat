@@ -18,7 +18,7 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
-namespace WChat::ChatServer::messages {
+namespace WChat::ChatServer::messages::handlers {
     MessageHandler_Message::MessageHandler_Message() {
     }
 
@@ -54,4 +54,4 @@ namespace WChat::ChatServer::messages {
             to_user->saveMsg(from, message);
         }
     }
-}  // namespace WChat::ChatServer::messages
+}  // namespace WChat::ChatServer::messages::handlers

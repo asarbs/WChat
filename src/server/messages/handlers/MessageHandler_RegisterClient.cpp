@@ -19,8 +19,8 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
-#include "server/messages/MessageHandler.h"
-namespace WChat::ChatServer::messages {
+#include "server/messages/handlers/MessageHandler.h"
+namespace WChat::ChatServer::messages::handlers {
     MessageHandler_RegisterClient::MessageHandler_RegisterClient() {
     }
 
@@ -47,4 +47,4 @@ namespace WChat::ChatServer::messages {
             logger::logger << logger::warning << "User object for id = " << new_user_id << " is NULL" << logger::endl;
         }
     }
-};  // namespace WChat::ChatServer::messages
+};  // namespace WChat::ChatServer::messages::handlers

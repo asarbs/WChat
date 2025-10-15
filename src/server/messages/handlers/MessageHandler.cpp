@@ -18,7 +18,7 @@
 #include "logger.h"
 #include "server/proto/messeges.pb.h"
 
-namespace WChat::ChatServer::messages {
+namespace WChat::ChatServer::messages::handlers {
     MessageHandler::MessageHandler() {
     }
 
@@ -72,4 +72,4 @@ namespace WChat::ChatServer::messages {
         msg_resp.SerializeToString(&serialized);
         s->send(hdl, serialized, websocketpp::frame::opcode::binary);
     }
-};  // namespace WChat::ChatServer::messages
+};  // namespace WChat::ChatServer::messages::handlers

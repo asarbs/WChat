@@ -82,17 +82,17 @@ else()
 endif()
 
 add_executable(${TARGET_NAME_SERVER}
-    server/messages/MessageHandler_RegisterClient.cpp
-    server/messages/MessageManager.cpp
-    server/messages/MessageHandler.cpp
-    server/messages/MessageHandler_Message.cpp
-    server/messages/MessageHandler_UnregisterClient.cpp
-    server/errors/ErrorHandlers.cpp
-    server/client/ChatClientDatabase.cpp
     server/client/ChatClient.cpp
+    server/client/ChatClientDatabase.cpp
     server/core/Config.cpp
-    server/server.cpp
+    server/errors/ErrorHandlers.cpp
+    server/messages/handlers/MessageHandler_Message.cpp
+    server/messages/handlers/MessageHandler_RegisterClient.cpp
+    server/messages/handlers/MessageHandler_UnregisterClient.cpp
+    server/messages/handlers/MessageHandler.cpp
+    server/messages/MessageManager.cpp
     server/proto/messeges.pb.cc
+    server/server.cpp
 )
 
 target_link_libraries(${TARGET_NAME_SERVER}

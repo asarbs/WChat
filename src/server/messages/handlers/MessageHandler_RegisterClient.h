@@ -9,23 +9,21 @@
  *
  */
 
-#ifndef MESSAGEHANDLER_UNREGISTERCLIENT_H
-#define MESSAGEHANDLER_UNREGISTERCLIENT_H
+#ifndef MESSAGEHANDLER_REGISTERCLIENT_H
+#define MESSAGEHANDLER_REGISTERCLIENT_H
 
 #pragma once
 
-#include "server/messages/MessageHandler.h"
-
-namespace WChat::ChatServer::messages {
-
-    class MessageHandler_UnregisterClient : public MessageHandler {
+#include "server/messages/handlers/MessageHandler.h"
+namespace WChat::ChatServer::messages::handlers {
+    class MessageHandler_RegisterClient : public MessageHandler {
         public:
-            MessageHandler_UnregisterClient();
-            ~MessageHandler_UnregisterClient() override;
+            MessageHandler_RegisterClient();
+            ~MessageHandler_RegisterClient() override;
             void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
 
         protected:
         private:
     };
-};  // namespace WChat::ChatServer::messages
+};  // namespace WChat::ChatServer::messages::handlers
 #endif

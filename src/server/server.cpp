@@ -22,10 +22,10 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
-#include "server/messages/MessageHandler_Message.h"
-#include "server/messages/MessageHandler_RegisterClient.h"
-#include "server/messages/MessageHandler_UnregisterClient.h"
 #include "server/messages/MessageManager.h"
+#include "server/messages/handlers/MessageHandler_Message.h"
+#include "server/messages/handlers/MessageHandler_RegisterClient.h"
+#include "server/messages/handlers/MessageHandler_UnregisterClient.h"
 #include "server/proto/messeges.pb.h"
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
@@ -93,16 +93,16 @@ void on_message(websocket_server* s, websocketpp::connection_hdl hdl, websocket_
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
     } catch (nlohmann::json_abi_v3_11_3::detail::out_of_range& e) {
         logger::logger << logger::error << "JSON parse error: `" << e.what() << "`." << logger::endl;
-        WChat::ChatServer::messages::send_nack(s, hdl);
+        WChat::ChatServer::messages::handlers::send_nack(s, hdl);
     } catch (WChat::ChatServer::errors::ProtoculWarning& e) {
         logger::logger << logger::warning << "Runtime Wargning:" << e.what() << "." << logger::endl;
-        WChat::ChatServer::messages::send_nack(s, hdl);
+        WChat::ChatServer::messages::handlers::send_nack(s, hdl);
     } catch (std::runtime_error& e) {
         logger::logger << logger::critical << "Runtime Error:" << e.what() << "." << logger::endl;
-        WChat::ChatServer::messages::send_nack(s, hdl);
+        WChat::ChatServer::messages::handlers::send_nack(s, hdl);
     } catch (...) {
         logger::logger << logger::critical << "UNKNOWN Error" << logger::endl;
-        WChat::ChatServer::messages::send_nack(s, hdl);
+        WChat::ChatServer::messages::handlers::send_nack(s, hdl);
         throw;
     }
 }
@@ -116,9 +116,9 @@ int main(int argc, char* argv[]) {
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
     argpars.parse(argc, argv);
 
-    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::MessageHandler_Message>());
-    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::MessageHandler_RegisterClient>());
-    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::MessageHandler_UnregisterClient>());
+    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::MessageHandler_Message>());
+    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::MessageHandler_RegisterClient>());
+    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::MessageHandler_UnregisterClient>());
 
     try {
         ws_server.set_reuse_addr(true);

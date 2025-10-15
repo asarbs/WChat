@@ -8,7 +8,7 @@
 
 enable_testing()
 
-file(GLOB TEST_SOURCES
+file(GLOB_RECURSE TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_SOURCE_DIR}/src/server/**/*.cpp
     ${CMAKE_SOURCE_DIR}/src/server/**/*.cc

@@ -15,8 +15,8 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
-#include "server/messages/MessageHandler.h"
-namespace WChat::ChatServer::messages {
+#include "server/messages/handlers/MessageHandler.h"
+namespace WChat::ChatServer::messages::handlers {
     MessageHandler_UnregisterClient::MessageHandler_UnregisterClient() {
     }
 
@@ -34,4 +34,4 @@ namespace WChat::ChatServer::messages {
             send_nack(s, hdl);
         }
     }
-};  // namespace WChat::ChatServer::messages
+};  // namespace WChat::ChatServer::messages::handlers

@@ -16,8 +16,8 @@
 
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
-#include "server/messages/MessageHandler.h"
-namespace WChat::ChatServer::messages {
+#include "server/messages/handlers/MessageHandler.h"
+namespace WChat::ChatServer::messages::handlers {
     class MessageHandler_Message : public MessageHandler {
         public:
             MessageHandler_Message();
@@ -27,5 +27,5 @@ namespace WChat::ChatServer::messages {
         protected:
         private:
     };
-};  // namespace WChat::ChatServer::messages
+};  // namespace WChat::ChatServer::messages::handlers
 #endif
