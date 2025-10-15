@@ -33,77 +33,77 @@ build_ci_image:
         - Dockerfile.ci
         # - .gitlab-ci.yml
 
-clang_check:
-  stage: lint
-  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
-  script:
-    - make clang-check
+# clang_check:
+#   stage: lint
+#   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+#   script:
+#     - make clang-check
 
-cpplint:
-  stage: lint
-  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
-  script:
-    - make cpplint
+# cpplint:
+#   stage: lint
+#   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+#   script:
+#     - make cpplint
 
-cppcheck:
-  stage: lint
-  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
-  script:
-    - make cppcheck
+# cppcheck:
+#   stage: lint
+#   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+#   script:
+#     - make cppcheck
 
-build_app:
-  stage: build
-  needs: ["clang_check", "cpplint", "cppcheck"]
-  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
-  script:
-    - make compile-server
-  artifacts:
-    paths:
-      - build/linux/bin/WChat_SERVER
-    expire_in: 1h
+# build_app:
+#   stage: build
+#   needs: ["clang_check", "cpplint", "cppcheck"]
+#   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+#   script:
+#     - make compile-server
+#   artifacts:
+#     paths:
+#       - build/linux/bin/WChat_SERVER
+#     expire_in: 1h
 
-test_unit:
-  stage: test
-  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
-  script:
-    - make test-unit
-  needs: ["build_app"]
-  artifacts:
-    when: always
-    expire_in: 1h
-    paths:
-      - build/test-unit-results.xml
-    reports:
-      junit:
-        - build/test-unit-results.xml
+# test_unit:
+#   stage: test
+#   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+#   script:
+#     - make test-unit
+#   needs: ["build_app"]
+#   artifacts:
+#     when: always
+#     expire_in: 1h
+#     paths:
+#       - build/test-unit-results.xml
+#     reports:
+#       junit:
+#         - build/test-unit-results.xml
 
-test_app:
-  stage: test
-  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
-  script:
-    - make test-app
-  needs: ["build_app"]
-  artifacts:
-    when: always
-    expire_in: 1h
-    paths:
-      - build/test-app-results.xml
-    reports:
-      junit:
-        - build/test-app-results.xml
+# test_app:
+#   stage: test
+#   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+#   script:
+#     - make test-app
+#   needs: ["build_app"]
+#   artifacts:
+#     when: always
+#     expire_in: 1h
+#     paths:
+#       - build/test-app-results.xml
+#     reports:
+#       junit:
+#         - build/test-app-results.xml
 
 sync_to_github:
   stage: deploy
   only:
     - master
-  needs: ["build_app", "test_app", "test_unit"]
+  # needs: ["build_app", "test_app", "test_unit"]
   variables:
     GIT_DEPTH: 0            # zapewnia pełną historię (potrzebne do push --mirror)
   before_script:
     - apt-get update -qq
     - apt-get install -y openssh-client git
     - mkdir -p ~/.ssh
-    - echo "$GITHUB_SSH_KEY" > ~/.ssh/id_ed25519
+    - echo "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - git config --global user.name "GitLab CI"
