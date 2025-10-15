@@ -86,11 +86,11 @@ add_executable(${TARGET_NAME_SERVER}
     server/client/ChatClientDatabase.cpp
     server/core/Config.cpp
     server/errors/ErrorHandlers.cpp
-    server/messages/handlers/MessageHandler_Message.cpp
-    server/messages/handlers/MessageHandler_RegisterClient.cpp
-    server/messages/handlers/MessageHandler_UnregisterClient.cpp
-    server/messages/handlers/MessageHandler.cpp
-    server/messages/MessageManager.cpp
+    server/messages/handlers/Handler.cpp
+    server/messages/handlers/Message.cpp
+    server/messages/handlers/RegisterClient.cpp
+    server/messages/handlers/UnregisterClient.cpp
+    server/messages/Manager.cpp
     server/proto/messeges.pb.cc
     server/server.cpp
 )

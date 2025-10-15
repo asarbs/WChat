@@ -9,7 +9,7 @@
  *
  */
 
-#include "MessageHandler_RegisterClient.h"
+#include "RegisterClient.h"
 
 #include <memory>
 #include <optional>
@@ -19,7 +19,7 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
-#include "server/messages/handlers/MessageHandler.h"
+#include "server/messages/handlers/Handler.h"
 namespace WChat::ChatServer::messages::handlers {
     RegisterClient::RegisterClient() {
     }

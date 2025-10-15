@@ -9,7 +9,7 @@
  *
  */
 
-#include "MessageHandler.h"
+#include "Handler.h"
 
 #include <google/protobuf/util/json_util.h>
 

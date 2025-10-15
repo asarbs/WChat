@@ -22,15 +22,15 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
-#include "server/messages/MessageManager.h"
-#include "server/messages/handlers/MessageHandler_Message.h"
-#include "server/messages/handlers/MessageHandler_RegisterClient.h"
-#include "server/messages/handlers/MessageHandler_UnregisterClient.h"
+#include "server/messages/Manager.h"
+#include "server/messages/handlers/Message.h"
+#include "server/messages/handlers/RegisterClient.h"
+#include "server/messages/handlers/UnregisterClient.h"
 #include "server/proto/messeges.pb.h"
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
 
-WChat::ChatServer::messages::MessageManager __messageManager;
+WChat::ChatServer::messages::Manager __messageManager;
 
 bool operator==(const websocketpp::connection_hdl& a, const websocketpp::connection_hdl& b) {
     // Porównanie connection_hdl na podstawie shared_ptr

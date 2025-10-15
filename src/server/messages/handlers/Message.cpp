@@ -9,7 +9,7 @@
  *
  */
 
-#include "MessageHandler_Message.h"
+#include "Message.h"
 
 #include <memory>
 #include <string>
