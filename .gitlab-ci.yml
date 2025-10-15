@@ -100,7 +100,7 @@ sync_to_github:
   variables:
     GIT_DEPTH: 0            # zapewnia pełną historię (potrzebne do push --mirror)
   before_script:
-    - apk add --no-cache openssh-client git
+    - apt install -y openssh-client git
     - mkdir -p ~/.ssh
     - echo "$GITHUB_SSH_KEY_B64" | base64 -d > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
