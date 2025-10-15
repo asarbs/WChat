@@ -9,6 +9,7 @@ stages:
   - lint
   - build
   - test
+  - deploy
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -52,6 +53,7 @@ cppcheck:
 
 build_app:
   stage: build
+  needs: ["clang_check", "cpplint", "cppcheck"]
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make compile-server
@@ -89,3 +91,24 @@ test_app:
     reports:
       junit:
         - build/test-app-results.xml
+
+sync_to_github:
+  stage: deploy
+  only:
+    - master
+  needs: ["build_app", "test_app", "test_unit"]
+  variables:
+    GIT_DEPTH: 0            # zapewnia pełną historię (potrzebne do push --mirror)
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$GITHUB_SSH_KEY" > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - git config --global user.name "GitLab CI"
+    - git config --global user.email "ci@${CI_SERVER_HOST}"
+  script:
+    - echo "🚀 Push to GitLab..."
+    - git remote remove github 2>/dev/null || true
+    - git remote add github git@github.com:asarbs/WChat.git
+    - git fetch --unshallow || true
+    - git push --mirror github
