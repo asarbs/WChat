@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -63,6 +64,16 @@ namespace WChat::ChatServer::core {
             }
             ConfigValue value() const {
                 return _value;
+            }
+
+            std::string toString() const {
+                return std::visit(
+                    [](auto&& arg) -> std::string {
+                        std::stringstream ss;
+                        ss << arg;
+                        return ss.str();
+                    },
+                    _value);
             }
 
         protected:

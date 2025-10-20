@@ -19,5 +19,4 @@ tools/keys
 *.app
 *.exe
 *.war
-
-
+*.conf

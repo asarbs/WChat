@@ -17,12 +17,12 @@
 
 using namespace WChat::ChatServer::core;
 
-enum class ParamKey {
+enum class TestParamKey {
     Host,
     Port
 };
 
-using TestConfigType = Config<ParamKey>;
+using TestConfigType = Config<TestParamKey>;
 
 class ConfigTest : public ::testing::Test {
     protected:
@@ -37,35 +37,41 @@ class ConfigTest : public ::testing::Test {
 };
 
 TEST_F(ConfigTest, RegisterStringParam) {
-    TestConfigType::instance().addParam(ParamKey::Host, {"host", "Host of server", "lockalhost"});
-    const ConfigParameter& param = TestConfigType::instance().get(ParamKey::Host);
+    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
+    const ConfigParameter& param = TestConfigType::instance().get(TestParamKey::Host);
     EXPECT_EQ(param.name(), "host");
     EXPECT_EQ(param.description(), "Host of server");
     EXPECT_EQ(std::get<std::string>(param.value()), "lockalhost");
-    EXPECT_EQ(TestConfigType::instance().value<std::string>(ParamKey::Host), "lockalhost");
-    EXPECT_EQ(TestConfigType::instance().value<std::string>(ParamKey::Host), std::get<std::string>(param.value()));
+    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), "lockalhost");
+    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), std::get<std::string>(param.value()));
 }
 
 TEST_F(ConfigTest, RegisterIntParam) {
-    TestConfigType::instance().addParam(ParamKey::Port, {"port", "Port of server", 9002});
-    const ConfigParameter& param = TestConfigType::instance().get(ParamKey::Port);
+    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", 9002});
+    const ConfigParameter& param = TestConfigType::instance().get(TestParamKey::Port);
     EXPECT_EQ(param.name(), "port");
     EXPECT_EQ(param.description(), "Port of server");
     EXPECT_EQ(std::get<int>(param.value()), 9002);
-    EXPECT_EQ(TestConfigType::instance().value<int>(ParamKey::Port), 9002);
-    EXPECT_EQ(TestConfigType::instance().value<int>(ParamKey::Port), std::get<int>(param.value()));
+    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), 9002);
+    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), std::get<int>(param.value()));
 }
 
 TEST_F(ConfigTest, DoubleRegisterStringParam) {
-    TestConfigType::instance().addParam(ParamKey::Host, {"host", "Host of server", "lockalhost1"});
+    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost1"});
 
     ConfigParameter cp   = {"host", "Host of server", "lockalhost2"};
     bool exceptionThrown = false;
     try {
-        TestConfigType::instance().addParam(ParamKey::Host, cp);
+        TestConfigType::instance().addParam(TestParamKey::Host, cp);
     } catch (TestConfigType::ParameterAlreadyRegistered& e) {
         exceptionThrown = true;
     }
 
     EXPECT_TRUE(exceptionThrown) << "Expected ParameterAlreadyRegistered exception was not thrown";
+}
+
+TEST_F(ConfigTest, saveToFile) {
+    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
+    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", 9002});
+    TestConfigType::instance().saveToFile();
 }

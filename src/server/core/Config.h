@@ -15,11 +15,16 @@
 #pragma once
 
 #include <exception>
+#include <fstream>
 #include <map>
 
 #include "server/core/ConfigParameter.h"
 
 namespace WChat::ChatServer::core {
+    enum class ParamKey {
+        Host,
+        Port
+    };
     template <class ParamsDict>
     class Config {
         public:
@@ -44,6 +49,14 @@ namespace WChat::ChatServer::core {
                 return std::get<T>(get(key).value());
             }
 
+            void saveToFile() {  // cppcheck-suppress unusedFunction
+                std::ofstream out("WChatServer.conf");
+
+                for (const auto& [keys, params] : _param_collection) {
+                    out << params.name() << "=" << params.toString() << " # " << params.description() << "\n";
+                }
+            }
+
             void clear() {
                 _param_collection.clear();
             }
@@ -57,5 +70,8 @@ namespace WChat::ChatServer::core {
             }
             std::map<ParamsDict, ConfigParameter> _param_collection;
     };
+
+    using ServerConfig = Config<ParamKey>;
+
 };  // namespace WChat::ChatServer::core
 #endif

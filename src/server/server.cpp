@@ -21,6 +21,7 @@
 #include "logger.h"
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
+#include "server/core/Config.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/Manager.h"
 #include "server/messages/handlers/Message.h"
@@ -111,6 +112,8 @@ int main(int argc, char* argv[]) {
     logger::logger.setLogLevel(logger::debug);
     logger::logger << logger::info << "Start WChat Server" << logger::endl;
     websocket_server ws_server;
+
+    WChat::ChatServer::core::ServerConfig::instance();
 
     Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");

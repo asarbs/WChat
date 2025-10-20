@@ -11,4 +11,14 @@
 
 #include "Config.h"
 
+namespace WChat::ChatServer::core {
+    template <>
+    ServerConfig::Config() {
+        // Dodanie parametrów domyślnych
+        addParam(ParamKey::Host, {"host", "Host of server", "localhost"});
+        addParam(ParamKey::Port, {"port", "Port number", 9002});
+    }
+
+}  // namespace WChat::ChatServer::core
+
 #include "logger.h"
