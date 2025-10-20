@@ -9,6 +9,6 @@
  *
  */
 
-#include "Config.h"
+#include "ConfigParameter.h"
 
 #include "logger.h"

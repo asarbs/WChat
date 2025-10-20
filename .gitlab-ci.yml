@@ -31,7 +31,7 @@ build_ci_image:
   rules:
     - changes:
         - Dockerfile.ci
-        # - .gitlab-ci.yml
+        - .gitlab-ci.yml
 
 clang_check:
   stage: lint
