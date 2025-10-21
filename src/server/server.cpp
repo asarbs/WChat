@@ -113,7 +113,8 @@ int main(int argc, char* argv[]) {
     logger::logger << logger::info << "Start WChat Server" << logger::endl;
     websocket_server ws_server;
 
-    WChat::ChatServer::core::ServerConfig::instance();
+    // WChat::ChatServer::core::ServerConfig::instance().saveToFile();
+    WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
 
     Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
     // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
@@ -134,11 +135,11 @@ int main(int argc, char* argv[]) {
         ws_server.set_open_handler(&on_open);
         ws_server.set_close_handler(&on_close);
         // ws_server.set_validate_handler(&validate_handler);
-
-        ws_server.listen(boost::asio::ip::tcp::v4(), 9002);
+        uint32_t port = WChat::ChatServer::core::ServerConfig::instance().value<uint32_t>(WChat::ChatServer::core::ParamKey::Port);
+        ws_server.listen(boost::asio::ip::tcp::v4(), port);
         ws_server.start_accept();
 
-        logger::logger << logger::debug << "server WebSocket działa na porcie 9002" << logger::endl;
+        logger::logger << logger::debug << "server WebSocket działa na porcie " << port << logger::endl;
 
         ws_server.run();
     } catch (websocketpp::exception const& e) {

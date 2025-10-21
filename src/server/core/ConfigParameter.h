@@ -18,19 +18,21 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <variant>
 #include <vector>
 
+#include "logger.h"
+
 namespace WChat::ChatServer::core {
-    using ConfigValue = std::variant<uint32_t, int32_t, double, std::string, bool>;
 
     class ConfigParameter {
         public:
-            ConfigParameter() : _name("name"), _description(""), _value(0) {
+            ConfigParameter() : _name("name"), _description(""), _value("") {
             }
 
-            ConfigParameter(std::string name, std::string description, ConfigValue value) : _name(name), _description(description), _value(value) {
+            ConfigParameter(std::string name, std::string description, const std::string& value) : _name(name), _description(description), _value(value) {
                 if (_name.find(' ') != std::string::npos) {
                     throw std::invalid_argument("ConfigParameter name cannot contain spaces");
                 }
@@ -62,18 +64,27 @@ namespace WChat::ChatServer::core {
             const std::string& description() const {  // cppcheck-suppress unusedFunction
                 return _description;
             }
-            ConfigValue value() const {
+            const std::string& value() const {
                 return _value;
             }
 
-            std::string toString() const {
-                return std::visit(
-                    [](auto&& arg) -> std::string {
-                        std::stringstream ss;
-                        ss << arg;
-                        return ss.str();
-                    },
-                    _value);
+            void set(const std::string& val) {
+                _value = val;
+            }
+
+            template <typename T>
+            T as() const {
+                if constexpr (std::is_same_v<T, std::string>) {
+                    return _value;
+                } else if constexpr (std::is_same_v<T, bool>) {
+                    return "true" == _value;
+                } else if constexpr (std::is_integral_v<T>) {
+                    return static_cast<T>(std::stoll(_value));
+                } else if constexpr (std::is_floating_point_v<T>) {
+                    return static_cast<T>(std::stod(_value));
+                } else {
+                    throw std::invalid_argument("Unsupported type.");
+                }
             }
 
         protected:
@@ -81,7 +92,7 @@ namespace WChat::ChatServer::core {
         private:
             std::string _name;
             std::string _description;
-            ConfigValue _value;
+            std::string _value;
     };
 }  // namespace WChat::ChatServer::core
 #endif

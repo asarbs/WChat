@@ -17,7 +17,10 @@
 #include <exception>
 #include <fstream>
 #include <map>
+#include <string>
+#include <utility>
 
+#include "logger.h"
 #include "server/core/ConfigParameter.h"
 
 namespace WChat::ChatServer::core {
@@ -29,36 +32,60 @@ namespace WChat::ChatServer::core {
     class Config {
         public:
             class ParameterAlreadyRegistered : std::exception {};
+            class ConfigurationFileError : std::exception {};
             static Config<ParamsDict>& instance() {  // cppcheck-suppress unusedFunction
                 static Config<ParamsDict> instance;
                 return instance;
             }
             void addParam(const ParamsDict& key, ConfigParameter param) {  // cppcheck-suppress unusedFunction
-                if (_param_collection.find(key) != _param_collection.end()) {
+                // if (_paramCollection.find(key) != _paramCollection.end() || _params2enums.find(param.name()) != _params2enums.end()) {
+                if (_paramCollection.find(key) != _paramCollection.end()) {
                     throw ParameterAlreadyRegistered();
                 }
-                _param_collection[key] = param;
+                _paramCollection[key]       = param;
+                _params2enums[param.name()] = key;
             }
 
-            const ConfigParameter& get(const ParamsDict& key) {
-                return _param_collection[key];
+            const ConfigParameter& get(const ParamsDict& key) const {
+                return _paramCollection.at(key);
             }
 
             template <typename T>
-            T value(const ParamsDict& key) {
-                return std::get<T>(get(key).value());
+            T value(const ParamsDict& key) const {
+                return get(key).template as<T>();
             }
 
             void saveToFile() {  // cppcheck-suppress unusedFunction
-                std::ofstream out("WChatServer.conf");
+                std::ofstream out(_confFileName);
 
-                for (const auto& [keys, params] : _param_collection) {
-                    out << params.name() << "=" << params.toString() << " # " << params.description() << "\n";
+                for (const auto& [keys, params] : _paramCollection) {
+                    out << "# " << params.description() << "\n" << params.name() << "=" << params.value() << "\n";
                 }
+                out.close();
+            }
+
+            void loadFromFile() {
+                // logger::logger << logger::debug << "Open configuration file: " << _confFileName << logger::endl;
+                std::ifstream in(_confFileName);
+                if (!in.is_open()) {
+                    throw ConfigurationFileError();
+                }
+                std::string line;
+                while (std::getline(in, line)) {
+                    if (line[0] == '#') {
+                        // logger::logger << logger::debug << "Commnet: '" << line << "'." << logger::endl;
+                    } else {
+                        std::pair<std::string, std::string> parameter = splitParam(line, '=');
+                        // logger::logger << logger::debug << "Param: '" << parameter.first << "->" << parameter.second << "'." << logger::endl;
+                        ParamsDict key                                = _params2enums[parameter.first];
+                        _paramCollection.at(key).set(parameter.second);
+                    }
+                }
+                in.close();
             }
 
             void clear() {
-                _param_collection.clear();
+                _paramCollection.clear();
             }
 
         protected:
@@ -68,10 +95,16 @@ namespace WChat::ChatServer::core {
             }
             ~Config() {
             }
-            std::map<ParamsDict, ConfigParameter> _param_collection;
+            std::map<ParamsDict, ConfigParameter> _paramCollection;
+            std::map<std::string, ParamsDict> _params2enums;
+            static const std::string _confFileName;
+
+            std::pair<std::string, std::string> splitParam(const std::string& in, char delimiter) {
+                size_t delimiterPos = in.find_first_of(delimiter);
+                return {in.substr(0, delimiterPos), in.substr(delimiterPos + 1)};
+            }
     };
 
     using ServerConfig = Config<ParamKey>;
-
 };  // namespace WChat::ChatServer::core
 #endif

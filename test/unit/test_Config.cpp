@@ -24,6 +24,9 @@ enum class TestParamKey {
 
 using TestConfigType = Config<TestParamKey>;
 
+template <>
+const std::string TestConfigType::_confFileName = "Test.conf";
+
 class ConfigTest : public ::testing::Test {
     protected:
         void SetUp() override {
@@ -41,19 +44,19 @@ TEST_F(ConfigTest, RegisterStringParam) {
     const ConfigParameter& param = TestConfigType::instance().get(TestParamKey::Host);
     EXPECT_EQ(param.name(), "host");
     EXPECT_EQ(param.description(), "Host of server");
-    EXPECT_EQ(std::get<std::string>(param.value()), "lockalhost");
+    EXPECT_EQ(param.as<std::string>(), "lockalhost");
     EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), "lockalhost");
-    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), std::get<std::string>(param.value()));
+    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), param.as<std::string>());
 }
 
 TEST_F(ConfigTest, RegisterIntParam) {
-    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", 9002});
+    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", "9002"});
     const ConfigParameter& param = TestConfigType::instance().get(TestParamKey::Port);
     EXPECT_EQ(param.name(), "port");
     EXPECT_EQ(param.description(), "Port of server");
-    EXPECT_EQ(std::get<int>(param.value()), 9002);
+    EXPECT_EQ(param.as<int>(), 9002);
     EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), 9002);
-    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), std::get<int>(param.value()));
+    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), param.as<int>());
 }
 
 TEST_F(ConfigTest, DoubleRegisterStringParam) {
@@ -72,6 +75,15 @@ TEST_F(ConfigTest, DoubleRegisterStringParam) {
 
 TEST_F(ConfigTest, saveToFile) {
     TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
-    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", 9002});
+    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", "9002"});
     TestConfigType::instance().saveToFile();
+}
+
+TEST_F(ConfigTest, loadFromFile) {
+    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
+    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", "8002"});
+    TestConfigType::instance().saveToFile();
+    TestConfigType::instance().loadFromFile();
+    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), 8002);
+    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), "lockalhost");
 }

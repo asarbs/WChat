@@ -11,13 +11,18 @@
 
 #include "Config.h"
 
+#include <string>
+
 namespace WChat::ChatServer::core {
     template <>
     ServerConfig::Config() {
         // Dodanie parametrów domyślnych
         addParam(ParamKey::Host, {"host", "Host of server", "localhost"});
-        addParam(ParamKey::Port, {"port", "Port number", 9002});
+        addParam(ParamKey::Port, {"port", "Port number", "9002"});
     }
+
+    template <>
+    const std::string ServerConfig::_confFileName = "WChatServer.conf";
 
 }  // namespace WChat::ChatServer::core
 
