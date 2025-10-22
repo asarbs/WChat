@@ -15,6 +15,8 @@
 #pragma once
 
 #include <list>
+#include <map>
+#include <memory>
 #include <string>
 #include <websocketpp/server.hpp>
 
@@ -32,15 +34,17 @@ namespace WChat::ChatServer::client {
             ~ChatClient();
             ChatClient& operator=(const ChatClient& other);
 
-            void registerClient();
-            void unregister();
-            void saveMsg(uint64_t from, std::string message);
-            bool isRegistered() const;
-            uint64_t getUserId() const;
-            const std::string& getName() const;
             bool hasMsg() const;
+            bool isRegistered() const;
+            const std::string& getName() const;
             MsgHolder popMsg();
-
+            uint64_t getUserId() const;
+            void registerClient();
+            void saveMsg(uint64_t from, std::string message);
+            void unregister();
+            void addContect(std::shared_ptr<ChatClient> contact);
+            std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator contactsBegin();
+            std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator contactsEnd();
             websocketpp::connection_hdl connection;
 
         protected:
@@ -50,10 +54,11 @@ namespace WChat::ChatServer::client {
             ChatClient(ChatClient&&)            = delete;
             ChatClient& operator=(ChatClient&&) = delete;
 
-            uint64_t __user_id;
-            std::string __name;
-            bool __is_registered;
-            std::list<MsgHolder> __savedMsg = {};
+            uint64_t _user_id;
+            std::string _name;
+            bool _is_registered;
+            std::list<MsgHolder> _savedMsg = {};
+            std::map<uint64_t, std::shared_ptr<ChatClient>> _contacts;
     };
 };  // namespace WChat::ChatServer::client
 
