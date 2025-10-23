@@ -1,7 +1,7 @@
 /*
  * World VTT
  *
- * Copyright (C) 2024, Asar Miniatures
+ * Copyright (C) 2025, Asar Miniatures
  * All rights reserved.
  *
  * This file is part of the [Project Name] project. It may be used, modified,
@@ -24,6 +24,8 @@
 #include "server/core/Config.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/Manager.h"
+#include "server/messages/handlers/ConnectionReq.h"
+#include "server/messages/handlers/ConnectionRes.h"
 #include "server/messages/handlers/Message.h"
 #include "server/messages/handlers/RegisterClient.h"
 #include "server/messages/handlers/UnregisterClient.h"
@@ -109,22 +111,24 @@ void on_message(websocket_server* s, websocketpp::connection_hdl hdl, websocket_
 }
 
 int main(int argc, char* argv[]) {
-    logger::logger.setLogLevel(logger::debug);
-    logger::logger << logger::info << "Start WChat Server" << logger::endl;
-    websocket_server ws_server;
-
-    // WChat::ChatServer::core::ServerConfig::instance().saveToFile();
-    WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
-
-    Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
-    // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
-    argpars.parse(argc, argv);
-
-    __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::Message>());
-    __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::RegisterClient>());
-    __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::UnregisterClient>());
-
     try {
+        logger::logger.setLogLevel(logger::debug);
+        logger::logger << logger::info << "Start WChat Server" << logger::endl;
+        websocket_server ws_server;
+
+        // WChat::ChatServer::core::ServerConfig::instance().saveToFile();
+        WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
+
+        Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
+        // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
+        argpars.parse(argc, argv);
+
+        __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::Message>());
+        __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::RegisterClient>());
+        __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::UnregisterClient>());
+        __messageManager.register_handler(WChat::MessageType::CONTACT_CONNECTION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::ConnectionReq>());
+        __messageManager.register_handler(WChat::MessageType::CONTACT_CONNECTION_RES, std::make_shared<WChat::ChatServer::messages::handlers::ConnectionRes>());
+
         ws_server.set_reuse_addr(true);
         ws_server.init_asio();
 

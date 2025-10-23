@@ -2,7 +2,7 @@
 
 A modular and cross-platform chat application built with **C++**, **Python**, and **Shell scripting**, featuring automated builds, containerized CI/CD support, and comprehensive testing.
 
----
+<!-- ---
 
 ## 🧭 Table of Contents
 
@@ -17,7 +17,7 @@ A modular and cross-platform chat application built with **C++**, **Python**, an
 - [CI / Deployment](#ci--deployment)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
+- [Contact](#contact) -->
 
 ---
 
@@ -58,8 +58,8 @@ The repository also includes configuration for containerized environments and co
 | Build System | CMake, Make |
 | CI / Automation | GitLab CI, Docker |
 | Editor / IDE | VSCode (devcontainer support) |
-| Testing | CTest, custom unit tests |
-| Environment | Linux / macOS compatible |
+| Testing | GTest, pytest |
+| Environment | Linux |
 
 ---
 

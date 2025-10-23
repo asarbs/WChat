@@ -1,6 +1,6 @@
 # World VTT
 #
-# Copyright (C) 2024, Asar Miniatures
+# Copyright (C) 2025, Asar Miniatures
 # All rights reserved.
 #
 # This file is part of the [Project Name] project. It may be used, modified,

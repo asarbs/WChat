@@ -1,6 +1,6 @@
 # World VTT
 #
-# Copyright (C) 2024, Asar Miniatures
+# Copyright (C) 2025, Asar Miniatures
 # All rights reserved.
 #
 # This file is part of the [Project Name] project. It may be used, modified,
@@ -86,6 +86,8 @@ add_executable(${TARGET_NAME_SERVER}
     server/client/ChatClientDatabase.cpp
     server/core/Config.cpp
     server/errors/ErrorHandlers.cpp
+    server/messages/handlers/ConnectionReq.cpp
+    server/messages/handlers/ConnectionRes.cpp
     server/messages/handlers/Handler.cpp
     server/messages/handlers/Message.cpp
     server/messages/handlers/RegisterClient.cpp

@@ -46,3 +46,36 @@ async def test_register_reregister_users(ws_client1):
     await unregister_user(ws_client1, uid)
     assert await register_user(ws_client1, "Asar1") == 0
 
+@pytest.mark.asyncio
+async def test_add_contact_positive_scenario(ws_client1, ws_client2):
+    from_u1_name = "Asar1"
+    from_uid1 = await register_user(ws_client1, from_u1_name)
+    to_uid2 = await register_user(ws_client2, "Asar2")
+    await send_connection_request(ws_client1, from_uid1, to_uid2, from_u1_name)
+    from_id, from_name, to_id = await wait_for_connection_request(ws_client2)
+    assert from_id == from_uid1
+    assert from_name == from_u1_name
+    assert to_id == to_uid2
+    await send_connection_ack(ws_client2, to_uid2, from_uid1)
+    ack, from_ack_id, to_ack_id =await wait_for_connection_ack(ws_client1)
+    assert ack == messeges_pb2.Response.ACK
+    assert from_ack_id == from_uid1
+    assert to_ack_id == to_uid2
+
+
+@pytest.mark.asyncio
+async def test_add_contact_negative_scenario(ws_client1, ws_client2):
+    from_u1_name = "Asar1"
+    from_uid1 = await register_user(ws_client1, from_u1_name)
+    to_uid2 = await register_user(ws_client2, "Asar2")
+    await send_connection_request(ws_client1, from_uid1, to_uid2, from_u1_name)
+    from_id, from_name, to_id = await wait_for_connection_request(ws_client2)
+    assert from_id == from_uid1
+    assert from_name == from_u1_name
+    assert to_id == to_uid2
+    await send_connection_nack(ws_client2, to_uid2, from_uid1)
+    ack, from_ack_id, to_ack_id =await wait_for_connection_nack(ws_client1)
+    assert ack == messeges_pb2.Response.NACK
+    assert from_ack_id == from_uid1
+    assert to_ack_id == to_uid2
+

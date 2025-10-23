@@ -1,7 +1,7 @@
 /*
  * World VTT
  *
- * Copyright (C) 2024, Asar Miniatures
+ * Copyright (C) 2025, Asar Miniatures
  * All rights reserved.
  *
  * This file is part of the [Project Name] project. It may be used, modified,
@@ -17,16 +17,14 @@
 #include <stdexcept>
 #include <string>
 
+#define THROW_NOT_IMPLEMENTED()                                                                    \
+    do {                                                                                           \
+        std::ostringstream oss;                                                                    \
+        oss << "Unimplemented yet! (" << __FILE__ << ":" << __LINE__ << " in " << __func__ << ")"; \
+        throw std::runtime_error(oss.str());                                                       \
+    } while (0)
+
 namespace WChat::ChatServer::errors {
-    // class ErrorHandlers {
-    //     public:
-    //         ErrorHandlers();
-    //         ~ErrorHandlers();
-
-    //     protected:
-    //     private:
-    // };
-
     class ProtoculError : public std::runtime_error {
         public:
             explicit ProtoculError(const std::string& what_arg) : std::runtime_error(what_arg) {

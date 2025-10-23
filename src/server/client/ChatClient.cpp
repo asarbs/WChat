@@ -1,7 +1,7 @@
 /*
  * World VTT
  *
- * Copyright (C) 2024, Asar Miniatures
+ * Copyright (C) 2025, Asar Miniatures
  * All rights reserved.
  *
  * This file is part of the [Project Name] project. It may be used, modified,
@@ -62,7 +62,8 @@ namespace WChat::ChatServer::client {
         _savedMsg.pop_front();
         return tmp;
     }
-    void ChatClient::addContect(std::shared_ptr<ChatClient> contact) {  // cppcheck-suppress unusedFunction
+    void ChatClient::addContect(std::shared_ptr<ChatClient> contact) {
+        logger::logger << logger::info << getName() << " has new contact " << contact->getName() << logger::endl;
         _contacts[contact->_user_id] = contact;
     }
 

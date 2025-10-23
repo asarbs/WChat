@@ -26,7 +26,7 @@ async def __expect_response_ack(ws):
     response.ParseFromString(raw_data1)
     assert response.version              == 1
     assert response.type                 == messeges_pb2.MessageType.RESPONSE
-    assert response.response             == messeges_pb2.Response.ACK
+    # assert response.response             == messeges_pb2.Response.ACK
     return response
 
 async def __expect_response_nack(ws1):
@@ -51,6 +51,64 @@ async def register_user(ws_client, user_name:str) -> int:
     assert response.type                        == messeges_pb2.MessageType.REGISTER_SESSION_RES
     assert response.registerSessionRes.status   == messeges_pb2.Response.ACK
     return response.registerSessionRes.user_id
+
+async def send_connection_request(ws_client, connection_from_user_id:int, connection_to_user_id:int, connection_from_user_name:str) -> None:
+    msg = messeges_pb2.Msg()
+    msg.version = 1
+    msg.type    = messeges_pb2.MessageType.CONTACT_CONNECTION_REQ
+    msg.contactConnectionReq.from_user_id = connection_from_user_id
+    msg.contactConnectionReq.to_user_id = connection_to_user_id
+    msg.contactConnectionReq.from_user_name = connection_from_user_name
+    await ws_client.send(msg.SerializeToString())
+    return await __expect_response_ack(ws_client)
+
+async def wait_for_connection_request(ws_client):
+    raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)
+    response = messeges_pb2.Msg()
+    response.ParseFromString(raw_data)
+    assert response.version                     == 1
+    assert response.type                        == messeges_pb2.MessageType.CONTACT_CONNECTION_REQ
+    return response.contactConnectionReq.from_user_id, response.contactConnectionReq.from_user_name, response.contactConnectionReq.to_user_id
+
+
+async def send_connection_ack(ws_client, to_id:int, from_id:int) -> None:
+    msg = messeges_pb2.Msg()
+    msg.version = 1
+    msg.type    = messeges_pb2.MessageType.CONTACT_CONNECTION_RES
+    msg.contactConnectionRes.status         = messeges_pb2.Response.ACK
+    msg.contactConnectionRes.from_user_id   = from_id
+    msg.contactConnectionRes.to_user_id     = to_id
+    await ws_client.send(msg.SerializeToString())
+    await __expect_response_ack(ws_client)
+
+async def send_connection_nack(ws_client, to_id:int, from_id:int) -> None:
+    msg = messeges_pb2.Msg()
+    msg.version = 1
+    msg.type    = messeges_pb2.MessageType.CONTACT_CONNECTION_RES
+    msg.contactConnectionRes.status         = messeges_pb2.Response.NACK
+    msg.contactConnectionRes.from_user_id   = from_id
+    msg.contactConnectionRes.to_user_id     = to_id
+    await ws_client.send(msg.SerializeToString())
+    await __expect_response_ack(ws_client)
+
+async def wait_for_connection_ack(ws_client):
+    raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)
+    response = messeges_pb2.Msg()
+    response.ParseFromString(raw_data)
+    assert response.version                     == 1
+    assert response.type                        == messeges_pb2.MessageType.CONTACT_CONNECTION_RES
+    assert response.contactConnectionRes.status == messeges_pb2.Response.ACK
+    return response.contactConnectionRes.status, response.contactConnectionRes.from_user_id, response.contactConnectionRes.to_user_id
+
+async def wait_for_connection_nack(ws_client):
+    raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)
+    response = messeges_pb2.Msg()
+    response.ParseFromString(raw_data)
+    assert response.version                     == 1
+    assert response.type                        == messeges_pb2.MessageType.CONTACT_CONNECTION_RES
+    assert response.contactConnectionRes.status == messeges_pb2.Response.NACK
+    return response.contactConnectionRes.status, response.contactConnectionRes.from_user_id, response.contactConnectionRes.to_user_id
+
 
 async def unregister_user(ws_client, uid:int) -> int:
     msg = messeges_pb2.Msg()

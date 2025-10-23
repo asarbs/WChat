@@ -1,7 +1,7 @@
 /*
  * World VTT
  *
- * Copyright (C) 2024, Asar Miniatures
+ * Copyright (C) 2025, Asar Miniatures
  * All rights reserved.
  *
  * This file is part of the [Project Name] project. It may be used, modified,
@@ -25,9 +25,15 @@ namespace WChat::ChatServer::messages::handlers {
     Handler::~Handler() {
     }
 
-    void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& msg) {  // cppcheck-suppress unusedFunction
+    void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const WChat::Msg& msg) {
+        std::string serialized;
+        msg.SerializeToString(&serialized);
+        s->send(hdl, serialized, websocketpp::frame::opcode::binary);
+    }
+
+    void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& msg) {
         logger::logger << logger::debug << "send_msg: msg:" << logger::debug << msg << logger::endl;
-        s->send(hdl, msg, websocketpp::frame::opcode::text);
+        s->send(hdl, msg, websocketpp::frame::opcode::binary);
     }
 
     void send_ack_nack(websocket_server* s, websocketpp::connection_hdl hdl, bool status) {

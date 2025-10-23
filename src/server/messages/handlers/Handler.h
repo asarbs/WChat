@@ -1,7 +1,7 @@
 /*
  * World VTT
  *
- * Copyright (C) 2024, Asar Miniatures
+ * Copyright (C) 2025, Asar Miniatures
  * All rights reserved.
  *
  * This file is part of the [Project Name] project. It may be used, modified,
@@ -34,6 +34,7 @@ namespace WChat::ChatServer::messages::handlers {
         private:
     };
 
+    void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const WChat::Msg& msg);
     void send_msg(websocket_server* s, websocketpp::connection_hdl hdl, const std::string& msg);
     void send_ack(websocket_server* s, websocketpp::connection_hdl hdl);
     void send_nack(websocket_server* s, websocketpp::connection_hdl hdl);
