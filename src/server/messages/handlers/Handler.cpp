@@ -78,4 +78,22 @@ namespace WChat::ChatServer::messages::handlers {
         msg_resp.SerializeToString(&serialized);
         s->send(hdl, serialized, websocketpp::frame::opcode::binary);
     }
+    void send_user_contacts(websocket_server* s, websocketpp::connection_hdl hdl, std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator begin,
+                            std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator end) {
+        WChat::Msg msg_resp;
+        msg_resp.set_version(1);
+        msg_resp.set_type(WChat::MessageType::LIST_CONTACT_RES);
+        WChat::ListContactRes* listContactRes = msg_resp.mutable_listcontactres();
+
+        for (std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator iter = begin; iter != end; iter++) {
+            WChat::UserInfo* u_info = listContactRes->add_contacts();
+            u_info->set_user_name(iter->second->getName());
+            u_info->set_user_id(iter->second->getUserId());
+            logger::logger << logger::debug << "Contact[name:" << iter->second->getName() << ";id:" << iter->second->getUserId() << "]" << logger::endl;
+        }
+        std::string serialized;
+        msg_resp.SerializeToString(&serialized);
+        s->send(hdl, serialized, websocketpp::frame::opcode::binary);
+    }
+
 };  // namespace WChat::ChatServer::messages::handlers

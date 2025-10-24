@@ -26,6 +26,7 @@
 #include "server/messages/Manager.h"
 #include "server/messages/handlers/ConnectionReq.h"
 #include "server/messages/handlers/ConnectionRes.h"
+#include "server/messages/handlers/ListContactReq.h"
 #include "server/messages/handlers/Message.h"
 #include "server/messages/handlers/RegisterClient.h"
 #include "server/messages/handlers/UnregisterClient.h"
@@ -128,6 +129,7 @@ int main(int argc, char* argv[]) {
         __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::UnregisterClient>());
         __messageManager.register_handler(WChat::MessageType::CONTACT_CONNECTION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::ConnectionReq>());
         __messageManager.register_handler(WChat::MessageType::CONTACT_CONNECTION_RES, std::make_shared<WChat::ChatServer::messages::handlers::ConnectionRes>());
+        __messageManager.register_handler(WChat::MessageType::LIST_CONTACT_REQ, std::make_shared<WChat::ChatServer::messages::handlers::ListContactReq>());
 
         ws_server.set_reuse_addr(true);
         ws_server.init_asio();

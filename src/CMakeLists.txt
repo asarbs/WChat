@@ -89,6 +89,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/messages/handlers/ConnectionReq.cpp
     server/messages/handlers/ConnectionRes.cpp
     server/messages/handlers/Handler.cpp
+    server/messages/handlers/ListContactReq.cpp
     server/messages/handlers/Message.cpp
     server/messages/handlers/RegisterClient.cpp
     server/messages/handlers/UnregisterClient.cpp

@@ -45,7 +45,7 @@ async def send_connection_request(ws_client, connection_from_user_id:int, connec
     await ws_client.send(msg.SerializeToString())
     return await expect_response_ack(ws_client)
 
-async def send_connection_ack(ws_client, to_id:int, from_id:int) -> None:
+async def send_connection(ws_client, to_id:int, from_id:int) -> None:
     msg = messeges_pb2.Msg()
     msg.version = 1
     msg.type    = messeges_pb2.MessageType.CONTACT_CONNECTION_RES
@@ -108,3 +108,30 @@ async def send_message_and_expect_response(ws1, uid1, uid2, msg):
     assert response.textMessage.from_user_id     == int(uid1)
     assert response.textMessage.to_user_id       == int(uid2)
     assert response.textMessage.message  == msg
+
+async def add_contact_for_user(ws_client1, ws_client2, from_uid1, to_uid2, from_u1_name):
+    await send_connection_request(ws_client1, from_uid1, to_uid2, from_u1_name)
+    from_id, from_name, to_id = await wait_for_connection_request(ws_client2)
+    assert from_id == from_uid1
+    assert from_name == from_u1_name
+    assert to_id == to_uid2
+    await send_connection(ws_client2, to_uid2, from_uid1)
+    ack, from_ack_id, to_ack_id =await wait_for_connection(ws_client1)
+    assert ack == messeges_pb2.Response.ACK
+    assert from_ack_id == from_uid1
+    assert to_ack_id == to_uid2
+
+async def get_contect_list(ws_client, from_uid1):
+    msg = messeges_pb2.Msg()
+    msg.version = 1
+    msg.type    = messeges_pb2.MessageType.LIST_CONTACT_REQ
+    msg.listContactReq.user_id = from_uid1
+    await ws_client.send(msg.SerializeToString())
+
+    raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)
+    response = messeges_pb2.Msg()
+    response.ParseFromString(raw_data)
+    assert response.version                     == 1
+    assert response.type                        == messeges_pb2.MessageType.LIST_CONTACT_RES, (f"Expected {messeges_pb2.MessageType.LIST_CONTACT_RES}, got {response.type}")
+    return [ {'id': contact.user_id , "name": contact.user_name } for contact in response.listContactRes.contacts]
+

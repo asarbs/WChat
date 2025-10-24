@@ -34,7 +34,7 @@ async def wait_for_connection_request(ws_client):
     assert response.type                        == messeges_pb2.MessageType.CONTACT_CONNECTION_REQ
     return response.contactConnectionReq.from_user_id, response.contactConnectionReq.from_user_name, response.contactConnectionReq.to_user_id
 
-async def wait_for_connection_ack(ws_client):
+async def wait_for_connection(ws_client):
     raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)
     response = messeges_pb2.Msg()
     response.ParseFromString(raw_data)
