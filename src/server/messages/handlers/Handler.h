@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <map>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <websocketpp/config/asio_no_tls.hpp>

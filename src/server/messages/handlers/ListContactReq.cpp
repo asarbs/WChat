@@ -11,6 +11,9 @@
 
 #include "ListContactReq.h"
 
+#include <memory>
+#include <utility>
+
 #include "logger.h"
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"

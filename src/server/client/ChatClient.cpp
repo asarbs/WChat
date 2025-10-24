@@ -38,7 +38,7 @@ namespace WChat::ChatServer::client {
     bool ChatClient::isRegistered() const {
         return _is_registered;
     }
-    uint64_t ChatClient::getUserId() const {  // cppcheck-suppress unusedFunction
+    uint64_t ChatClient::getUserId() const {
         return _user_id;
     }
     const std::string& ChatClient::getName() const {
@@ -67,10 +67,10 @@ namespace WChat::ChatServer::client {
         _contacts[contact->_user_id] = contact;
     }
 
-    std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator ChatClient::contactsBegin() {  // cppcheck-suppress unusedFunction
+    std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator ChatClient::contactsBegin() {
         return _contacts.begin();
     }
-    std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator ChatClient::contactsEnd() {  // cppcheck-suppress unusedFunction
+    std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator ChatClient::contactsEnd() {
         return _contacts.end();
     }
 

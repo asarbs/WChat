@@ -13,6 +13,8 @@
 
 #include <google/protobuf/util/json_util.h>
 
+#include <map>
+#include <memory>
 #include <string>
 
 #include "logger.h"
@@ -85,7 +87,7 @@ namespace WChat::ChatServer::messages::handlers {
         msg_resp.set_type(WChat::MessageType::LIST_CONTACT_RES);
         WChat::ListContactRes* listContactRes = msg_resp.mutable_listcontactres();
 
-        for (std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator iter = begin; iter != end; iter++) {
+        for (std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator iter = begin; iter != end; ++iter) {
             WChat::UserInfo* u_info = listContactRes->add_contacts();
             u_info->set_user_name(iter->second->getName());
             u_info->set_user_id(iter->second->getUserId());
