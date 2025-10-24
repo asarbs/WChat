@@ -11,7 +11,9 @@ import pytest
 import asyncio
 import json
 
-from server_procedures import *
+from common.fixtures import *
+from common.actions import *
+from common.conditions import *
 
 @pytest.mark.asyncio
 async def test_register_user(ws_client):
@@ -62,7 +64,6 @@ async def test_add_contact_positive_scenario(ws_client1, ws_client2):
     assert from_ack_id == from_uid1
     assert to_ack_id == to_uid2
 
-
 @pytest.mark.asyncio
 async def test_add_contact_negative_scenario(ws_client1, ws_client2):
     from_u1_name = "Asar1"
@@ -79,3 +80,6 @@ async def test_add_contact_negative_scenario(ws_client1, ws_client2):
     assert from_ack_id == from_uid1
     assert to_ack_id == to_uid2
 
+pytest.mark.asyncio
+async def test_get_contact_list():
+    pass

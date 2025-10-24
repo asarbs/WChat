@@ -13,9 +13,9 @@ import json
 import messeges_pb2
 from google.protobuf.json_format import MessageToJson
 
-from server_procedures import *
-
-UINT32_MAX = (1 << 32) - 1
+from common.fixtures import *
+from common.actions import *
+from common.conditions import *
 
 @pytest.mark.asyncio
 async def test_invalid_msg(ws_client):

@@ -14,17 +14,13 @@ import time
 import os
 import signal
 import sys
-
-
-SERVER_URL = "ws://localhost:9002/ws"
-PROGRAM_CMD = ["../../build/linux/bin/WChat_SERVER"]
-
+from constants import *
 
 @pytest_asyncio.fixture(autouse=True)
 def run_server():
     proc = subprocess.Popen(PROGRAM_CMD, stdout=sys.stdout, stderr=sys.stderr)
 
-    time.sleep(2)
+    time.sleep(0.2)
 
     yield proc  # testy się odpalą
 

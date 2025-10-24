@@ -11,7 +11,9 @@ import pytest
 import asyncio
 import json
 
-from server_procedures import *
+from common.fixtures import *
+from common.actions import *
+from common.conditions import *
 
 @pytest.mark.asyncio
 async def test_register_user_and_send_msg(ws_client1, ws_client2):
