@@ -29,49 +29,18 @@ namespace WChat::ChatServer::core {
 
     class ConfigParameter {
         public:
-            ConfigParameter() : _name("name"), _description(""), _value("") {
-            }
+            ConfigParameter();
+            ConfigParameter(const std::string& name, const std::string& description, const std::string& value);
+            virtual ~ConfigParameter();
+            ConfigParameter(const ConfigParameter& rhs);
+            ConfigParameter(const ConfigParameter&& rhs);
+            ConfigParameter& operator=(const ConfigParameter& rhs);
+            ConfigParameter& operator=(const ConfigParameter&& rhs);
 
-            ConfigParameter(std::string name, std::string description, const std::string& value) : _name(name), _description(description), _value(value) {
-                if (_name.find(' ') != std::string::npos) {
-                    throw std::invalid_argument("ConfigParameter name cannot contain spaces");
-                }
-            }
-
-            ConfigParameter(ConfigParameter& rhs) : _name(rhs._name), _description(rhs._description), _value(rhs._value) {
-            }
-
-            ConfigParameter(ConfigParameter&& rhs) : _name(std::move(rhs._name)), _description(std::move(rhs._description)), _value(std::move(rhs._value)) {
-            }
-
-            ConfigParameter& operator=(const ConfigParameter& rhs) {
-                _name        = rhs._name;
-                _description = rhs._description;
-                _value       = rhs._value;
-                return *this;
-            }
-
-            ConfigParameter& operator=(const ConfigParameter&& rhs) {
-                _name        = rhs._name;
-                _description = rhs._description;
-                _value       = rhs._value;
-                return *this;
-            }
-
-            const std::string& name() const {  // cppcheck-suppress unusedFunction
-                return _name;
-            }
-            const std::string& description() const {  // cppcheck-suppress unusedFunction
-                return _description;
-            }
-            const std::string& value() const {
-                return _value;
-            }
-
-            void set(const std::string& val) {
-                _value = val;
-            }
-
+            const std::string& name() const;
+            const std::string& description() const;
+            const std::string& value() const;
+            void set(const std::string& val);
             template <typename T>
             T as() const {
                 if constexpr (std::is_same_v<T, std::string>) {

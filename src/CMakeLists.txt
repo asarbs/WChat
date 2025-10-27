@@ -85,6 +85,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/client/ChatClient.cpp
     server/client/ChatClientDatabase.cpp
     server/core/Config.cpp
+    server/core/ConfigParameter.cpp
     server/errors/ErrorHandlers.cpp
     server/messages/handlers/ConnectionReq.cpp
     server/messages/handlers/ConnectionRes.cpp
@@ -96,6 +97,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/messages/Manager.cpp
     server/proto/messeges.pb.cc
     server/server.cpp
+    server/core/ConfigChoice.cpp
 )
 
 target_link_libraries(${TARGET_NAME_SERVER}
