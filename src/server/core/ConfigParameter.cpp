@@ -48,13 +48,13 @@ namespace WChat::ChatServer::core {
         return *this;
     }
 
-    const std::string& ConfigParameter::name() const {
+    const std::string ConfigParameter::name() const {
         return _name;
     }
-    const std::string& ConfigParameter::description() const {
+    const std::string ConfigParameter::description() const {
         return _description;
     }
-    const std::string& ConfigParameter::value() const {
+    const std::string ConfigParameter::value() const {
         return _value;
     }
 

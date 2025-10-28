@@ -37,10 +37,10 @@ namespace WChat::ChatServer::core {
             ConfigParameter& operator=(const ConfigParameter& rhs);
             ConfigParameter& operator=(const ConfigParameter&& rhs);
 
-            const std::string& name() const;
-            const std::string& description() const;
-            const std::string& value() const;
-            void set(const std::string& val);
+            const std::string name() const;  // cppcheck-suppress returnByReference
+            virtual const std::string description() const;
+            const std::string value() const;  // cppcheck-suppress returnByReference
+            virtual void set(const std::string& val);
             template <typename T>
             T as() const {
                 if constexpr (std::is_same_v<T, std::string>) {

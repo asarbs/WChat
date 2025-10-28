@@ -39,5 +39,12 @@ namespace WChat::ChatServer::errors {
             explicit ProtoculWarning(const char* what_arg) : std::runtime_error(what_arg) {
             }
     };
+    class ConfigurationError : public std::runtime_error {
+        public:
+            explicit ConfigurationError(const std::string& what_arg) : std::runtime_error(what_arg) {
+            }
+            explicit ConfigurationError(const char* what_arg) : std::runtime_error(what_arg) {
+            }
+    };
 };  // namespace WChat::ChatServer::errors
 #endif

@@ -40,29 +40,29 @@ class ConfigTest : public ::testing::Test {
 };
 
 TEST_F(ConfigTest, RegisterStringParam) {
-    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
-    const ConfigParameter& param = TestConfigType::instance().get(TestParamKey::Host);
-    EXPECT_EQ(param.name(), "host");
-    EXPECT_EQ(param.description(), "Host of server");
-    EXPECT_EQ(param.as<std::string>(), "lockalhost");
+    TestConfigType::instance().addParam(TestParamKey::Host, std::make_shared<ConfigParameter>("host", "Host of server", "lockalhost"));
+    const std::shared_ptr<ConfigParameter> param = TestConfigType::instance().get(TestParamKey::Host);
+    EXPECT_EQ(param->name(), "host");
+    EXPECT_EQ(param->description(), "Host of server");
+    EXPECT_EQ(param->as<std::string>(), "lockalhost");
     EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), "lockalhost");
-    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), param.as<std::string>());
+    EXPECT_EQ(TestConfigType::instance().value<std::string>(TestParamKey::Host), param->as<std::string>());
 }
 
 TEST_F(ConfigTest, RegisterIntParam) {
-    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", "9002"});
-    const ConfigParameter& param = TestConfigType::instance().get(TestParamKey::Port);
-    EXPECT_EQ(param.name(), "port");
-    EXPECT_EQ(param.description(), "Port of server");
-    EXPECT_EQ(param.as<int>(), 9002);
+    TestConfigType::instance().addParam(TestParamKey::Port, std::make_shared<ConfigParameter>("port", "Port of server", "9002"));
+    const std::shared_ptr<ConfigParameter> param = TestConfigType::instance().get(TestParamKey::Port);
+    EXPECT_EQ(param->name(), "port");
+    EXPECT_EQ(param->description(), "Port of server");
+    EXPECT_EQ(param->as<int>(), 9002);
     EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), 9002);
-    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), param.as<int>());
+    EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), param->as<int>());
 }
 
 TEST_F(ConfigTest, DoubleRegisterStringParam) {
-    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost1"});
+    TestConfigType::instance().addParam(TestParamKey::Host, std::make_shared<ConfigParameter>("host", "Host of server", "lockalhost1"));
 
-    ConfigParameter cp   = {"host", "Host of server", "lockalhost2"};
+    auto cp              = std::make_shared<ConfigParameter>("host", "Host of server", "lockalhost2");
     bool exceptionThrown = false;
     try {
         TestConfigType::instance().addParam(TestParamKey::Host, cp);
@@ -74,14 +74,14 @@ TEST_F(ConfigTest, DoubleRegisterStringParam) {
 }
 
 TEST_F(ConfigTest, saveToFile) {
-    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
-    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", "9002"});
+    TestConfigType::instance().addParam(TestParamKey::Host, std::make_shared<ConfigParameter>("host", "Host of server", "lockalhost"));
+    TestConfigType::instance().addParam(TestParamKey::Port, std::make_shared<ConfigParameter>("port", "Port of server", "9002"));
     TestConfigType::instance().saveToFile();
 }
 
 TEST_F(ConfigTest, loadFromFile) {
-    TestConfigType::instance().addParam(TestParamKey::Host, {"host", "Host of server", "lockalhost"});
-    TestConfigType::instance().addParam(TestParamKey::Port, {"port", "Port of server", "8002"});
+    TestConfigType::instance().addParam(TestParamKey::Host, std::make_shared<ConfigParameter>("host", "Host of server", "lockalhost"));
+    TestConfigType::instance().addParam(TestParamKey::Port, std::make_shared<ConfigParameter>("port", "Port of server", "8002"));
     TestConfigType::instance().saveToFile();
     TestConfigType::instance().loadFromFile();
     EXPECT_EQ(TestConfigType::instance().value<int>(TestParamKey::Port), 8002);

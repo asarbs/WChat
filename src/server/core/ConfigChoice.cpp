@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "logger.h"
+#include "server/errors/ErrorHandlers.h"
 
 namespace WChat::ChatServer::core {
     ConfigChoice::ConfigChoice() : ConfigParameter() {
@@ -41,5 +42,23 @@ namespace WChat::ChatServer::core {
         }
         return *this;
     }
+    void ConfigChoice::set(const std::string& val) {
+        auto f = std::find(_choice.begin(), _choice.end(), val);
+        if (f == _choice.end()) {
+            std::stringstream ss;
+            ss << "Value `" << val << "` is not on allowed list";
 
+            throw WChat::ChatServer::errors::ConfigurationError(ss.str());
+        }
+        ConfigParameter::set(val);
+    }
+
+    const std::string ConfigChoice::description() const {
+        std::stringstream ss;
+        ss << ConfigParameter::description() << "; /";
+        for (const auto& c : _choice) {
+            ss << c << "/";
+        }
+        return ss.str();
+    }
 }  // namespace WChat::ChatServer::core

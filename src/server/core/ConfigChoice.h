@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include "logger.h"
 #include "server/core/ConfigParameter.h"
 
 namespace WChat::ChatServer::core {
@@ -29,6 +30,8 @@ namespace WChat::ChatServer::core {
             ConfigChoice(const ConfigChoice&& rhs);
             ConfigChoice& operator=(const ConfigChoice& rhs);
             ConfigChoice& operator=(const ConfigChoice&& rhs);
+            void set(const std::string& val) override;
+            const std::string description() const override;
 
         protected:
             //

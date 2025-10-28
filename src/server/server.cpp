@@ -145,11 +145,13 @@ int main(int argc, char* argv[]) {
         ws_server.listen(boost::asio::ip::tcp::v4(), port);
         ws_server.start_accept();
 
+        std::string storage = WChat::ChatServer::core::ServerConfig::instance().value<std::string>(WChat::ChatServer::core::ParamKey::Storage);
+
         logger::logger << logger::debug << "server WebSocket działa na porcie " << port << logger::endl;
 
         ws_server.run();
     } catch (websocketpp::exception const& e) {
-        logger::logger << logger::error << "Wystąpił błąd: " << e.what() << logger::endl;
+        logger::logger << logger::error << "Error: " << e.what() << logger::endl;
     }
     logger::logger << logger::info << "Close WChat Server" << logger::endl;
     return 0;

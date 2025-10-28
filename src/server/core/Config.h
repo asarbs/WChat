@@ -17,16 +17,19 @@
 #include <exception>
 #include <fstream>
 #include <map>
+#include <memory>
 #include <string>
 #include <utility>
 
 #include "logger.h"
+#include "server/core/ConfigChoice.h"
 #include "server/core/ConfigParameter.h"
 
 namespace WChat::ChatServer::core {
     enum class ParamKey {
         Host,
-        Port
+        Port,
+        Storage
     };
     template <class ParamsDict>
     class Config {
@@ -37,29 +40,29 @@ namespace WChat::ChatServer::core {
                 static Config<ParamsDict> instance;
                 return instance;
             }
-            void addParam(const ParamsDict& key, ConfigParameter param) {  // cppcheck-suppress unusedFunction
+            void addParam(const ParamsDict& key, std::shared_ptr<ConfigParameter> param) {  // cppcheck-suppress unusedFunction
                 // if (_paramCollection.find(key) != _paramCollection.end() || _params2enums.find(param.name()) != _params2enums.end()) {
                 if (_paramCollection.find(key) != _paramCollection.end()) {
                     throw ParameterAlreadyRegistered();
                 }
-                _paramCollection[key]       = param;
-                _params2enums[param.name()] = key;
+                _paramCollection[key]        = param;
+                _params2enums[param->name()] = key;
             }
 
-            const ConfigParameter& get(const ParamsDict& key) const {
+            const std::shared_ptr<ConfigParameter> get(const ParamsDict& key) const {
                 return _paramCollection.at(key);
             }
 
             template <typename T>
             T value(const ParamsDict& key) const {
-                return get(key).template as<T>();
+                return get(key)->template as<T>();
             }
 
             void saveToFile() {  // cppcheck-suppress unusedFunction
                 std::ofstream out(_confFileName);
 
                 for (const auto& [keys, params] : _paramCollection) {
-                    out << "# " << params.description() << "\n" << params.name() << "=" << params.value() << "\n";
+                    out << "# " << params->description() << "\n" << params->name() << "=" << params->value() << "\n";
                 }
                 out.close();
             }
@@ -78,7 +81,7 @@ namespace WChat::ChatServer::core {
                         std::pair<std::string, std::string> parameter = splitParam(line, '=');
                         // logger::logger << logger::debug << "Param: '" << parameter.first << "->" << parameter.second << "'." << logger::endl;
                         ParamsDict key                                = _params2enums[parameter.first];
-                        _paramCollection.at(key).set(parameter.second);
+                        _paramCollection.at(key)->set(parameter.second);
                     }
                 }
                 in.close();
@@ -95,7 +98,7 @@ namespace WChat::ChatServer::core {
             }
             ~Config() {
             }
-            std::map<ParamsDict, ConfigParameter> _paramCollection;
+            std::map<ParamsDict, std::shared_ptr<ConfigParameter>> _paramCollection;
             std::map<std::string, ParamsDict> _params2enums;
             static const std::string _confFileName;
 
