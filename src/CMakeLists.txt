@@ -64,6 +64,15 @@ FetchContent_Declare(protobuf
     SYSTEM)
 FetchContent_MakeAvailable(protobuf)
 
+FetchContent_Declare(SQLiteCpp
+    GIT_REPOSITORY https://github.com/SRombauts/SQLiteCpp.git
+    GIT_TAG 3.3.3
+    GIT_SHALLOW OFF
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(SQLiteCpp)
+
+
 find_package(Boost REQUIRED)
 
 message(STATUS "Application name: ${TARGET_NAME_SERVER} ${TARGET_NAME_CLIENT}")
@@ -98,6 +107,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/proto/messeges.pb.cc
     server/server.cpp
     server/core/ConfigChoice.cpp
+    server/core/storage/db/sqlite/SQLightWrapper.cpp
 )
 
 target_link_libraries(${TARGET_NAME_SERVER}
@@ -109,6 +119,7 @@ target_link_libraries(${TARGET_NAME_SERVER}
         cpp_logger_lib
         cpp_arguments_lib
         protobuf
+        SQLiteCpp
     )
 
 target_include_directories(${TARGET_NAME_SERVER}
@@ -118,5 +129,6 @@ target_include_directories(${TARGET_NAME_SERVER}
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_arguments-src
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
         ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
+        ${CMAKE_SOURCE_DIR}/build/linux/_deps/sqlight-src/include/
 )
 

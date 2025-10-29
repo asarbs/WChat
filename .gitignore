@@ -20,3 +20,4 @@ tools/keys
 *.exe
 *.war
 *.conf
+*.db

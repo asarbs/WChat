@@ -22,6 +22,7 @@
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/core/Config.h"
+#include "server/core/storage/db/sqlite/SQLightWrapper.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/Manager.h"
 #include "server/messages/handlers/ConnectionReq.h"
@@ -117,6 +118,7 @@ int main(int argc, char* argv[]) {
         logger::logger << logger::info << "Start WChat Server" << logger::endl;
         websocket_server ws_server;
 
+        WChat::ChatServer::core::storage::db::sqlite::SQLightWrapper::instance();
         // WChat::ChatServer::core::ServerConfig::instance().saveToFile();
         WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
 

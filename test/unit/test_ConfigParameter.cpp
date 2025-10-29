@@ -33,3 +33,8 @@ TEST(ConfigChoice, ChoiceSetThrow) {
     ConfigChoice cc("Storage", "Storage of serwer data", "volatile", std::vector<std::string>{"volatile", "db"});
     EXPECT_THROW({ cc.set("db2"); }, WChat::ChatServer::errors::ConfigurationError);
 }
+
+TEST(ConfigChoice, ChiceDescriptin) {
+    ConfigChoice cc("Storage", "Storage of serwer data", "volatile", std::vector<std::string>{"volatile", "db"});
+    EXPECT_EQ(cc.description(), "Storage of serwer data; /volatile/db/");
+}

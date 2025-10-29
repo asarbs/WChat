@@ -123,7 +123,7 @@ compile-server: compile-proto-cpp
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
 	${Q}cmake --build ${BUILD_DIR}/linux -j8 --target WChat_SERVER
 
-run_server: compile-server
+run_server:
 	${Q} ./build/linux/bin/WChat_SERVER
 
 run_client:
