@@ -16,17 +16,22 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 
 #include <string>
+#include <vector>
+
+#include "server/core/storage/Storage.h"
 
 namespace WChat::ChatServer::core::storage::db::sqlite {
-    class SQLightWrapper {
+    class SQLightWrapper : public Storage {
         public:
             static SQLightWrapper& instance();
-            bool addUser(std::string name);
+            void addUser(std::string name) override;
+            void addContact(uint64_t userAId, uint64_t userBId) override;
+            std::vector<uint64_t> getUserContacts(uint64_t userId) override;
 
         protected:
         private:
             SQLightWrapper();
-            ~SQLightWrapper();
+            ~SQLightWrapper() override;
             SQLightWrapper(const SQLightWrapper& rhs)             = delete;
             SQLightWrapper(const SQLightWrapper&& rhs)            = delete;
             SQLightWrapper& operator=(const SQLightWrapper& rhs)  = delete;

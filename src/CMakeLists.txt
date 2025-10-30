@@ -108,6 +108,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/server.cpp
     server/core/ConfigChoice.cpp
     server/core/storage/db/sqlite/SQLightWrapper.cpp
+    server/core/storage/StorageFactory.cpp
 )
 
 target_link_libraries(${TARGET_NAME_SERVER}

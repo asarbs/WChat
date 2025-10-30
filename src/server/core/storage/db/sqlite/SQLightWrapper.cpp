@@ -40,11 +40,28 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         return instance;
     }
 
-    bool SQLightWrapper::addUser(std::string name) {  // cppcheck-suppress unusedFunction
+    void SQLightWrapper::addUser(std::string name) {
         SQLite::Statement query(_db, "INSERT INTO users (name) VALUES (?)");
         query.bind(1, name);
         query.exec();
-        return true;
+    }
+    void SQLightWrapper::addContact(uint64_t userAId, uint64_t userBId) {
+        SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1) VALUE (?), (user_id_2) VALUE (?)");
+        query.bind(1, static_cast<uint32_t>(userAId));
+        query.bind(2, static_cast<uint32_t>(userBId));
+        query.exec();
+    }
+
+    std::vector<uint64_t> SQLightWrapper::getUserContacts(uint64_t userId) {
+        std::vector<uint64_t> contacts;
+
+        SQLite::Statement query(_db, "SELECT user_id_2 FROM contacts WHERE user_id_1 = (?)");
+        query.bind(1, static_cast<uint32_t>(userId));
+        while (query.executeStep()) {
+            uint64_t contactId = query.getColumn(0).getInt64();
+            contacts.push_back(contactId);
+        }
+        return contacts;
     }
 
 };  // namespace WChat::ChatServer::core::storage::db::sqlite
