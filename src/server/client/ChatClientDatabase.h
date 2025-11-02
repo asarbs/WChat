@@ -21,6 +21,7 @@
 #include <websocketpp/server.hpp>
 
 #include "ChatClient.h"
+#include "server/core/storage/Storage.h"
 
 namespace WChat::ChatServer::client {
 
@@ -41,7 +42,7 @@ namespace WChat::ChatServer::client {
             void clean();
 
             size_t size() const {
-                return __chat_clients.size();
+                return _chat_clients.size();
             }
 
             ChatClientDatabase(const ChatClientDatabase&)            = delete;
@@ -51,8 +52,9 @@ namespace WChat::ChatServer::client {
         private:
             ChatClientDatabase();
             ~ChatClientDatabase() = default;
-            std::map<uint64_t, std::shared_ptr<ChatClient>> __chat_clients{};
-            uint64_t __next_free_user_id;
+            std::map<uint64_t, std::shared_ptr<ChatClient>> _chat_clients{};
+            uint64_t _next_free_user_id;
+            std::shared_ptr<WChat::ChatServer::core::storage::Storage> _storage;
     };
 };  // namespace WChat::ChatServer::client
 #endif

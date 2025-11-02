@@ -12,6 +12,7 @@
 #include "ChatClientDatabase.h"
 
 #include "logger.h"
+#include "server/core/storage/StorageFactory.h"
 
 namespace WChat::ChatServer::client {
 
@@ -20,7 +21,7 @@ namespace WChat::ChatServer::client {
         return instance;
     }
 
-    ChatClientDatabase::ChatClientDatabase() : __next_free_user_id(0) {
+    ChatClientDatabase::ChatClientDatabase() : _next_free_user_id(0), _storage(WChat::ChatServer::core::storage::getStorage()) {
     }
 
     // ChatClientDatabase::~ChatClientDatabase() {
@@ -32,13 +33,13 @@ namespace WChat::ChatServer::client {
             return uid;
         }
 
-        std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(__next_free_user_id, new_user_name);
+        std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(_next_free_user_id, new_user_name);
         cc->connection                 = hdl;
         cc->registerClient();
-        __chat_clients[__next_free_user_id] = cc;
-        uint64_t current_client_id          = __next_free_user_id;
-        logger::logger << logger::debug << "ChatClientDatabase::regiserClinet with id = " << __next_free_user_id << "." << logger::endl;
-        __next_free_user_id++;
+        _chat_clients[_next_free_user_id] = cc;
+        uint64_t current_client_id        = _next_free_user_id;
+        logger::logger << logger::debug << "ChatClientDatabase::regiserClinet with id = " << _next_free_user_id << "." << logger::endl;
+        _next_free_user_id++;
         return current_client_id;
     }
 
@@ -49,19 +50,19 @@ namespace WChat::ChatServer::client {
     }
 
     std::shared_ptr<ChatClient> ChatClientDatabase::get(uint64_t user_id) {
-        auto it = __chat_clients.find(user_id);
-        if (it != __chat_clients.end()) {
+        auto it = _chat_clients.find(user_id);
+        if (it != _chat_clients.end()) {
             return it->second;
         }
         return nullptr;
     }
     void ChatClientDatabase::clean() {  // cppcheck-suppress unusedFunction
-        __chat_clients.clear();
-        __next_free_user_id = 0;
+        _chat_clients.clear();
+        _next_free_user_id = 0;
     }
 
     uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
-        for (auto cc : __chat_clients) {
+        for (auto cc : _chat_clients) {
             if (cc.second->getName() == uname) {
                 return cc.first;
             }

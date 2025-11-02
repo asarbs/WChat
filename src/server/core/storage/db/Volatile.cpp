@@ -40,4 +40,8 @@ namespace WChat::ChatServer::core::storage::db {
         return std::vector<uint64_t>(filtered.begin(), filtered.end());
     }
 
+    uint64_t Volatile::getUserIdByName(const std::string& name) {
+        return 0;
+    }
+
 }  // namespace WChat::ChatServer::core::storage::db
