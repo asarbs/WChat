@@ -64,8 +64,16 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         return contacts;
     }
 
-    uint64_t SQLightWrapper::getUserIdByName(const std::string& name) {
+    std::optional<uint64_t> SQLightWrapper::getUserIdByName(const std::string& name) {
         return 0;
+    }
+
+    size_t SQLightWrapper::size() {
+        return 0;
+    }
+
+    bool SQLightWrapper::isUserRegistered(std::string name) {
+        return false;
     }
 
 };  // namespace WChat::ChatServer::core::storage::db::sqlite

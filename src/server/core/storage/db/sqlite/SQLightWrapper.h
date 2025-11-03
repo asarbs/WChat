@@ -24,10 +24,13 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     class SQLightWrapper : public Storage {
         public:
             static SQLightWrapper& instance();
-            void addUser(std::string name) override;
-            void addContact(uint64_t userAId, uint64_t userBId) override;
+
+            bool isUserRegistered(std::string name) override;
+            size_t size() override;
             std::vector<uint64_t> getUserContacts(uint64_t userId) override;
-            uint64_t getUserIdByName(const std::string& name) override;
+            std::optional<uint64_t> getUserIdByName(const std::string& name) override;
+            void addContact(uint64_t userAId, uint64_t userBId) override;
+            void addUser(std::string name) override;
 
         protected:
         private:

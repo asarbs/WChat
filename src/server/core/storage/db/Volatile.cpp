@@ -40,8 +40,28 @@ namespace WChat::ChatServer::core::storage::db {
         return std::vector<uint64_t>(filtered.begin(), filtered.end());
     }
 
-    uint64_t Volatile::getUserIdByName(const std::string& name) {
-        return 0;
+    std::optional<uint64_t> Volatile::getUserIdByName(const std::string& name) {
+        auto filtered = _usersDb | std::ranges::views::filter([name](const UserInfo& ui) { return ui.name == name; });
+        auto it       = filtered.begin();
+        if (it != filtered.end()) {
+            return it->userId;
+        }
+
+        return {};
+    }
+
+    bool Volatile::isUserRegistered(std::string name) {
+        auto filtered = _usersDb | std::ranges::views::filter([name](const UserInfo& ui) { return ui.name == name; });
+        auto it       = filtered.begin();
+        if (it != filtered.end()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    size_t Volatile::size() {
+        return _usersDb.size();
     }
 
 }  // namespace WChat::ChatServer::core::storage::db

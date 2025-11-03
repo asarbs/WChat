@@ -110,6 +110,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/core/storage/db/sqlite/SQLightWrapper.cpp
     server/core/storage/StorageFactory.cpp
     server/core/storage/db/Volatile.cpp
+    server/errors/ClientException.cpp
 )
 
 target_link_libraries(${TARGET_NAME_SERVER}

@@ -9,8 +9,6 @@
  *
  */
 
-#include "ErrorHandlers.h"
+#include "ClientException.h"
 
 #include "logger.h"
-
-namespace WChat::ChatServer::errors {};

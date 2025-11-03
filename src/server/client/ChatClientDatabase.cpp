@@ -13,6 +13,7 @@
 
 #include "logger.h"
 #include "server/core/storage/StorageFactory.h"
+#include "server/errors/ClientException.h"
 
 namespace WChat::ChatServer::client {
 
@@ -21,26 +22,28 @@ namespace WChat::ChatServer::client {
         return instance;
     }
 
-    ChatClientDatabase::ChatClientDatabase() : _next_free_user_id(0), _storage(WChat::ChatServer::core::storage::getStorage()) {
+    ChatClientDatabase::ChatClientDatabase() : _storage(WChat::ChatServer::core::storage::getStorage()) {
     }
 
     // ChatClientDatabase::~ChatClientDatabase() {
     // }
 
-    uint64_t ChatClientDatabase::regiserClinet(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
+    uint64_t ChatClientDatabase::regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
         uint64_t uid = getUserIdByName(new_user_name);
         if (uid != UINT64_MAX) {
             return uid;
         }
 
-        std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(_next_free_user_id, new_user_name);
+        std::optional<uint64_t> userId = _storage->getUserIdByName(new_user_name);
+        if (!userId) {
+            throw WChat::ChatServer::errors::client::ClientNotRegistered(new_user_name);
+        }
+        std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(*userId, new_user_name);
         cc->connection                 = hdl;
         cc->registerClient();
-        _chat_clients[_next_free_user_id] = cc;
-        uint64_t current_client_id        = _next_free_user_id;
-        logger::logger << logger::debug << "ChatClientDatabase::regiserClinet with id = " << _next_free_user_id << "." << logger::endl;
-        _next_free_user_id++;
-        return current_client_id;
+        _chat_clients[*userId] = cc;
+        logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << *userId << "." << logger::endl;
+        return *userId;
     }
 
     bool ChatClientDatabase::unregiserClinet(uint64_t user_id) {
@@ -58,7 +61,6 @@ namespace WChat::ChatServer::client {
     }
     void ChatClientDatabase::clean() {  // cppcheck-suppress unusedFunction
         _chat_clients.clear();
-        _next_free_user_id = 0;
     }
 
     uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
