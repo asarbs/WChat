@@ -40,10 +40,11 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         return instance;
     }
 
-    void SQLightWrapper::addUser(std::string name) {
+    std::optional<uint64_t> SQLightWrapper::addUser(std::string name) {
         SQLite::Statement query(_db, "INSERT INTO users (name) VALUES (?)");
         query.bind(1, name);
         query.exec();
+        return {};
     }
     void SQLightWrapper::addContact(uint64_t userAId, uint64_t userBId) {
         SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1) VALUE (?), (user_id_2) VALUE (?)");

@@ -14,6 +14,7 @@
 #include <string>
 
 #include "logger.h"
+#include "server/core/storage/db/Volatile.h"
 #include "server/core/storage/db/sqlite/SQLightWrapper.h"
 #include "server/errors/ErrorHandlers.h"
 
@@ -22,6 +23,8 @@ namespace WChat::ChatServer::core::storage {
         std::string storage = WChat::ChatServer::core::ServerConfig::instance().value<std::string>(WChat::ChatServer::core::ParamKey::Storage);
         if (storage == "db") {
             return std::shared_ptr<Storage>(&WChat::ChatServer::core::storage::db::sqlite::SQLightWrapper::instance(), [](Storage*) {});  // empty deleter
+        } else if (storage == "volatile") {
+            return std::shared_ptr<Storage>(&WChat::ChatServer::core::storage::db::Volatile::instance(), [](Storage*) {});  // empty deleter
         } else {
             std::stringstream ss;
             ss << "Unsupported data storage method `" << storage << "`." << std::endl;

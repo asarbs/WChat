@@ -36,7 +36,7 @@ namespace WChat::ChatServer::client {
 
         std::optional<uint64_t> userId = _storage->getUserIdByName(new_user_name);
         if (!userId) {
-            throw WChat::ChatServer::errors::client::ClientNotRegistered(new_user_name);
+            userId = _storage->addUser(new_user_name);
         }
         std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(*userId, new_user_name);
         cc->connection                 = hdl;

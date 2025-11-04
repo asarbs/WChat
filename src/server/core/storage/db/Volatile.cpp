@@ -25,9 +25,15 @@ namespace WChat::ChatServer::core::storage::db {
     Volatile::~Volatile() {
     }
 
-    void Volatile::addUser(std::string name) {
+    Volatile& Volatile::instance() {
+        static Volatile instance;
+        return instance;
+    }
+
+    std::optional<uint64_t> Volatile::addUser(std::string name) {
         _usersDb.emplace_back(_userCounter, name, true);
         _userCounter++;
+        return _userCounter - 1;
     }
     void Volatile::addContact(uint64_t userAId, uint64_t userBId) {
         _contacts.emplace_back(userAId, userBId);
