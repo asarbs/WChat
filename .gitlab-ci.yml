@@ -51,7 +51,7 @@ cppcheck:
   script:
     - make cppcheck
 
-build_app:
+build_server:
   stage: build
   needs: ["clang_check", "cpplint", "cppcheck"]
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
@@ -62,12 +62,23 @@ build_app:
       - build/linux/bin/WChat_SERVER
     expire_in: 1h
 
-test_unit:
+build_client:
+  stage: build
+  needs: ["clang_check", "cpplint", "cppcheck"]
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+  script:
+    - make compile-server
+  artifacts:
+    paths:
+      - build/linux/bin/WChat_CLIENT
+    expire_in: 1h
+
+test_server_unit:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make test-unit
-  needs: ["build_app"]
+  needs: ["build_server"]
   artifacts:
     when: always
     expire_in: 1h
@@ -77,12 +88,12 @@ test_unit:
       junit:
         - build/test-unit-results.xml
 
-test_app:
+test_server_app:
   stage: test
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
     - make test-app
-  needs: ["build_app"]
+  needs: ["build_server"]
   artifacts:
     when: always
     expire_in: 1h

@@ -22,4 +22,5 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -pthread")
 include(FetchContent)
 
 add_subdirectory(src)
+add_subdirectory(src/client/cpp)
 add_subdirectory(test/unit)

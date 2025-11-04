@@ -84,7 +84,6 @@ clean:
 	${Q}rm -rf $(BUILD_DIR)
 	${Q}rm -rf test_exe
 	${Q}rm -rf prof_app
-	${Q}rm -rf $(TARGET_NAME)
 	${Q}rm -rf gmon.out
 	${Q}find . -name "*.o" | xargs -r rm
 	${Q}find . -name "*.pcm" | xargs -r rm
@@ -109,22 +108,32 @@ test-app-filter: compile-proto-python
 test: test-unit test-app
 
 compile-proto-cpp:
-	@echo 'Compile proto-cpp: $(TARGET_NAME)'
+	@echo 'Compile proto-cpp'
 	protoc -I=${PROTO_DIR} --cpp_out=${PROTO_DIR} ${PROTO_DIR}/messeges.proto
 
 compile-proto-python:
-	@echo 'Compile proto-cpp: $(TARGET_NAME)'
+	@echo 'Compile proto-python'
 	protoc -I=${PROTO_DIR} --python_out=test/app ${PROTO_DIR}/messeges.proto
 
 compile-proto: compile-proto-cpp compile-proto-python
 
 compile-server: compile-proto-cpp
-	@echo 'Build executable file: $(TARGET_NAME)'
+	@echo 'Build executable file: SERVER'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
-	${Q}cmake --build ${BUILD_DIR}/linux -j8 --target WChat_SERVER
+	${Q}cmake --build ${BUILD_DIR}/linux -j2 --target WChat_SERVER
+
+compile-client:
+	@echo 'Build executable file: CLIENT'
+	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
+	${Q}cmake --build ${BUILD_DIR}/linux -j2 --target WChat_CLIENT
+
+compile: compile-server compile-client
 
 run_server:
 	${Q} ./build/linux/bin/WChat_SERVER
+
+run_client:
+	${Q} ./build/linux/bin/WChat_CLIENT
 
 run_client:
 	@echo "Starting simple HTTP server at http://localhost:8080"
