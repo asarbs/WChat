@@ -18,10 +18,10 @@
 
 namespace WChat::ChatServer::messages::handlers {
 
-    class UnregisterClient : public Handler {
+    class UnregisterClientSession : public Handler {
         public:
-            UnregisterClient();
-            ~UnregisterClient() override;
+            UnregisterClientSession();
+            ~UnregisterClientSession() override;
             void handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) override;
 
         protected:

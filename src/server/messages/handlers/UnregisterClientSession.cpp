@@ -9,7 +9,7 @@
  *
  */
 
-#include "UnregisterClient.h"
+#include "UnregisterClientSession.h"
 
 #include "logger.h"
 #include "server/client/ChatClient.h"
@@ -17,13 +17,13 @@
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/handlers/Handler.h"
 namespace WChat::ChatServer::messages::handlers {
-    UnregisterClient::UnregisterClient() {
+    UnregisterClientSession::UnregisterClientSession() {
     }
 
-    UnregisterClient::~UnregisterClient() {
+    UnregisterClientSession::~UnregisterClientSession() {
     }
 
-    void UnregisterClient::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
+    void UnregisterClientSession::handle(websocket_server* s, const websocketpp::connection_hdl& hdl, WChat::Msg msg) {
         if (!msg.has_unregistersessionreq()) {
             throw WChat::ChatServer::errors::ProtoculError("Msg don't contain UnregisterSessionReq");
         }

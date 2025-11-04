@@ -30,7 +30,7 @@
 #include "server/messages/handlers/ListContactReq.h"
 #include "server/messages/handlers/Message.h"
 #include "server/messages/handlers/RegisterClientSession.h"
-#include "server/messages/handlers/UnregisterClient.h"
+#include "server/messages/handlers/UnregisterClientSession.h"
 #include "server/proto/messeges.pb.h"
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
 
         __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::Message>());
         __messageManager.register_handler(WChat::MessageType::REGISTER_SESSION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::RegisterClientSession>());
-        __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::UnregisterClient>());
+        __messageManager.register_handler(WChat::MessageType::UNREGISTER_SESSION, std::make_shared<WChat::ChatServer::messages::handlers::UnregisterClientSession>());
         __messageManager.register_handler(WChat::MessageType::CONTACT_CONNECTION_REQ, std::make_shared<WChat::ChatServer::messages::handlers::ConnectionReq>());
         __messageManager.register_handler(WChat::MessageType::CONTACT_CONNECTION_RES, std::make_shared<WChat::ChatServer::messages::handlers::ConnectionRes>());
         __messageManager.register_handler(WChat::MessageType::LIST_CONTACT_REQ, std::make_shared<WChat::ChatServer::messages::handlers::ListContactReq>());

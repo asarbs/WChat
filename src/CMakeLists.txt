@@ -94,7 +94,12 @@ add_executable(${TARGET_NAME_SERVER}
     server/client/ChatClient.cpp
     server/client/ChatClientDatabase.cpp
     server/core/Config.cpp
+    server/core/ConfigChoice.cpp
     server/core/ConfigParameter.cpp
+    server/core/storage/db/sqlite/SQLightWrapper.cpp
+    server/core/storage/db/Volatile.cpp
+    server/core/storage/StorageFactory.cpp
+    server/errors/ClientException.cpp
     server/errors/ErrorHandlers.cpp
     server/messages/handlers/ConnectionReq.cpp
     server/messages/handlers/ConnectionRes.cpp
@@ -102,15 +107,10 @@ add_executable(${TARGET_NAME_SERVER}
     server/messages/handlers/ListContactReq.cpp
     server/messages/handlers/Message.cpp
     server/messages/handlers/RegisterClientSession.cpp
-    server/messages/handlers/UnregisterClient.cpp
+    server/messages/handlers/UnregisterClientSession.cpp
     server/messages/Manager.cpp
     server/proto/messeges.pb.cc
     server/server.cpp
-    server/core/ConfigChoice.cpp
-    server/core/storage/db/sqlite/SQLightWrapper.cpp
-    server/core/storage/StorageFactory.cpp
-    server/core/storage/db/Volatile.cpp
-    server/errors/ClientException.cpp
 )
 
 target_link_libraries(${TARGET_NAME_SERVER}
