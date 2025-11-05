@@ -86,6 +86,8 @@ clean:
 	${Q}rm -rf prof_app
 	${Q}rm -rf gmon.out
 	${Q}find . -name "*.o" | xargs -r rm
+	${Q}find . -name "*.conf" | xargs -r rm
+	${Q}find . -name "*.db" | xargs -r rm
 	${Q}find . -name "*.pcm" | xargs -r rm
 	${Q}find . -name "*.pb.h" | xargs -r rm
 	${Q}find . -name "*.pb.cc" | xargs -r rm
@@ -93,7 +95,7 @@ clean:
 compile-test_unit: compile-proto-cpp
 	@echo 'Build file: test_main'
 	${Q}cmake -S . -B $(BUILD_DIR)/linux -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
-	${Q}cmake --build $(BUILD_DIR)/linux -j8 --target unit_tests
+	${Q}cmake --build $(BUILD_DIR)/linux -j2 --target unit_tests
 
 test-unit: compile-test_unit
 	@echo 'Exe: test_main'
@@ -135,7 +137,7 @@ run_server:
 run_client:
 	${Q} ./build/linux/bin/WChat_CLIENT
 
-run_client:
+run_client_web:
 	@echo "Starting simple HTTP server at http://localhost:8080"
 	@cd src/client/html && python3 -m http.server 8080
 

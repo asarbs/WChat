@@ -63,14 +63,13 @@ FetchContent_Declare(protobuf
     SYSTEM)
 FetchContent_MakeAvailable(protobuf)
 
-FetchContent_Declare(SQLiteCpp
-    GIT_REPOSITORY https://github.com/SRombauts/SQLiteCpp.git
-    GIT_TAG 3.3.3
+FetchContent_Declare(ftxui
+    GIT_REPOSITORY https://github.com/ArthurSonzogni/FTXUI.git
+    GIT_TAG main
     GIT_SHALLOW OFF
     EXCLUDE_FROM_ALL
     SYSTEM)
-FetchContent_MakeAvailable(SQLiteCpp)
-
+FetchContent_MakeAvailable(ftxui)
 
 find_package(Boost REQUIRED)
 
@@ -102,7 +101,9 @@ target_link_libraries(${TARGET_NAME_CLIENT}
         cpp_logger_lib
         cpp_arguments_lib
         protobuf
-        SQLiteCpp
+        ftxui::component
+        ftxui::dom
+        ftxui::screen
     )
 
 target_include_directories(${TARGET_NAME_CLIENT}
@@ -113,5 +114,7 @@ target_include_directories(${TARGET_NAME_CLIENT}
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
         ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/sqlight-src/include/
+        ${CMAKE_SOURCE_DIR}/build/linux/_deps/ftxui-src/include
+        ${CMAKE_SOURCE_DIR}/build/linux/_deps/imtui-src/include
 )
 

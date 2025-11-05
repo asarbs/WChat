@@ -67,7 +67,7 @@ build_client:
   needs: ["clang_check", "cpplint", "cppcheck"]
   image: $CI_REGISTRY_IMAGE/wchat-ci:latest
   script:
-    - make compile-server
+    - make compile-client
   artifacts:
     paths:
       - build/linux/bin/WChat_CLIENT
