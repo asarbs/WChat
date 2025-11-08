@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package WChat;
+
+message UserInfo {
+    string user_name = 1;
+    uint64 user_id   = 2;
+}
+
+enum Response{
+    NACK = 0;
+    ACK  = 1;
+}
+
+message RegisterSessionReq {
+    string user_name = 1;
+}
+message RegisterSessionRes {
+    Response status  = 1;
+    uint64   user_id = 2;
+}
+
+message UnregisterSessionReq {
+    uint64 user_id = 1;
+}
+
+message TextMessage {
+    uint64 from_user_id = 1;
+    uint64 to_user_id = 2;
+    string message  = 3;
+}
+
+message ContactConnectionReq {
+    uint64 from_user_id   = 1;
+    uint64 to_user_id     = 2;
+    string from_user_name = 3;
+}
+
+message ContactConnectionRes {
+    Response status       = 1;
+    uint64 from_user_id   = 2;
+    uint64 to_user_id     = 3;
+}
+
+message ListContactReq {
+    uint64 user_id     = 1;
+}
+
+message ListContactRes {
+    repeated UserInfo contacts = 1;
+}
+
+enum MessageType {
+    RESPONSE               = 0;
+    REGISTER_SESSION_REQ   = 1;
+    REGISTER_SESSION_RES   = 2;
+    SEND_TEXT_MSG          = 3;
+    UNREGISTER_SESSION     = 4;
+    CONTACT_CONNECTION_REQ = 5;
+    CONTACT_CONNECTION_RES = 6;
+    LIST_CONTACT_REQ       = 7;
+    LIST_CONTACT_RES       = 8;
+    LAST                   = 9;
+}
+
+message Msg {
+    uint32                          version                 = 1;
+    MessageType                     type                    = 2;
+    optional Response               response                = 3;
+    optional RegisterSessionReq     registerSessionReq      = 4;
+    optional RegisterSessionRes     registerSessionRes      = 5;
+    optional UnregisterSessionReq   unregisterSessionReq    = 6;
+    optional TextMessage            textMessage             = 7;
+    optional ContactConnectionReq   contactConnectionReq    = 8;
+    optional ContactConnectionRes   contactConnectionRes    = 9;
+    optional ListContactReq         listContactReq          = 10;
+    optional ListContactRes         listContactRes          = 11;
+}

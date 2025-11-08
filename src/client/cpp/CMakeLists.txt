@@ -25,19 +25,14 @@ FetchContent_Declare(cpp_arguments
     SYSTEM)
 FetchContent_MakeAvailable(cpp_arguments)
 
-FetchContent_Declare(websocketpp
-    GIT_REPOSITORY https://github.com/zaphoyd/websocketpp.git
-    GIT_TAG 0.8.2
+FetchContent_Declare(
+    ixwebsocket
+    GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
+    GIT_TAG v11.4.6
     GIT_SHALLOW OFF
     EXCLUDE_FROM_ALL
     SYSTEM)
-FetchContent_MakeAvailable(websocketpp)
-if(NOT websocketpp_POPULATED)
-    FetchContent_Populate(websocketpp)
-    add_library(websocketpp INTERFACE)
-    target_include_directories(websocketpp INTERFACE ${websocketpp_SOURCE_DIR})
-endif()
-
+FetchContent_MakeAvailable(ixwebsocket)
 
 FetchContent_Declare(nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -89,7 +84,11 @@ else()
 endif()
 
 add_executable(${TARGET_NAME_CLIENT}
+    ChatClient.cpp
     client.cpp
+    internal/Message.cpp
+    proto/messeges.pb.cc
+    ServerApi/ProtoWrapper.cpp
 )
 
 target_link_libraries(${TARGET_NAME_CLIENT}
@@ -104,6 +103,7 @@ target_link_libraries(${TARGET_NAME_CLIENT}
         ftxui::component
         ftxui::dom
         ftxui::screen
+        ixwebsocket
     )
 
 target_include_directories(${TARGET_NAME_CLIENT}

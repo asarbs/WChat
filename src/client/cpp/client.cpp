@@ -9,24 +9,27 @@
  */
 
 #include <atomic>
+#include <ftxui/component/captured_mouse.hpp>
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/component_base.hpp>
+#include <ftxui/component/component_options.hpp>
+#include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
+#include <ftxui/util/ref.hpp>
 #include <iostream>
 #include <memory>  // for allocator, __shared_ptr_access
 #include <string>  // for char_traits, operator+, string, basic_string
 #include <thread>
 #include <vector>
 
-#include "ftxui/component/captured_mouse.hpp"      // for ftxui
-#include "ftxui/component/component.hpp"           // for Input, Renderer, Vertical
-#include "ftxui/component/component_base.hpp"      // for ComponentBase
-#include "ftxui/component/component_options.hpp"   // for InputOption
-#include "ftxui/component/screen_interactive.hpp"  // for Component, ScreenInteractive
-#include "ftxui/dom/elements.hpp"                  // for text, hbox, separator, Element, operator|, vbox, border
-#include "ftxui/util/ref.hpp"                      // for Ref
 #include "logger.h"
 
 int main() {
+}
+
+/*
+int main_test_tui() {  // cppcheck-suppress unusedFunction
     using namespace ftxui;
 
     std::string first_name;
@@ -144,3 +147,4 @@ int main() {
     clock_thread.join();
     return 0;
 }
+*/
