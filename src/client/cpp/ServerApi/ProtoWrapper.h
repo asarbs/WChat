@@ -34,7 +34,8 @@ namespace WChat::ChatClient::ServerAPI {
             }
     };
 
-    ProtoBuffer buildRegisterSessionReq(const std::string& userName) ProtoBuffer buildTestMsg(const uint64_t fromUserId, const uint64_t toUserId, const std::string& msgText);
+    ProtoBuffer buildRegisterSessionReq(const std::string& userName);
+    ProtoBuffer buildTestMsg(const uint64_t fromUserId, const uint64_t toUserId, const std::string& msgText);
     ProtoBuffer buildTestMsg(const uint64_t fromUserId, const uint64_t toUserId, const std::string& msgText);
     ProtoBuffer buildContactConnectionReq(const uint64_t fromUserId, const uint64_t toUserId, const std::string& fromUserName);
     ProtoBuffer buildContactConnectionRes(const uint64_t fromUserId, const uint64_t toUserId, const Ack& ack);

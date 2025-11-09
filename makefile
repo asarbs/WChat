@@ -126,7 +126,7 @@ compile-server: compile-proto-cpp
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
 	${Q}cmake --build ${BUILD_DIR}/linux -j2 --target WChat_SERVER
 
-compile-client:
+compile-client: compile-proto-cpp
 	@echo 'Build executable file: CLIENT'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
 	${Q}cmake --build ${BUILD_DIR}/linux -j2 --target WChat_CLIENT

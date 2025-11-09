@@ -85,7 +85,7 @@ namespace WChat::ChatClient::ServerAPI {
         WChat::Msg msg;
         msg.set_version(ProtoAPIVersion);
         msg.set_type(WChat::MessageType::LIST_CONTACT_REQ);
-        WChat::LIST_CONTACT_REQ* res = msg.mutable_listcontactreq();
+        WChat::ListContactReq* res = msg.mutable_listcontactreq();
         res->set_user_id(userId);
 
         std::string serialized;
