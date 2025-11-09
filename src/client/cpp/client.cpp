@@ -26,6 +26,69 @@
 #include "logger.h"
 
 int main() {
+    auto screen = ftxui::ScreenInteractive::Fullscreen();
+
+    int value = 50;
+    std::string first_name;
+    ftxui::Component input_first_name = ftxui::Input(&first_name, "first name");
+
+    auto help = ftxui::Button("[F1] Help", [&]() {  //
+        value++;                                    //
+        screen.PostEvent(ftxui::Event::Custom);     //
+    });                                             //
+
+    auto connect = ftxui::Button("[F2] Connect", [&]() {  //
+        value = 50;                                       //
+        screen.PostEvent(ftxui::Event::Custom);           //
+    });                                                   //
+
+    auto down = ftxui::Button("[F3] Down", [&]() {  //
+        value--;                                    //
+        screen.PostEvent(ftxui::Event::Custom);     //
+    });                                             //
+
+    auto exit = ftxui::Button("[F10] Exit", screen.ExitLoopClosure());
+
+    auto container = ftxui::Container::Horizontal({
+        help,
+        connect,
+        down,
+        exit,
+    });
+
+    auto toolbarRenderer = ftxui::Renderer(container, [&] {
+        return ftxui::hbox({
+                   help->Render(),
+                   connect->Render(),
+                   down->Render(),
+                   exit->Render(),
+               }) |
+               ftxui::hcenter | ftxui::bgcolor(ftxui::Color::DarkBlue);
+    });
+
+    auto component = ftxui::Container::Vertical({
+        input_first_name,  //
+        toolbarRenderer    //
+    });
+    component->SetActiveChild(input_first_name);
+
+    auto renderer = ftxui::Renderer(component, [&]() {  //
+        auto elem = ftxui::vbox({
+                        input_first_name->Render(),                       //
+                        ftxui::separator(),                               //
+                        ftxui::text("Value : " + std::to_string(value)),  //
+                        ftxui::separator(),                               //
+                        ftxui::text("Input : " + first_name)              //
+                    }) |
+                    ftxui::flex;
+
+        return ftxui::vbox({
+                   elem,                      //
+                   toolbarRenderer->Render()  //
+               }) |
+               ftxui::border;
+    });
+    screen.Loop(renderer);
 }
 
 /*
