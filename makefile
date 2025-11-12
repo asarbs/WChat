@@ -31,6 +31,13 @@ TEST_BIN_DIR = ${PROJECT_DIR}/build/test
 BUILD_DIR = ${PROJECT_DIR}/build
 BUILD_TYPE ?= Debug
 
+REPO_NAME := $(shell basename `git rev-parse --show-toplevel`)
+BRANCH_OR_TAG := $(shell git describe --tags --exact-match 2>/dev/null || git rev-parse --abbrev-ref HEAD)
+COMMIT_HASH := $(shell git rev-parse --short HEAD)
+BUILD_DATE := $(shell date +"%Y%m%d%H%M%S")
+TAR_NAME := $(REPO_NAME)_$(BRANCH_OR_TAG)_$(BUILD_DATE)_$(COMMIT_HASH).tar.gz
+
+
 FIND_CMD = find ${SOURCES_DIR} \( -iname "*.h" -o -iname "*.cpp" -o -iname "*.cppm" \) -and ! -path "*/libs/*" -and ! -path "*/proto/*"
 
 .setup-cpplint:
@@ -92,6 +99,7 @@ clean:
 	${Q}find . -name "*.pb.h" | xargs -r rm
 	${Q}find . -name "*.pb.cc" | xargs -r rm
 
+
 compile-test_unit: compile-proto-cpp
 	@echo 'Build file: test_main'
 	${Q}cmake -S . -B $(BUILD_DIR)/linux -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
@@ -133,13 +141,13 @@ compile-client: compile-proto-cpp
 
 compile: compile-server compile-client
 
-run_server:
+run-server:
 	${Q} ./build/linux/bin/WChat_SERVER
 
-run_client:
+run-client:
 	${Q} ./build/linux/bin/WChat_CLIENT
 
-run_client_web:
+run-client_web:
 	@echo "Starting simple HTTP server at http://localhost:8080"
 	@cd src/client/html && python3 -m http.server 8080
 
@@ -179,5 +187,13 @@ sync-github:
 	git remote add github git@github.com:asarbs/WChat.git
 	if [ -f .git/shallow ]; then git fetch --unshallow; fi
 	git push --force github master --tags
+
+arichive:
+	@echo 'Build Archive'
+	$(Q)tar czf ${BUILD_DIR}/$(TAR_NAME) ${BUILD_DIR}/linux/bin/WChat_SERVER ${BUILD_DIR}/linux/bin/WChat_CLIENT
+
+deploy:
+	@echo 'Deploy Archive'
+	$(Q)rclone -vvvv copy ${BUILD_DIR}/*.tar.gz gdrive:tmp/WChat-Releases
 
 all: clean clang-check cppcheck cpplint cpplint compile-server test-unit test-app

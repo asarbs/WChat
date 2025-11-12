@@ -31,7 +31,7 @@ build_ci_image:
   rules:
     - changes:
         - Dockerfile.ci
-        - .gitlab-ci.yml
+        # - .gitlab-ci.yml
 
 clang_check:
   stage: lint
@@ -102,3 +102,19 @@ test_server_app:
     reports:
       junit:
         - build/test-app-results.xml
+
+deploy_to_gdrive:
+  stage: deploy
+  image: $CI_REGISTRY_IMAGE/wchat-ci:latest
+  needs:
+    - build_server
+    - build_client
+  before_script:
+    - apt-get update && apt-get install -y rclone
+  script:
+    - mkdir -p ~/.config/rclone
+    - cp "$RCLONE_CONFIG" ~/.config/rclone/rclone.conf
+    - make arichive V=1
+    - make deploy V=1
+  only:
+    - tags
