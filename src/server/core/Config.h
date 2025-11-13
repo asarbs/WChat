@@ -71,7 +71,8 @@ namespace WChat::ChatServer::core {
                 // logger::logger << logger::debug << "Open configuration file: " << _confFileName << logger::endl;
                 std::ifstream in(_confFileName);
                 if (!in.is_open()) {
-                    throw ConfigurationFileError();
+                    saveToFile();
+                    // throw ConfigurationFileError();
                 }
                 std::string line;
                 while (std::getline(in, line)) {

@@ -25,12 +25,64 @@
 #include <thread>
 #include <vector>
 
+#include "ServerApi/ProtoDecoder.h"
+#include "ServerApi/ProtoWrapper.h"
 #include "logger.h"
-
 int main() {
-    auto screen = ftxui::ScreenInteractive::Fullscreen();
+    WChat::ChatClient::ServerAPI::ProtoDecoder decoder;
 
-    int value = 50;
+    ix::WebSocket webSocket;
+    bool isOpen = false;
+    webSocket.setUrl("ws://localhost:9002/ws");
+    webSocket.setPingInterval(15);
+    // webSocket.enablePerMessageDeflate();
+    webSocket.disablePerMessageDeflate();
+    webSocket.setOnMessageCallback([&isOpen, &decoder](const ix::WebSocketMessagePtr& msg) {
+        if (msg->type == ix::WebSocketMessageType::Open) {
+            logger::logger << logger::debug << "Open Connection" << logger::endl;
+            isOpen = true;
+            // Headers can be inspected (pairs of string/string)
+        } else if (msg->type == ix::WebSocketMessageType::Message) {
+            decoder.decode(msg->str);
+        } else if (msg->type == ix::WebSocketMessageType::Close) {
+            logger::logger << logger::debug << "Close Connection" << logger::endl;
+
+            // The server can send an explicit code and reason for closing.
+            // This data can be accessed through the closeInfo object.
+            logger::logger << logger::debug << msg->closeInfo.code << logger::endl;
+            logger::logger << logger::debug << msg->closeInfo.reason << logger::endl;
+        } else if (msg->type == ix::WebSocketMessageType::Error) {
+            std::stringstream ss;
+            ss << "Error: " << msg->errorInfo.reason << logger::endl;
+            ss << "#retries: " << msg->errorInfo.retries << logger::endl;
+            ss << "Wait time(ms): " << msg->errorInfo.wait_time << logger::endl;
+            ss << "HTTP Status: " << msg->errorInfo.http_status << logger::endl;
+            logger::logger << logger::debug << ss.str() << logger::endl;
+        } else if (msg->type == ix::WebSocketMessageType::Ping || msg->type == ix::WebSocketMessageType::Pong) {
+            logger::logger << logger::debug << "pong data: " << msg->str << logger::endl;
+        }
+    });
+
+    webSocket.start();
+    while (!isOpen) {
+        logger::logger << logger::debug << "wait to open connection" << logger::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
+    ix::WebSocketSendInfo info = webSocket.sendBinary(WChat::ChatClient::ServerAPI::buildRegisterSessionReq("asar"));
+    logger::logger << logger::debug << "send result:\n\r" <<         //
+        "\tsucess=" << info.success << "\n\r" <<                     //
+        "\tcompressionError:" << info.compressionError << "\n\r" <<  //
+        "\tpayloadSize:" << info.payloadSize << "\n\r" <<            //
+        "\twireSize:" << info.wireSize << "\n\r" <<                  //
+        logger::endl;
+
+    std::this_thread::sleep_for(std::chrono::seconds(30));
+    webSocket.stop();
+
+    return 0;
+
+    auto screen = ftxui::ScreenInteractive::Fullscreen();
+    int value   = 50;
     std::string first_name;
     std::string time_str;
     std::atomic<bool> running         = true;

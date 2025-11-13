@@ -16,7 +16,7 @@
 constexpr uint32_t ProtoAPIVersion = 1;
 
 namespace WChat::ChatClient::ServerAPI {
-    ProtoBuffer buildRegisterSessionReq(const std::string& userName) {  // cppcheck-suppress unusedFunction
+    ProtoBuffer buildRegisterSessionReq(const std::string& userName) {
         WChat::Msg msg;
         msg.set_version(ProtoAPIVersion);
         msg.set_type(WChat::MessageType::REGISTER_SESSION_REQ);

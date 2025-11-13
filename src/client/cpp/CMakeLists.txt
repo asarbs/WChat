@@ -89,6 +89,7 @@ add_executable(${TARGET_NAME_CLIENT}
     internal/Message.cpp
     proto/messeges.pb.cc
     ServerApi/ProtoWrapper.cpp
+    ServerApi/ProtoDecoder.cpp
 )
 
 target_link_libraries(${TARGET_NAME_CLIENT}
