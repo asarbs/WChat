@@ -14,7 +14,9 @@
 
 #pragma once
 
+#include <queue>
 #include <string>
+#include <variant>
 
 #include "proto/messeges.pb.h"
 
@@ -32,6 +34,7 @@ namespace WChat::ChatClient::ServerAPI {
 
         protected:
         private:
+            std::queue<std::variant<WChat::Msg, WChat::RegisterSessionRes, WChat::TextMessage, WChat::ListContactRes>> _serverMsgQueue;
     };
 };  // namespace WChat::ChatClient::ServerAPI
 #endif

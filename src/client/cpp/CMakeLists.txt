@@ -90,6 +90,8 @@ add_executable(${TARGET_NAME_CLIENT}
     proto/messeges.pb.cc
     ServerApi/ProtoWrapper.cpp
     ServerApi/ProtoDecoder.cpp
+    ThreadSafeQueue.cpp
+    WebSocketWorker.cpp
 )
 
 target_link_libraries(${TARGET_NAME_CLIENT}

@@ -28,6 +28,7 @@
 #include "ServerApi/ProtoDecoder.h"
 #include "ServerApi/ProtoWrapper.h"
 #include "logger.h"
+
 int main() {
     WChat::ChatClient::ServerAPI::ProtoDecoder decoder;
 

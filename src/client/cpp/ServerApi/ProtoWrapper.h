@@ -15,11 +15,15 @@
 #pragma once
 
 #include <string>
+#include <variant>
 
 #include "proto/messeges.pb.h"
 
 namespace WChat::ChatClient::ServerAPI {
-    using ProtoBuffer = std::string;
+    using ProtoBuffer     = std::string;
+    using ProtoRxMessages = std::variant<WChat::Msg, WChat::RegisterSessionRes, WChat::TextMessage, WChat::ListContactRes>;
+    using ProtoTxMessages = std::variant<WChat::Msg, WChat::RegisterSessionReq, WChat::TextMessage, WChat::ContactConnectionReq, WChat::ContactConnectionRes,
+                                         WChat::UnregisterSessionReq, WChat::ListContactReq>;
     struct Ack {
             enum class Type {
                 Ack,

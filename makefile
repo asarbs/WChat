@@ -196,4 +196,4 @@ deploy:
 	@echo 'Deploy Archive'
 	$(Q)rclone -vvvv copy ${BUILD_DIR}/*.tar.gz gdrive:tmp/WChat-Releases
 
-all: clean clang-check cppcheck cpplint cpplint compile-server test-unit test-app
+all: clean clang-check cppcheck cpplint cpplint compile-server compile-client test-unit test-app
