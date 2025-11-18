@@ -17,6 +17,7 @@
 #include <ixwebsocket/IXWebSocket.h>
 
 #include <atomic>
+#include <memory>
 #include <thread>
 
 #include "ServerApi/ProtoDecoder.h"

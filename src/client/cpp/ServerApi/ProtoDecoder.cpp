@@ -11,6 +11,8 @@
 
 #include "ProtoDecoder.h"
 
+#include <memory>
+
 #include "logger.h"
 
 namespace WChat::ChatClient::ServerAPI {

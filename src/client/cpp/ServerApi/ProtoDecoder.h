@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <memory>
 #include <queue>
 #include <string>
 #include <variant>
@@ -24,7 +25,7 @@
 namespace WChat::ChatClient::ServerAPI {
     class ProtoDecoder {
         public:
-            ProtoDecoder(std::shared_ptr<FromWebSockerQueue> fromSeverQueue);
+            explicit ProtoDecoder(std::shared_ptr<FromWebSockerQueue> fromSeverQueue);
             virtual ~ProtoDecoder();
             ProtoDecoder(const ProtoDecoder& rhs);
             ProtoDecoder(const ProtoDecoder&& rhs);

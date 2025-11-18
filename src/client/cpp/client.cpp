@@ -36,16 +36,16 @@ int main() {
             WChat::ChatClient::ServerAPI::ProtoRxMessages msg = fromQueue->waitAndPop();
 
             if (std::holds_alternative<WChat::Msg>(msg)) {
-                auto& m = std::get<WChat::Msg>(msg);
+                const WChat::Msg& m = std::get<WChat::Msg>(msg);
                 logger::logger << logger::debug << "Got Msg" << logger::endl;
             } else if (std::holds_alternative<WChat::RegisterSessionRes>(msg)) {
-                auto& m = std::get<WChat::RegisterSessionRes>(msg);
+                const WChat::RegisterSessionRes& m = std::get<WChat::RegisterSessionRes>(msg);
                 logger::logger << logger::debug << "Got RegisterSessionRes" << logger::endl;
             } else if (std::holds_alternative<WChat::TextMessage>(msg)) {
-                auto& m = std::get<WChat::TextMessage>(msg);
+                const WChat::TextMessage& m = std::get<WChat::TextMessage>(msg);
                 logger::logger << logger::debug << "Got TextMessage" << logger::endl;
             } else if (std::holds_alternative<WChat::ListContactRes>(msg)) {
-                auto& m = std::get<WChat::ListContactRes>(msg);
+                const WChat::ListContactRes& m = std::get<WChat::ListContactRes>(msg);
                 logger::logger << logger::debug << "Got ListContactRes" << logger::endl;
             } else {
                 logger::logger << logger::error << "Code should not be here" << logger::endl;

@@ -27,12 +27,14 @@ CUI::CUI(const CUI&& rhs) {
 
 CUI& CUI::operator=(const CUI& rhs) {
     if (this != &rhs) {
+        //
     }
     return *this;
 }
 
 CUI& CUI::operator=(const CUI&& rhs) {
     if (this != &rhs) {
+        //
     }
     return *this;
 }

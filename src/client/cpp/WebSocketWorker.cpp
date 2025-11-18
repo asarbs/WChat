@@ -11,6 +11,8 @@
 
 #include "WebSocketWorker.h"
 
+#include <memory>
+
 #include "logger.h"
 
 WebSocketWorker::WebSocketWorker(std::shared_ptr<ToWebSockerQueue> toServerQueue, std::shared_ptr<FromWebSockerQueue> fromServerQueue)
