@@ -58,14 +58,6 @@ FetchContent_Declare(protobuf
     SYSTEM)
 FetchContent_MakeAvailable(protobuf)
 
-FetchContent_Declare(ftxui
-    GIT_REPOSITORY https://github.com/ArthurSonzogni/FTXUI.git
-    GIT_TAG main
-    GIT_SHALLOW OFF
-    EXCLUDE_FROM_ALL
-    SYSTEM)
-FetchContent_MakeAvailable(ftxui)
-
 find_package(Boost REQUIRED)
 
 message(STATUS "Application name: ${TARGET_NAME_CLIENT}")
@@ -103,9 +95,6 @@ target_link_libraries(${TARGET_NAME_CLIENT}
         cpp_logger_lib
         cpp_arguments_lib
         protobuf
-        ftxui::component
-        ftxui::dom
-        ftxui::screen
         ixwebsocket
     )
 

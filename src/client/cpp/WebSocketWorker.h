@@ -24,7 +24,7 @@
 
 class WebSocketWorker {
     public:
-        WebSocketWorker(ToWebSockerQueue* toQueue, FromWebSockerQueue* fromQueue);
+        WebSocketWorker(std::shared_ptr<ToWebSockerQueue> toServerQueue, std::shared_ptr<FromWebSockerQueue> fromServerQueue);
         virtual ~WebSocketWorker();
         WebSocketWorker(const WebSocketWorker& rhs)             = delete;
         WebSocketWorker(const WebSocketWorker&& rhs)            = delete;
@@ -44,8 +44,8 @@ class WebSocketWorker {
 
         ix::WebSocket _webSocket;
 
-        ToWebSockerQueue* _toServerQueue;
-        FromWebSockerQueue* _fromSeverQueue;
+        std::shared_ptr<ToWebSockerQueue> _toServerQueue;
+        std::shared_ptr<FromWebSockerQueue> _fromSeverQueue;
 };
 
 #endif

@@ -179,7 +179,7 @@ cppcheck: clean
 		--inline-suppr \
 		--force \
 		--error-exitcode=1 \
-		-I ${SOURCES_DIR} \
+		-I ${SOURCES_DIR}
 		${SOURCES_DIR}
 
 sync-github:

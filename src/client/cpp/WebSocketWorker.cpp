@@ -13,7 +13,8 @@
 
 #include "logger.h"
 
-WebSocketWorker::WebSocketWorker(ToWebSockerQueue* toServerQueue, FromWebSockerQueue* fromServerQueue) : _toServerQueue(toServerQueue), _fromSeverQueue(fromServerQueue) {
+WebSocketWorker::WebSocketWorker(std::shared_ptr<ToWebSockerQueue> toServerQueue, std::shared_ptr<FromWebSockerQueue> fromServerQueue)
+    : _toServerQueue(toServerQueue), _fromSeverQueue(fromServerQueue), _decoder(fromServerQueue) {
     _webSocket.setUrl("ws://localhost:9002/ws");
     _webSocket.disablePerMessageDeflate();
     _webSocket.setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) {
@@ -64,6 +65,7 @@ void WebSocketWorker::run() {
 
     while (_running) {
         if (auto msg = _toServerQueue->tryPop()) {
+            logger::logger << logger::debug << "Send msg to webSocket" << logger::endl;
             _webSocket.sendBinary(msg.value());
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));

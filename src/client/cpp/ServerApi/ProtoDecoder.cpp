@@ -14,7 +14,7 @@
 #include "logger.h"
 
 namespace WChat::ChatClient::ServerAPI {
-    ProtoDecoder::ProtoDecoder() {
+    ProtoDecoder::ProtoDecoder(std::shared_ptr<FromWebSockerQueue> fromSeverQueue) : _fromSeverQueue(fromSeverQueue) {
     }
 
     ProtoDecoder::~ProtoDecoder() {
@@ -52,22 +52,21 @@ namespace WChat::ChatClient::ServerAPI {
         switch (message_type_id) {
             case WChat::MessageType::REGISTER_SESSION_RES:
                 {
-                    _serverMsgQueue.push(msg.registersessionres());
+                    _fromSeverQueue->push(msg.registersessionres());
                 }
                 break;
             case WChat::MessageType::SEND_TEXT_MSG:
                 {
-                    _serverMsgQueue.push(msg.textmessage());
+                    _fromSeverQueue->push(msg.textmessage());
                 }
                 break;
             case WChat::MessageType::LIST_CONTACT_RES:
                 {
-                    _serverMsgQueue.push(msg.listcontactres());
+                    _fromSeverQueue->push(msg.listcontactres());
                 }
                 break;
             default:
                 logger::logger << logger::warning << "unsupported message type id = `" << message_type_id << "` handler." << logger::endl;
         }
-        logger::logger << logger::debug << "Msg queue size=" << _serverMsgQueue.size() << logger::endl;
     }
 };  // namespace WChat::ChatClient::ServerAPI
