@@ -18,6 +18,8 @@
 #include "ServerApi/ProtoDecoder.h"
 #include "ServerApi/ProtoWrapper.h"
 #include "WebSocketWorker.h"
+#include "internal/CUI.h"
+#include "internal/CommandsExcutor.h"
 #include "logger.h"
 
 int main() {
@@ -25,8 +27,11 @@ int main() {
     std::shared_ptr<FromWebSockerQueue> fromQueue = std::make_shared<FromWebSockerQueue>();
 
     WebSocketWorker sockertWorker(toQueue, fromQueue);
-
     sockertWorker.start();
+    WChat::internal::cui::CUIWorker cui;
+    cui.registerCommand("example", WChat::internal::cui::exampleCUIFunction);
+    cui.registerCommand("reg", WChat::internal::cui::CommandsExcutor{toQueue});
+    cui.start();
 
     std::thread receiver([fromQueue] {
         logger::logger << logger::debug << "Start of receiver thread" << logger::endl;
@@ -54,6 +59,8 @@ int main() {
     });
 
     receiver.join();
+    cui.stop();
     sockertWorker.stop();
+
     return 0;
 }

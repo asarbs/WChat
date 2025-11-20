@@ -56,10 +56,12 @@ void WebSocketWorker::start() {
     }
     _running      = true;
     _workerThread = std::thread(&WebSocketWorker::run, this);
+    logger::logger << logger::debug << "WebSocketWorker::start" << logger::endl;
 }
 
 void WebSocketWorker::stop() {
     _running = false;
+    logger::logger << logger::debug << "WebSocketWorker::stop" << logger::endl;
 }
 
 void WebSocketWorker::run() {

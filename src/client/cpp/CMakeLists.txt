@@ -84,6 +84,8 @@ add_executable(${TARGET_NAME_CLIENT}
     ServerApi/ProtoDecoder.cpp
     ThreadSafeQueue.cpp
     WebSocketWorker.cpp
+    internal/CUI.cpp
+    internal/CommandsExcutor.cpp
 )
 
 target_link_libraries(${TARGET_NAME_CLIENT}
