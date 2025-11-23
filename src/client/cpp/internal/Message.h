@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include "ServerApi/ProtoWrapper.h"
+#include "server/api/ProtoWrapper.h"
 
 namespace WChat::ChatClient::internal {
     struct Message {
@@ -25,7 +25,7 @@ namespace WChat::ChatClient::internal {
                 Rx,  // in direction from Chat Server
             };
             Direction dir;
-            WChat::ChatClient::ServerAPI::ProtoBuffer data;
+            WChat::ChatClient::server::api::ProtoBuffer data;
     };
 };  // namespace WChat::ChatClient::internal
 #endif

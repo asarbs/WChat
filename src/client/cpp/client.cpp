@@ -15,21 +15,20 @@
 #include <thread>
 #include <vector>
 
-#include "ServerApi/ProtoDecoder.h"
-#include "ServerApi/ProtoWrapper.h"
-#include "WebSocketWorker.h"
 #include "internal/CUI.h"
 #include "internal/CommandsExcutor.h"
 #include "logger.h"
+#include "server/api/ProtoDecoder.h"
+#include "server/api/ProtoWrapper.h"
+#include "server/connection/WebSocketWorker.h"
 
 int main() {
-    std::shared_ptr<ToWebSockerQueue> toQueue     = std::make_shared<ToWebSockerQueue>();
-    std::shared_ptr<FromWebSockerQueue> fromQueue = std::make_shared<FromWebSockerQueue>();
+    std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue     = std::make_shared<WChat::server::connection::ToWebSockerQueue>();
+    std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromQueue = std::make_shared<WChat::server::connection::FromWebSockerQueue>();
 
-    WebSocketWorker sockertWorker(toQueue, fromQueue);
+    WChat::server::connection::WebSocketWorker sockertWorker(toQueue, fromQueue);
     sockertWorker.start();
     WChat::internal::cui::CUIWorker cui;
-    cui.registerCommand("example", WChat::internal::cui::exampleCUIFunction);
     cui.registerCommand("reg", WChat::internal::cui::CommandsExcutor{toQueue});
     cui.start();
 
@@ -38,7 +37,7 @@ int main() {
         while (true) {
             logger::logger << logger::debug << "Waiting for message..." << logger::endl;
 
-            WChat::ChatClient::ServerAPI::ProtoRxMessages msg = fromQueue->waitAndPop();
+            WChat::ChatClient::server::api::ProtoRxMessages msg = fromQueue->waitAndPop();
 
             if (std::holds_alternative<WChat::Msg>(msg)) {
                 const WChat::Msg& m = std::get<WChat::Msg>(msg);

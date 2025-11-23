@@ -17,12 +17,12 @@
 #include <memory>
 #include <string>
 
-#include "ThreadSafeQueue.h"
+#include "server/connection/ThreadSafeQueue.h"
 
 namespace WChat::internal::cui {
     class CommandsExcutor {
         public:
-            explicit CommandsExcutor(std::shared_ptr<ToWebSockerQueue> toServerQueue);
+            explicit CommandsExcutor(std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toServerQueue);
             virtual ~CommandsExcutor();
             CommandsExcutor(const CommandsExcutor& rhs);
             CommandsExcutor(const CommandsExcutor&& rhs);
@@ -33,7 +33,7 @@ namespace WChat::internal::cui {
 
         protected:
         private:
-            std::shared_ptr<ToWebSockerQueue> _toServerQueue;
+            std::shared_ptr<WChat::server::connection::ToWebSockerQueue> _toServerQueue;
     };
 };  // namespace WChat::internal::cui
 #endif

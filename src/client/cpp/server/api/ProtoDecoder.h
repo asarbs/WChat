@@ -19,13 +19,13 @@
 #include <string>
 #include <variant>
 
-#include "ThreadSafeQueue.h"
 #include "proto/messeges.pb.h"
+#include "server/connection/ThreadSafeQueue.h"
 
-namespace WChat::ChatClient::ServerAPI {
+namespace WChat::ChatClient::server::api {
     class ProtoDecoder {
         public:
-            explicit ProtoDecoder(std::shared_ptr<FromWebSockerQueue> fromSeverQueue);
+            explicit ProtoDecoder(std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromSeverQueue);
             virtual ~ProtoDecoder();
             ProtoDecoder(const ProtoDecoder& rhs);
             ProtoDecoder(const ProtoDecoder&& rhs);
@@ -36,7 +36,7 @@ namespace WChat::ChatClient::ServerAPI {
 
         protected:
         private:
-            std::shared_ptr<FromWebSockerQueue> _fromSeverQueue;
+            std::shared_ptr<WChat::server::connection::FromWebSockerQueue> _fromSeverQueue;
     };
-};  // namespace WChat::ChatClient::ServerAPI
+};  // namespace WChat::ChatClient::server::api
 #endif

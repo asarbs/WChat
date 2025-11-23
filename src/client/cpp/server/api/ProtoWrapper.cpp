@@ -15,7 +15,7 @@
 
 constexpr uint32_t ProtoAPIVersion = 1;
 
-namespace WChat::ChatClient::ServerAPI {
+namespace WChat::ChatClient::server::api {
     ProtoBuffer buildRegisterSessionReq(const std::string& userName) {
         WChat::Msg msg;
         msg.set_version(ProtoAPIVersion);
@@ -93,4 +93,4 @@ namespace WChat::ChatClient::ServerAPI {
         return serialized;
     }
 
-};  // namespace WChat::ChatClient::ServerAPI
+};  // namespace WChat::ChatClient::server::api

@@ -78,14 +78,14 @@ endif()
 add_executable(${TARGET_NAME_CLIENT}
     ChatClient.cpp
     client.cpp
+    internal/CommandsExcutor.cpp
+    internal/CUI.cpp
     internal/Message.cpp
     proto/messeges.pb.cc
-    ServerApi/ProtoWrapper.cpp
-    ServerApi/ProtoDecoder.cpp
-    ThreadSafeQueue.cpp
-    WebSocketWorker.cpp
-    internal/CUI.cpp
-    internal/CommandsExcutor.cpp
+    server/api/ProtoDecoder.cpp
+    server/api/ProtoWrapper.cpp
+    server/connection/ThreadSafeQueue.cpp
+    server/connection/WebSocketWorker.cpp
 )
 
 target_link_libraries(${TARGET_NAME_CLIENT}

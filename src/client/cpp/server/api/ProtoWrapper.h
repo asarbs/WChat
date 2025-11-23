@@ -19,7 +19,7 @@
 
 #include "proto/messeges.pb.h"
 
-namespace WChat::ChatClient::ServerAPI {
+namespace WChat::ChatClient::server::api {
     using ProtoBuffer     = std::string;
     using ProtoRxMessages = std::variant<WChat::Msg, WChat::RegisterSessionRes, WChat::TextMessage, WChat::ListContactRes>;
     using ProtoTxMessages = std::variant<WChat::Msg, WChat::RegisterSessionReq, WChat::TextMessage, WChat::ContactConnectionReq, WChat::ContactConnectionRes,
@@ -45,6 +45,6 @@ namespace WChat::ChatClient::ServerAPI {
     ProtoBuffer buildUnregisterSession(const uint64_t userId);
     ProtoBuffer buildListContact(const uint64_t userId);
 
-};  // namespace WChat::ChatClient::ServerAPI
+};  // namespace WChat::ChatClient::server::api
 
 #endif

@@ -15,8 +15,8 @@
 
 #include "logger.h"
 
-namespace WChat::ChatClient::ServerAPI {
-    ProtoDecoder::ProtoDecoder(std::shared_ptr<FromWebSockerQueue> fromSeverQueue) : _fromSeverQueue(fromSeverQueue) {
+namespace WChat::ChatClient::server::api {
+    ProtoDecoder::ProtoDecoder(std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromSeverQueue) : _fromSeverQueue(fromSeverQueue) {
     }
 
     ProtoDecoder::~ProtoDecoder() {
@@ -71,4 +71,4 @@ namespace WChat::ChatClient::ServerAPI {
                 logger::logger << logger::warning << "unsupported message type id = `" << message_type_id << "` handler." << logger::endl;
         }
     }
-};  // namespace WChat::ChatClient::ServerAPI
+};  // namespace WChat::ChatClient::server::api
