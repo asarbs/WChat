@@ -78,12 +78,13 @@ endif()
 add_executable(${TARGET_NAME_CLIENT}
     ChatClient.cpp
     client.cpp
-    internal/CommandsExcutor.cpp
+    internal/CommandsExcutor/RegisterSession.cpp
     internal/CUI.cpp
     internal/Message.cpp
     proto/messeges.pb.cc
     server/api/ProtoDecoder.cpp
     server/api/ProtoWrapper.cpp
+    server/connection/MessagesReceiver.cpp
     server/connection/ThreadSafeQueue.cpp
     server/connection/WebSocketWorker.cpp
 )

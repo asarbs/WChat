@@ -15,49 +15,35 @@
 #include <thread>
 #include <vector>
 
+#include "ChatClient.h"
 #include "internal/CUI.h"
-#include "internal/CommandsExcutor.h"
+#include "internal/CommandsExcutor/RegisterSession.h"
 #include "logger.h"
 #include "server/api/ProtoDecoder.h"
 #include "server/api/ProtoWrapper.h"
+#include "server/connection/MessagesReceiver.h"
 #include "server/connection/WebSocketWorker.h"
 
 int main() {
     std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue     = std::make_shared<WChat::server::connection::ToWebSockerQueue>();
     std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromQueue = std::make_shared<WChat::server::connection::FromWebSockerQueue>();
-
+    std::shared_ptr<WChat::ChatClient::ChatClient> client                    = std::make_shared<WChat::ChatClient::ChatClient>();
     WChat::server::connection::WebSocketWorker sockertWorker(toQueue, fromQueue);
-    sockertWorker.start();
     WChat::internal::cui::CUIWorker cui;
-    cui.registerCommand("reg", WChat::internal::cui::CommandsExcutor{toQueue});
+
+    sockertWorker.start();
+    cui.registerCommand("reg", WChat::internal::cui::excutor::RegisterSession{toQueue, client});
     cui.start();
 
-    std::thread receiver([fromQueue] {
-        logger::logger << logger::debug << "Start of receiver thread" << logger::endl;
-        while (true) {
-            logger::logger << logger::debug << "Waiting for message..." << logger::endl;
+    WChat::server::connection::MessagesReceiver receiver(fromQueue, client);
+    receiver.start();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
-            WChat::ChatClient::server::api::ProtoRxMessages msg = fromQueue->waitAndPop();
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
 
-            if (std::holds_alternative<WChat::Msg>(msg)) {
-                const WChat::Msg& m = std::get<WChat::Msg>(msg);
-                logger::logger << logger::debug << "Got Msg" << logger::endl;
-            } else if (std::holds_alternative<WChat::RegisterSessionRes>(msg)) {
-                const WChat::RegisterSessionRes& m = std::get<WChat::RegisterSessionRes>(msg);
-                logger::logger << logger::debug << "Got RegisterSessionRes" << logger::endl;
-            } else if (std::holds_alternative<WChat::TextMessage>(msg)) {
-                const WChat::TextMessage& m = std::get<WChat::TextMessage>(msg);
-                logger::logger << logger::debug << "Got TextMessage" << logger::endl;
-            } else if (std::holds_alternative<WChat::ListContactRes>(msg)) {
-                const WChat::ListContactRes& m = std::get<WChat::ListContactRes>(msg);
-                logger::logger << logger::debug << "Got ListContactRes" << logger::endl;
-            } else {
-                logger::logger << logger::error << "Code should not be here" << logger::endl;
-            }
-        }
-    });
-
-    receiver.join();
+    receiver.stop();
     cui.stop();
     sockertWorker.stop();
 

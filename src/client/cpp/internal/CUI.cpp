@@ -70,9 +70,4 @@ namespace WChat::internal::cui {
         }
     }
 
-    bool exampleCUIFunction(const std::string& args) {
-        std::cout << "Example CUI Function with args=`" << args << "`" << std::endl;
-        return true;
-    }
-
 };  // namespace WChat::internal::cui

@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <cstdint>
+#include <string>
+
 namespace WChat::ChatClient {
     class ChatClient {
         public:
@@ -24,8 +27,14 @@ namespace WChat::ChatClient {
             ChatClient& operator=(const ChatClient& rhs);
             ChatClient& operator=(const ChatClient&& rhs);
 
+            void setUserId(uint64_t userId);
+            uint64_t getUserId() const;
+            void setName(const std::string& name);
+
         protected:
         private:
+            uint64_t _userId;
+            std::string _name;
     };
 };  // namespace WChat::ChatClient
 #endif
