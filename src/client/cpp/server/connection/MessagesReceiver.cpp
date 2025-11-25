@@ -49,7 +49,8 @@ namespace WChat::server::connection {
                 const WChat::RegisterSessionRes& m = std::get<WChat::RegisterSessionRes>(msg);
                 _handelRegisterSessionRes(m);
             } else if (std::holds_alternative<WChat::TextMessage>(msg)) {
-                // const WChat::TextMessage& m = std::get<WChat::TextMessage>(msg);
+                const WChat::TextMessage& m = std::get<WChat::TextMessage>(msg);
+                _handelIncommingMessage(m);
                 logger::logger << logger::debug << "Got TextMessage" << logger::endl;
             } else if (std::holds_alternative<WChat::ListContactRes>(msg)) {
                 // const WChat::ListContactRes& m = std::get<WChat::ListContactRes>(msg);
@@ -62,6 +63,14 @@ namespace WChat::server::connection {
     void MessagesReceiver::_handelRegisterSessionRes(const WChat::RegisterSessionRes& m) {
         logger::logger << logger::debug << "handel: RegisterSessionRes" << logger::endl;
         _client->setUserId(m.user_id());
+    }
+
+    void MessagesReceiver::_handelIncommingMessage(const WChat::TextMessage& m) {
+        logger::logger << logger::info                            //
+                       << "From ID:" << m.from_user_id() << ", "  //
+                       << "To ID:" << m.to_user_id() << ", "      //
+                       << "Message: `" << m.message() << "`."     //
+                       << logger::endl;
     }
 
 };  // namespace WChat::server::connection

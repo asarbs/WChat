@@ -45,6 +45,7 @@ namespace WChat::server::connection {
             std::shared_ptr<WChat::ChatClient::ChatClient> _client;
 
             void _handelRegisterSessionRes(const WChat::RegisterSessionRes& m);
+            void _handelIncommingMessage(const WChat::TextMessage& m);
     };
 };  // namespace WChat::server::connection
 #endif

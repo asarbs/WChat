@@ -18,12 +18,12 @@
 #include "ChatClient.h"
 #include "internal/CUI.h"
 #include "internal/CommandsExcutor/RegisterSession.h"
+#include "internal/CommandsExcutor/SendMsg.h"
 #include "logger.h"
 #include "server/api/ProtoDecoder.h"
 #include "server/api/ProtoWrapper.h"
 #include "server/connection/MessagesReceiver.h"
 #include "server/connection/WebSocketWorker.h"
-
 int main() {
     std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue     = std::make_shared<WChat::server::connection::ToWebSockerQueue>();
     std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromQueue = std::make_shared<WChat::server::connection::FromWebSockerQueue>();
@@ -33,6 +33,7 @@ int main() {
 
     sockertWorker.start();
     cui.registerCommand("reg", WChat::internal::cui::excutor::RegisterSession{toQueue, client});
+    cui.registerCommand("msg", WChat::internal::cui::excutor::SendMsg{toQueue, client});
     cui.start();
 
     WChat::server::connection::MessagesReceiver receiver(fromQueue, client);

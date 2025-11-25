@@ -27,7 +27,7 @@ namespace WChat::ChatClient::server::api {
         msg.SerializeToString(&serialized);
         return serialized;
     }
-    ProtoBuffer buildTestMsg(const uint64_t fromUserId, const uint64_t toUserId, const std::string& msgText) {  // cppcheck-suppress unusedFunction
+    ProtoBuffer buildTestMsg(const uint64_t fromUserId, const uint64_t toUserId, const std::string& msgText) {
         WChat::Msg msg;
         msg.set_version(ProtoAPIVersion);
         msg.set_type(WChat::MessageType::SEND_TEXT_MSG);
