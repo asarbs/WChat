@@ -24,7 +24,22 @@
 #include "server/api/ProtoWrapper.h"
 #include "server/connection/MessagesReceiver.h"
 #include "server/connection/WebSocketWorker.h"
+#include "server/core/Config.h"
+
+void registerClient(std::shared_ptr<WChat::ChatClient::ChatClient> client, std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue) {
+    if (client->hasName()) {
+        logger::logger << logger::info << "Unsaved username: " << client->getName() << logger::endl;
+        return;
+    }
+    logger::logger << logger::info << "Register saved username: " << client->getName() << logger::endl;
+
+    WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildRegisterSessionReq(client->getName());
+    toQueue->push(buff);
+}
+
 int main() {
+    WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
+
     std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue     = std::make_shared<WChat::server::connection::ToWebSockerQueue>();
     std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromQueue = std::make_shared<WChat::server::connection::FromWebSockerQueue>();
     std::shared_ptr<WChat::ChatClient::ChatClient> client                    = std::make_shared<WChat::ChatClient::ChatClient>();
@@ -39,7 +54,7 @@ int main() {
     WChat::server::connection::MessagesReceiver receiver(fromQueue, client);
     receiver.start();
     std::this_thread::sleep_for(std::chrono::seconds(1));
-
+    registerClient(client, toQueue);
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }

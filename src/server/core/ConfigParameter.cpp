@@ -11,6 +11,8 @@
 
 #include "ConfigParameter.h"
 
+#include "logger.h"
+
 namespace WChat::ChatServer::core {
 
     ConfigParameter::ConfigParameter() : _name("name"), _description(""), _value("") {
@@ -25,12 +27,27 @@ namespace WChat::ChatServer::core {
     }
 
     ConfigParameter::ConfigParameter(const ConfigParameter& rhs) : _name(rhs._name), _description(rhs._description), _value(rhs._value) {
+        // logger::logger << logger::warning << "Copy Constructor"     //
+        //                << _name << "<-" << rhs._name                //
+        //                << _description << "<-" << rhs._description  //
+        //                << _value << "<-" << rhs._value              //
+        //                << logger::endl;
     }
 
     ConfigParameter::ConfigParameter(const ConfigParameter&& rhs) : _name(std::move(rhs._name)), _description(std::move(rhs._description)), _value(std::move(rhs._value)) {
+        // logger::logger << logger::warning << "Move Constructor"     //
+        //                << _name << "<-" << rhs._name                //
+        //                << _description << "<-" << rhs._description  //
+        //                << _value << "<-" << rhs._value              //
+        //                << logger::endl;
     }
 
     ConfigParameter& ConfigParameter::operator=(const ConfigParameter& rhs) {
+        // logger::logger << logger::warning << "operator="            //
+        //                << _name << "<-" << rhs._name                //
+        //                << _description << "<-" << rhs._description  //
+        //                << _value << "<-" << rhs._value              //
+        //                << logger::endl;
         if (this != &rhs) {
             _name        = rhs._name;
             _description = rhs._description;
@@ -40,6 +57,11 @@ namespace WChat::ChatServer::core {
     }
 
     ConfigParameter& ConfigParameter::operator=(const ConfigParameter&& rhs) {
+        // logger::logger << logger::warning << "move operator="       //
+        //                << _name << "<-" << rhs._name                //
+        //                << _description << "<-" << rhs._description  //
+        //                << _value << "<-" << rhs._value              //
+        //                << logger::endl;
         if (this != &rhs) {
             _name        = std::move(rhs._name);
             _description = std::move(rhs._description);
@@ -63,5 +85,3 @@ namespace WChat::ChatServer::core {
     }
 
 }  // namespace WChat::ChatServer::core
-
-#include "logger.h"

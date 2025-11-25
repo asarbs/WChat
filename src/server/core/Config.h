@@ -29,13 +29,16 @@ namespace WChat::ChatServer::core {
     enum class ParamKey {
         Host,
         Port,
-        Storage
+        Storage,
+        UserName,
     };
     template <class ParamsDict>
     class Config {
         public:
             class ParameterAlreadyRegistered : std::exception {};
+            class ParameterNotRegistered : std::exception {};
             class ConfigurationFileError : std::exception {};
+
             static Config<ParamsDict>& instance() {  // cppcheck-suppress unusedFunction
                 static Config<ParamsDict> instance;
                 return instance;
@@ -45,6 +48,8 @@ namespace WChat::ChatServer::core {
                 if (_paramCollection.find(key) != _paramCollection.end()) {
                     throw ParameterAlreadyRegistered();
                 }
+                logger::logger << logger::debug << "addParam: " << param->name() << "=" << param->value() << " # " << param->description() << logger::endl;
+
                 _paramCollection[key]        = param;
                 _params2enums[param->name()] = key;
             }
@@ -63,12 +68,13 @@ namespace WChat::ChatServer::core {
 
                 for (const auto& [keys, params] : _paramCollection) {
                     out << "# " << params->description() << "\n" << params->name() << "=" << params->value() << "\n";
+                    logger::logger << logger::debug << "saveToFile: " << params->name() << "=" << params->value() << " # " << params->description() << logger::endl;
                 }
                 out.close();
             }
 
             void loadFromFile() {
-                // logger::logger << logger::debug << "Open configuration file: " << _confFileName << logger::endl;
+                logger::logger << logger::debug << "Open configuration file: " << _confFileName << logger::endl;
                 std::ifstream in(_confFileName);
                 if (!in.is_open()) {
                     saveToFile();
@@ -80,12 +86,16 @@ namespace WChat::ChatServer::core {
                         // logger::logger << logger::debug << "Commnet: '" << line << "'." << logger::endl;
                     } else {
                         std::pair<std::string, std::string> parameter = splitParam(line, '=');
-                        // logger::logger << logger::debug << "Param: '" << parameter.first << "->" << parameter.second << "'." << logger::endl;
-                        ParamsDict key                                = _params2enums[parameter.first];
+                        logger::logger << logger::debug << "Param: '" << parameter.first << "->" << parameter.second << "'." << logger::endl;
+                        ParamsDict key = _params2enums[parameter.first];
                         _paramCollection.at(key)->set(parameter.second);
                     }
                 }
                 in.close();
+
+                for (const auto& [keys, params] : _paramCollection) {
+                    logger::logger << logger::debug << "loadFromFile: " << params->name() << "=" << params->value() << " # " << params->description() << logger::endl;
+                }
             }
 
             void clear() {

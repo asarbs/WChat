@@ -13,6 +13,9 @@
 
 #include "logger.h"
 #include "server/api/ProtoWrapper.h"
+#include "server/core/Config.h"
+#include "server/core/ConfigChoice.h"
+#include "server/core/ConfigParameter.h"
 
 namespace WChat::internal::cui::excutor {
     RegisterSession::RegisterSession(std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toServerQueue, std::shared_ptr<WChat::ChatClient::ChatClient> client)
@@ -46,7 +49,13 @@ namespace WChat::internal::cui::excutor {
 
     bool RegisterSession::operator()(const std::string& args) {
         _client->setName(args);
+        std::shared_ptr<WChat::ChatServer::core::ConfigParameter> userNameParam =
+            WChat::ChatServer::core::ServerConfig::instance().get(WChat::ChatServer::core::ParamKey::UserName);
+        userNameParam->set(_client->getName());
+        WChat::ChatServer::core::ServerConfig::instance().saveToFile();
+
         WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildRegisterSessionReq(args);
+
         _toServerQueue->push(buff);
         return true;
     }

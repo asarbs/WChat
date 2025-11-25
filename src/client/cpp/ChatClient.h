@@ -30,8 +30,11 @@ namespace WChat::ChatClient {
             void setUserId(uint64_t userId);
             uint64_t getUserId() const;
             void setName(const std::string& name);
+            const std::string& getName() const;
+            bool hasName() const;
 
         protected:
+            //
         private:
             uint64_t _userId;
             std::string _name;

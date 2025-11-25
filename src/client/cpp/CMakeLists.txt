@@ -88,6 +88,14 @@ add_executable(${TARGET_NAME_CLIENT}
     server/connection/MessagesReceiver.cpp
     server/connection/ThreadSafeQueue.cpp
     server/connection/WebSocketWorker.cpp
+    ../../server/core/Config.cpp
+    ../../server/core/ConfigChoice.cpp
+    ../../server/core/ConfigParameter.cpp
+)
+
+target_compile_definitions(${TARGET_NAME_CLIENT}
+    PRIVATE
+        TARGET_NAME_CLIENT="${TARGET_NAME_CLIENT}"
 )
 
 target_link_libraries(${TARGET_NAME_CLIENT}
@@ -104,6 +112,7 @@ target_link_libraries(${TARGET_NAME_CLIENT}
 
 target_include_directories(${TARGET_NAME_CLIENT}
     PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/client/cpp
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_logger-src
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_arguments-src

@@ -14,9 +14,18 @@
 #include <utility>
 
 #include "logger.h"
+#include "server/core/Config.h"
+#include "server/core/ConfigChoice.h"
+#include "server/core/ConfigParameter.h"
 
 namespace WChat::ChatClient {
     ChatClient::ChatClient() : _userId(UINT64_MAX) {
+        std::string confFileName = WChat::ChatServer::core::ServerConfig::instance().value<std::string>(WChat::ChatServer::core::ParamKey::UserName);
+        if (confFileName == "username") {
+            logger::logger << logger::info << "Please regiser in server with 'reg' command" << logger::endl;
+        } else {
+            _name = confFileName;
+        }
     }
 
     ChatClient::~ChatClient() {
@@ -51,5 +60,12 @@ namespace WChat::ChatClient {
     }
     void ChatClient::setName(const std::string& name) {
         _name = name;
+    }
+    const std::string& ChatClient::getName() const {
+        return _name;
+    }
+
+    bool ChatClient::hasName() const {
+        return _name == "username";
     }
 };  // namespace WChat::ChatClient
