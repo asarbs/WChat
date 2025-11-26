@@ -28,6 +28,7 @@ namespace WChat::ChatClient {
             ChatClient& operator=(const ChatClient&& rhs);
 
             void setUserId(uint64_t userId);
+            bool isRegistered() const;
             uint64_t getUserId() const;
             void setName(const std::string& name);
             const std::string& getName() const;

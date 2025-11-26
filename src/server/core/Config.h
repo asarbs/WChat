@@ -82,14 +82,24 @@ namespace WChat::ChatServer::core {
                 }
                 std::string line;
                 while (std::getline(in, line)) {
-                    if (line[0] == '#') {
-                        // logger::logger << logger::debug << "Commnet: '" << line << "'." << logger::endl;
-                    } else {
-                        std::pair<std::string, std::string> parameter = splitParam(line, '=');
-                        logger::logger << logger::debug << "Param: '" << parameter.first << "->" << parameter.second << "'." << logger::endl;
-                        ParamsDict key = _params2enums[parameter.first];
-                        _paramCollection.at(key)->set(parameter.second);
+                    if (line.empty() || line[0] == '#') {
+                        continue;
                     }
+                    std::pair<std::string, std::string> parameter = splitParam(line, '=');
+
+                    if (parameter.first.empty()) {
+                        logger::logger << logger::warning << "Invalid config line: " << line << logger::endl;
+                        continue;
+                    }
+
+                    auto it = _params2enums.find(parameter.first);
+                    if (it == _params2enums.end()) {
+                        logger::logger << logger::warning << "Unknown parameter: " << parameter.first << logger::endl;
+                        continue;
+                    }
+                    ParamsDict key = _params2enums[parameter.first];
+                    _paramCollection.at(key)->set(parameter.second);
+                    logger::logger << logger::debug << "Param: '" << parameter.first << "->" << parameter.second << "'." << logger::endl;
                 }
                 in.close();
 

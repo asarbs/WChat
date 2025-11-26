@@ -81,7 +81,7 @@ namespace WChat::ChatClient::server::api {
         return serialized;
     }
 
-    ProtoBuffer buildListContact(const uint64_t userId) {  // cppcheck-suppress unusedFunction
+    ProtoBuffer buildListContact(const uint64_t userId) {
         WChat::Msg msg;
         msg.set_version(ProtoAPIVersion);
         msg.set_type(WChat::MessageType::LIST_CONTACT_REQ);

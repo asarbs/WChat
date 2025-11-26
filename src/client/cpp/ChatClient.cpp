@@ -58,6 +58,9 @@ namespace WChat::ChatClient {
     uint64_t ChatClient::getUserId() const {
         return _userId;
     }
+    bool ChatClient::isRegistered() const {
+        return _userId != UINT64_MAX;
+    }
     void ChatClient::setName(const std::string& name) {
         _name = name;
     }

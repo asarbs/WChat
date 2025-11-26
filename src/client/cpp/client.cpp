@@ -37,6 +37,15 @@ void registerClient(std::shared_ptr<WChat::ChatClient::ChatClient> client, std::
     toQueue->push(buff);
 }
 
+void getUserContactList(std::shared_ptr<WChat::ChatClient::ChatClient> client, std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue) {
+    while (!client->isRegistered()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+
+    WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildListContact(client->getUserId());
+    toQueue->push(buff);
+}
+
 int main() {
     WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
 
@@ -55,6 +64,7 @@ int main() {
     receiver.start();
     std::this_thread::sleep_for(std::chrono::seconds(1));
     registerClient(client, toQueue);
+    getUserContactList(client, toQueue);
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
