@@ -27,6 +27,7 @@ target_link_libraries(unit_tests PRIVATE
     gtest_main
     cpp_logger_lib
     cpp_arguments_lib
+    cpp_config
     nlohmann_json::nlohmann_json
     pthread
     protobuf

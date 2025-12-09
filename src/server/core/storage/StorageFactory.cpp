@@ -14,6 +14,7 @@
 #include <string>
 
 #include "logger.h"
+#include "server/core/ServerConfig.h"
 #include "server/core/storage/db/Volatile.h"
 #include "server/core/storage/db/sqlite/SQLightWrapper.h"
 #include "server/errors/ErrorHandlers.h"

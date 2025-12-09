@@ -17,6 +17,7 @@
 
 #include "ChatClient.h"
 #include "internal/CUI.h"
+#include "internal/ClientConfig.h"
 #include "internal/CommandsExcutor/RegisterSession.h"
 #include "internal/CommandsExcutor/SendMsg.h"
 #include "logger.h"
@@ -24,7 +25,6 @@
 #include "server/api/ProtoWrapper.h"
 #include "server/connection/MessagesReceiver.h"
 #include "server/connection/WebSocketWorker.h"
-#include "server/core/Config.h"
 
 void registerClient(std::shared_ptr<WChat::ChatClient::ChatClient> client, std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue) {
     if (client->hasName()) {
@@ -47,7 +47,7 @@ void getUserContactList(std::shared_ptr<WChat::ChatClient::ChatClient> client, s
 }
 
 int main() {
-    WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
+    WChat::internal::Config::ClientConfig::instance().loadFromFile();
 
     std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue     = std::make_shared<WChat::server::connection::ToWebSockerQueue>();
     std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromQueue = std::make_shared<WChat::server::connection::FromWebSockerQueue>();

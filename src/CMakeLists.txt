@@ -71,6 +71,13 @@ FetchContent_Declare(SQLiteCpp
     SYSTEM)
 FetchContent_MakeAvailable(SQLiteCpp)
 
+FetchContent_Declare(cpp_config
+    GIT_REPOSITORY https://github.com/asarbs/cpp_config.git
+    GIT_TAG master
+    GIT_SHALLOW OFF
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(cpp_config)
 
 find_package(Boost REQUIRED)
 
@@ -92,9 +99,7 @@ endif()
 add_executable(${TARGET_NAME_SERVER}
     server/client/ChatClient.cpp
     server/client/ChatClientDatabase.cpp
-    server/core/Config.cpp
-    server/core/ConfigChoice.cpp
-    server/core/ConfigParameter.cpp
+    server/core/ServerConfig.cpp
     server/core/storage/db/sqlite/SQLightWrapper.cpp
     server/core/storage/db/Volatile.cpp
     server/core/storage/StorageFactory.cpp
@@ -120,6 +125,7 @@ target_link_libraries(${TARGET_NAME_SERVER}
         nlohmann_json::nlohmann_json
         cpp_logger_lib
         cpp_arguments_lib
+        cpp_config
         protobuf
         SQLiteCpp
     )

@@ -14,7 +14,6 @@
 
 #include <memory>
 
-#include "server/core/Config.h"
 #include "server/core/storage/Storage.h"
 
 #pragma once

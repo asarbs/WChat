@@ -21,7 +21,7 @@
 #include "logger.h"
 #include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
-#include "server/core/Config.h"
+#include "server/core/ServerConfig.h"
 #include "server/core/storage/db/sqlite/SQLightWrapper.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/Manager.h"
@@ -150,6 +150,7 @@ int main(int argc, char* argv[]) {
         std::string storage = WChat::ChatServer::core::ServerConfig::instance().value<std::string>(WChat::ChatServer::core::ParamKey::Storage);
 
         logger::logger << logger::debug << "server WebSocket działa na porcie " << port << logger::endl;
+        logger::logger << logger::debug << "server user " << storage << " storage system" << logger::endl;
 
         ws_server.run();
     } catch (websocketpp::exception const& e) {

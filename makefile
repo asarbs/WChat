@@ -132,12 +132,12 @@ compile-proto: compile-proto-cpp compile-proto-python
 compile-server: compile-proto-cpp
 	@echo 'Build executable file: SERVER'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
-	${Q}cmake --build ${BUILD_DIR}/linux -j2 --target WChat_SERVER
+	${Q}cmake --build ${BUILD_DIR}/linux -j8 --target WChat_SERVER
 
 compile-client: compile-proto-cpp
 	@echo 'Build executable file: CLIENT'
 	${Q}cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -B $(BUILD_DIR)/linux
-	${Q}cmake --build ${BUILD_DIR}/linux -j2 --target WChat_CLIENT
+	${Q}cmake --build ${BUILD_DIR}/linux -j8 --target WChat_CLIENT
 
 compile: compile-server compile-client
 

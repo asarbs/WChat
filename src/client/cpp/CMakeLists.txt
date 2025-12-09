@@ -58,6 +58,14 @@ FetchContent_Declare(protobuf
     SYSTEM)
 FetchContent_MakeAvailable(protobuf)
 
+FetchContent_Declare(cpp_config
+    GIT_REPOSITORY https://github.com/asarbs/cpp_config.git
+    GIT_TAG master
+    GIT_SHALLOW OFF
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(cpp_config)
+
 find_package(Boost REQUIRED)
 
 message(STATUS "Application name: ${TARGET_NAME_CLIENT}")
@@ -88,9 +96,6 @@ add_executable(${TARGET_NAME_CLIENT}
     server/connection/MessagesReceiver.cpp
     server/connection/ThreadSafeQueue.cpp
     server/connection/WebSocketWorker.cpp
-    ../../server/core/Config.cpp
-    ../../server/core/ConfigChoice.cpp
-    ../../server/core/ConfigParameter.cpp
 )
 
 target_compile_definitions(${TARGET_NAME_CLIENT}
@@ -106,6 +111,7 @@ target_link_libraries(${TARGET_NAME_CLIENT}
         nlohmann_json::nlohmann_json
         cpp_logger_lib
         cpp_arguments_lib
+        cpp_config
         protobuf
         ixwebsocket
     )
@@ -119,7 +125,6 @@ target_include_directories(${TARGET_NAME_CLIENT}
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
         ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
         ${CMAKE_SOURCE_DIR}/build/linux/_deps/sqlight-src/include/
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/ftxui-src/include
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/imtui-src/include
+        ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_config-src/include
 )
 
