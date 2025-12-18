@@ -119,11 +119,9 @@ int main(int argc, char* argv[]) {
         websocket_server ws_server;
 
         WChat::ChatServer::core::storage::db::sqlite::SQLightWrapper::instance();
-        // WChat::ChatServer::core::ServerConfig::instance().saveToFile();
         WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
 
         Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
-        // argpars.addArgument("--level", Argument::Action::Store, "-l", "Path to level file.", "assets/test.yaml");
         argpars.parse(argc, argv);
 
         __messageManager.register_handler(WChat::MessageType::SEND_TEXT_MSG, std::make_shared<WChat::ChatServer::messages::handlers::Message>());
@@ -147,10 +145,7 @@ int main(int argc, char* argv[]) {
         ws_server.listen(boost::asio::ip::tcp::v4(), port);
         ws_server.start_accept();
 
-        std::string storage = WChat::ChatServer::core::ServerConfig::instance().value<std::string>(WChat::ChatServer::core::ParamKey::Storage);
-
-        logger::logger << logger::debug << "server WebSocket działa na porcie " << port << logger::endl;
-        logger::logger << logger::debug << "server user " << storage << " storage system" << logger::endl;
+        logger::logger << logger::debug << "server WebSocket port " << port << logger::endl;
 
         ws_server.run();
     } catch (websocketpp::exception const& e) {

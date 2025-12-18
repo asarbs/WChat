@@ -50,7 +50,7 @@ namespace cpp_config {
     }
 
     template <>
-    inline const std::string Config<WChat::internal::Config::ParamKey>::_confFileName = "WChatServer.conf";
+    inline const std::string Config<WChat::internal::Config::ParamKey>::_confFileName = "WChatClient.conf";
 
 }  // namespace cpp_config
 #endif
