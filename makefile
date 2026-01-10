@@ -144,8 +144,11 @@ compile: compile-server compile-client
 run-server:
 	${Q} ./build/linux/bin/WChat_SERVER
 
-run-client:
-	${Q} ./build/linux/bin/WChat_CLIENT
+run-client01:
+	${Q} ./build/linux/bin/WChat_CLIENT -c WChatClient01.conf
+
+run-client02:
+	${Q} ./build/linux/bin/WChat_CLIENT -c WChatClient02.conf
 
 run-client_web:
 	@echo "Starting simple HTTP server at http://localhost:8080"

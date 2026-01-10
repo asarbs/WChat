@@ -32,6 +32,7 @@ namespace WChat::internal::Config {
         Host,
         Port,
         UserName,
+        Password
     };
 
     using ClientConfig = cpp_config::Config<ParamKey>;
@@ -47,10 +48,8 @@ namespace cpp_config {
         addParam(PK::Host, std::make_shared<ConfigParameter>("host", "Host of server", "localhost"));
         addParam(PK::Port, std::make_shared<ConfigParameter>("port", "Port number", "9002"));
         addParam(PK::UserName, std::make_shared<ConfigParameter>("userame", "Client User name", "username"));
+        addParam(PK::Password, std::make_shared<ConfigParameter>("password", "Client Password", "password"));
     }
-
-    template <>
-    inline const std::string Config<WChat::internal::Config::ParamKey>::_confFileName = "WChatClient.conf";
 
 }  // namespace cpp_config
 #endif

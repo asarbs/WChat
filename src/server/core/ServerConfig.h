@@ -50,9 +50,5 @@ namespace cpp_config {
         addParam(PK::Port, std::make_shared<ConfigParameter>("port", "Port number", "9002"));
         addParam(PK::Storage, std::make_shared<ConfigChoice>("Storage", "Storage of server data", "volatile", std::vector<std::string>{"volatile", "db"}));
     }
-
-    template <>
-    inline const std::string Config<WChat::ChatServer::core::ParamKey>::_confFileName = "WChatServer.conf";
-
 }  // namespace cpp_config
 #endif

@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "ChatClient.h"
+#include "arguments.h"
 #include "internal/CUI.h"
 #include "internal/ClientConfig.h"
 #include "internal/CommandsExcutor/RegisterSession.h"
@@ -46,9 +47,13 @@ void getUserContactList(std::shared_ptr<WChat::ChatClient::ChatClient> client, s
     toQueue->push(buff);
 }
 
-int main() {
-    WChat::internal::Config::ClientConfig::instance().loadFromFile();
+int main(int argc, char* argv[]) {
+    Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("WChat Client", {0, 0, 1});
+    argpars.addArgument("--config", Argument::Action::Store, "-c", "path to configuration file", "WChatClient01.conf");
+    argpars.parse(argc, argv);
+    std::optional<std::string> config_file = argpars.getArgument<std::string>("-c");
 
+    WChat::internal::Config::ClientConfig::instance().loadFromFile(*config_file);
     std::shared_ptr<WChat::server::connection::ToWebSockerQueue> toQueue     = std::make_shared<WChat::server::connection::ToWebSockerQueue>();
     std::shared_ptr<WChat::server::connection::FromWebSockerQueue> fromQueue = std::make_shared<WChat::server::connection::FromWebSockerQueue>();
     std::shared_ptr<WChat::ChatClient::ChatClient> client                    = std::make_shared<WChat::ChatClient::ChatClient>();

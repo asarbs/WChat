@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
         websocket_server ws_server;
 
         WChat::ChatServer::core::storage::db::sqlite::SQLightWrapper::instance();
-        WChat::ChatServer::core::ServerConfig::instance().loadFromFile();
+        WChat::ChatServer::core::ServerConfig::instance().loadFromFile("WChatServer.conf");
 
         Argument::ArgumentParser& argpars = Argument::ArgumentParser::getInstance("Chat", {0, 0, 1});
         argpars.parse(argc, argv);
