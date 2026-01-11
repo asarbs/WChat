@@ -39,6 +39,7 @@ namespace WChat::ChatServer::client {
             userId = _storage->addUser(new_user_name);
         }
         _connections[*userId] = hdl;
+        _storage->registerUser(*userId);
         logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << *userId << "." << logger::endl;
         return *userId;
     }
@@ -65,11 +66,31 @@ namespace WChat::ChatServer::client {
     }
 
     uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
-        // for (auto cc : _chat_clients) {
-        //     if (cc.second->getName() == uname) {
-        //         return cc.first;
-        //     }
-        // }
-        return UINT64_MAX;
+        auto userId = _storage->getUserIdByName(uname);
+        if (!userId) {
+            return UINT64_MAX;
+        }
+        return *userId;
     }
+
+    bool ChatClientDatabase::hasMsg(uint64_t userId) {
+        return _storage->hasMsg(userId);
+    }
+
+    bool ChatClientDatabase::isRegistered(uint64_t userId) {
+        return _storage->isUserRegistered(userId);
+    }
+
+    bool ChatClientDatabase::saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) {
+        return _storage->saveMsg(to, from, message, wasSend);
+    }
+
+    bool ChatClientDatabase::createConnection(uint64_t from, uint64_t to) {
+        return _storage->createConnection(from, to);
+    }
+
+    WChat::ChatServer::core::storage::MsgHolder ChatClientDatabase::popMsg(uint64_t user_id) {
+        return _storage->popMsg(user_id);
+    }
+
 };  // namespace WChat::ChatServer::client

@@ -24,7 +24,6 @@
 #include "server/core/storage/Storage.h"
 
 namespace WChat::ChatServer::client {
-
     struct hdl_compare {
             bool operator()(const websocketpp::connection_hdl& lhs, const websocketpp::connection_hdl& rhs) const {
                 return lhs.owner_before(rhs);  // porównuje weak_ptr-y
@@ -40,7 +39,12 @@ namespace WChat::ChatServer::client {
             bool unregiserClinet(uint64_t user_id);
             std::shared_ptr<ChatClient> get(uint64_t user_id);
             websocketpp::connection_hdl connection(uint64_t user_id);
+            bool hasMsg(uint64_t userId);
+            bool isRegistered(uint64_t userId);
             void clean();
+            bool saveMsg(uint64_t to, uint64_t from, const std::string& message, bool was_sent);
+            bool createConnection(uint64_t from, uint64_t to);
+            WChat::ChatServer::core::storage::MsgHolder popMsg(uint64_t user_id);
 
             size_t size() const {
                 return _storage->size();

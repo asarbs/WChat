@@ -52,16 +52,16 @@ namespace WChat::ChatServer::client {
         _is_registered = false;
     }
     void ChatClient::saveMsg(uint64_t from, std::string message) {
-        _savedMsg.push_back({from, message});
+        // _savedMsg.push_back({from, message});
     }
     bool ChatClient::hasMsg() const {
-        return !_savedMsg.empty();
+        // return !_savedMsg.empty();
     }
-    ChatClient::MsgHolder ChatClient::popMsg() {
-        MsgHolder tmp = std::move(_savedMsg.front());
-        _savedMsg.pop_front();
-        return tmp;
-    }
+    // ChatClient::MsgHolder ChatClient::popMsg() {
+    //     MsgHolder tmp = std::move(_savedMsg.front());
+    //     _savedMsg.pop_front();
+    //     return tmp;
+    // }
     void ChatClient::addContect(std::shared_ptr<ChatClient> contact) {
         logger::logger << logger::info << getName() << " has new contact " << contact->getName() << logger::endl;
         _contacts[contact->_user_id] = contact;

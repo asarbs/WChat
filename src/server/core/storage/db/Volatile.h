@@ -26,13 +26,19 @@ namespace WChat::ChatServer::core::storage::db {
         public:
             static Volatile& instance();
 
-            bool isUserRegistered(std::string name) override;
-            size_t size() override;
-            std::vector<uint64_t> getUserContacts(uint64_t userId) override;
-            std::optional<uint64_t> getUserIdByName(const std::string& name) override;
-            void addContact(uint64_t userAId, uint64_t userBId) override;
-            std::optional<uint64_t> addUser(std::string name) override;
+            bool createConnection(uint64_t from, uint64_t to) override;
+            bool hasMsg(uint64_t userId) override;
+            bool isUserRegistered(const std::string& name) override;
+            bool isUserRegistered(uint64_t userId) override;
+            bool registerUser(uint64_t userId) override;
+            bool saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) override;
             bool unregister(uint64_t userId) override;
+            size_t size() override;
+            std::optional<uint64_t> addUser(std::string name) override;
+            std::optional<uint64_t> getUserIdByName(const std::string& name) override;
+            std::vector<uint64_t> getUserContacts(uint64_t userId) override;
+            void addContact(uint64_t userAId, uint64_t userBId) override;
+            virtual MsgHolder popMsg(uint64_t user_id) override;
 
         protected:
             //

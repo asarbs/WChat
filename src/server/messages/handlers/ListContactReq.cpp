@@ -31,8 +31,9 @@ namespace WChat::ChatServer::messages::handlers {
             throw WChat::ChatServer::errors::ProtoculError("Msg don't contain ContactConnectionReq");
         }
 
-        uint64_t userId                                             = std::move(msg.listcontactreq().user_id());
-        std::shared_ptr<WChat::ChatServer::client::ChatClient> user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(userId);
-        send_user_contacts(s, hdl, user->contactsBegin(), user->contactsEnd());
+        uint64_t userId = std::move(msg.listcontactreq().user_id());
+        logger::logger << logger::critical << "NOT IMPLEMENTED" << logger::endl;
+        // std::shared_ptr<WChat::ChatServer::client::ChatClient> user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(userId);
+        // send_user_contacts(s, hdl, user->contactsBegin(), user->contactsEnd());
     }
 };  // namespace WChat::ChatServer::messages::handlers

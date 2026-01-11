@@ -23,11 +23,6 @@
 namespace WChat::ChatServer::client {
     class ChatClient {
         public:
-            struct MsgHolder {
-                    uint64_t from;
-                    std::string message;
-            };
-
             ChatClient();
             explicit ChatClient(uint64_t user_id, const std::string& name);
             ChatClient(const ChatClient& other);
@@ -37,7 +32,6 @@ namespace WChat::ChatServer::client {
             bool hasMsg() const;
             bool isRegistered() const;
             const std::string& getName() const;
-            MsgHolder popMsg();
             uint64_t getUserId() const;
             void registerClient();
             void saveMsg(uint64_t from, std::string message);
@@ -57,7 +51,7 @@ namespace WChat::ChatServer::client {
             uint64_t _user_id;
             std::string _name;
             bool _is_registered;
-            std::list<MsgHolder> _savedMsg = {};
+
             std::map<uint64_t, std::shared_ptr<ChatClient>> _contacts;
     };
 };  // namespace WChat::ChatServer::client

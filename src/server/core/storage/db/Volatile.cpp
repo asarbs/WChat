@@ -45,6 +45,15 @@ namespace WChat::ChatServer::core::storage::db {
         return false;
     }
 
+    bool Volatile::registerUser(uint64_t userId) {
+        auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
+        auto it       = filtered.begin();
+        if (it != filtered.end()) {
+            it->isRegistered = true;
+            return true;
+        }
+        return false;
+    }
     void Volatile::addContact(uint64_t userAId, uint64_t userBId) {
         _contacts.emplace_back(userAId, userBId);
     }
@@ -66,8 +75,18 @@ namespace WChat::ChatServer::core::storage::db {
         return {};
     }
 
-    bool Volatile::isUserRegistered(std::string name) {
+    bool Volatile::isUserRegistered(const std::string& name) {
         auto filtered = _usersDb | std::ranges::views::filter([name](const UserInfo& ui) { return ui.name == name; });
+        auto it       = filtered.begin();
+        if (it != filtered.end()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool Volatile::isUserRegistered(uint64_t userId) {
+        auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
         auto it       = filtered.begin();
         if (it != filtered.end()) {
             return true;
@@ -78,6 +97,22 @@ namespace WChat::ChatServer::core::storage::db {
 
     size_t Volatile::size() {
         return _usersDb.size();
+    }
+
+    bool Volatile::hasMsg(uint64_t userId) {
+        return false;
+    }
+
+    bool Volatile::saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) {
+        return false;
+    }
+
+    bool Volatile::createConnection(uint64_t from, uint64_t to) {
+        return false;
+    }
+
+    MsgHolder Volatile::popMsg(uint64_t user_id) {
+        return MsgHolder{0, "TEST MSG"};
     }
 
 }  // namespace WChat::ChatServer::core::storage::db
