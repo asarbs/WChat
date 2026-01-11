@@ -38,14 +38,13 @@ namespace WChat::ChatServer::messages::handlers {
         if (status == WChat::Response::ACK) {
             send_ack(s, hdl);
             std::shared_ptr<WChat::ChatServer::client::ChatClient> from_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(from_user_id);
-            send_msg(s, from_user->connection, msg);
+            send_msg(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(from_user_id), msg);
             std::shared_ptr<WChat::ChatServer::client::ChatClient> to_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(to_user_id);
             from_user->addContect(to_user);
             to_user->addContect(from_user);
         } else {
             send_nack(s, hdl);
-            std::shared_ptr<WChat::ChatServer::client::ChatClient> from_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(from_user_id);
-            send_msg(s, from_user->connection, msg);
+            send_msg(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(from_user_id), msg);
         }
     }
 };  // namespace WChat::ChatServer::messages::handlers

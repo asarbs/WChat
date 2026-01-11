@@ -38,8 +38,6 @@ namespace WChat::ChatServer::messages::handlers {
         uint64_t from_user_id = std::move(msg.contactconnectionreq().from_user_id());
         logger::logger << logger::info << "ConnectionReq: name=" << name << "; to_user_id=" << to_user_id << "; from_user_id=" << from_user_id << logger::endl;
         send_ack(s, hdl);
-
-        std::shared_ptr<WChat::ChatServer::client::ChatClient> to_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(to_user_id);
-        send_msg(s, to_user->connection, msg);
+        send_msg(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(to_user_id), msg);
     }
 };  // namespace WChat::ChatServer::messages::handlers

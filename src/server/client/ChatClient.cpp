@@ -23,12 +23,12 @@ namespace WChat::ChatServer::client {
     }
     ChatClient::ChatClient(const ChatClient& other) {
         this->_user_id       = other._user_id;
-        this->connection     = other.connection;
+        // this->connection     = other.connection;
         this->_is_registered = other._is_registered;
     }
     ChatClient& ChatClient::operator=(const ChatClient& other) {
         this->_user_id       = other._user_id;
-        this->connection     = other.connection;
+        // this->connection     = other.connection;
         this->_is_registered = other._is_registered;
         return *this;
     }

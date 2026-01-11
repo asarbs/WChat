@@ -49,7 +49,7 @@ namespace WChat::ChatServer::messages::handlers {
         }
 
         if (to_user->isRegistered()) {
-            send_msg_to_user(s, to_user->connection, from, to, message);
+            send_msg_to_user(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(to), from, to, message);
         } else {
             to_user->saveMsg(from, message);
         }

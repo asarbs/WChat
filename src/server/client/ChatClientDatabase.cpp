@@ -39,8 +39,8 @@ namespace WChat::ChatServer::client {
             userId = _storage->addUser(new_user_name);
         }
         std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(*userId, new_user_name);
-        cc->connection                 = hdl;
         cc->registerClient();
+        _connections[*userId]  = hdl;
         _chat_clients[*userId] = cc;
         logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << *userId << "." << logger::endl;
         return *userId;
@@ -59,6 +59,15 @@ namespace WChat::ChatServer::client {
         }
         return nullptr;
     }
+
+    websocketpp::connection_hdl ChatClientDatabase::connection(uint64_t user_id) {
+        auto it = _connections.find(user_id);
+        if (it != _connections.end()) {
+            return it->second;
+        }
+        return {};
+    }
+
     void ChatClientDatabase::clean() {  // cppcheck-suppress unusedFunction
         _chat_clients.clear();
     }

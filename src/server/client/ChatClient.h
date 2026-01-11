@@ -45,7 +45,7 @@ namespace WChat::ChatServer::client {
             void addContect(std::shared_ptr<ChatClient> contact);
             std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator contactsBegin();
             std::map<uint64_t, std::shared_ptr<ChatClient>>::iterator contactsEnd();
-            websocketpp::connection_hdl connection;
+            // websocketpp::connection_hdl connection;
 
         protected:
             //

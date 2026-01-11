@@ -39,6 +39,7 @@ namespace WChat::ChatServer::client {
             uint64_t getUserIdByName(const std::string& name);
             bool unregiserClinet(uint64_t user_id);
             std::shared_ptr<ChatClient> get(uint64_t user_id);
+            websocketpp::connection_hdl connection(uint64_t user_id);
             void clean();
 
             size_t size() const {
@@ -53,6 +54,7 @@ namespace WChat::ChatServer::client {
             ChatClientDatabase();
             ~ChatClientDatabase() = default;
             std::map<uint64_t, std::shared_ptr<ChatClient>> _chat_clients{};
+            std::unordered_map<uint64_t, websocketpp::connection_hdl> _connections;
             std::shared_ptr<WChat::ChatServer::core::storage::Storage> _storage;
     };
 };  // namespace WChat::ChatServer::client
