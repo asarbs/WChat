@@ -38,25 +38,21 @@ namespace WChat::ChatServer::client {
         if (!userId) {
             userId = _storage->addUser(new_user_name);
         }
-        std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(*userId, new_user_name);
-        cc->registerClient();
-        _connections[*userId]  = hdl;
-        _chat_clients[*userId] = cc;
+        _connections[*userId] = hdl;
         logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << *userId << "." << logger::endl;
         return *userId;
     }
 
     bool ChatClientDatabase::unregiserClinet(uint64_t user_id) {
-        std::shared_ptr<ChatClient> cc = get(user_id);
-        cc->unregister();
+        _storage->unregister(user_id);
         return true;
     }
 
     std::shared_ptr<ChatClient> ChatClientDatabase::get(uint64_t user_id) {
-        auto it = _chat_clients.find(user_id);
-        if (it != _chat_clients.end()) {
-            return it->second;
-        }
+        // auto it = _chat_clients.find(user_id);
+        // if (it != _chat_clients.end()) {
+        //     return it->second;
+        // }
         return nullptr;
     }
 
@@ -68,16 +64,12 @@ namespace WChat::ChatServer::client {
         return {};
     }
 
-    void ChatClientDatabase::clean() {  // cppcheck-suppress unusedFunction
-        _chat_clients.clear();
-    }
-
     uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
-        for (auto cc : _chat_clients) {
-            if (cc.second->getName() == uname) {
-                return cc.first;
-            }
-        }
+        // for (auto cc : _chat_clients) {
+        //     if (cc.second->getName() == uname) {
+        //         return cc.first;
+        //     }
+        // }
         return UINT64_MAX;
     }
 };  // namespace WChat::ChatServer::client

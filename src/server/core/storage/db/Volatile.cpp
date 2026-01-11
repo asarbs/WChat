@@ -35,6 +35,16 @@ namespace WChat::ChatServer::core::storage::db {
         _userCounter++;
         return _userCounter - 1;
     }
+    bool Volatile::unregister(uint64_t userId) {
+        auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
+        auto it       = filtered.begin();
+        if (it != filtered.end()) {
+            it->isRegistered = false;
+            return true;
+        }
+        return false;
+    }
+
     void Volatile::addContact(uint64_t userAId, uint64_t userBId) {
         _contacts.emplace_back(userAId, userBId);
     }

@@ -43,7 +43,7 @@ namespace WChat::ChatServer::client {
             void clean();
 
             size_t size() const {
-                return _chat_clients.size();
+                return _storage->size();
             }
 
             ChatClientDatabase(const ChatClientDatabase&)            = delete;
@@ -53,7 +53,6 @@ namespace WChat::ChatServer::client {
         private:
             ChatClientDatabase();
             ~ChatClientDatabase() = default;
-            std::map<uint64_t, std::shared_ptr<ChatClient>> _chat_clients{};
             std::unordered_map<uint64_t, websocketpp::connection_hdl> _connections;
             std::shared_ptr<WChat::ChatServer::core::storage::Storage> _storage;
     };

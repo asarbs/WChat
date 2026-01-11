@@ -17,7 +17,13 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     SQLightWrapper::SQLightWrapper() : _db("WCHat.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE) {
         try {
             _db.exec("PRAGMA foreign_keys = ON;");
-            _db.exec("CREATE TABLE IF NOT EXISTS users    (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);");
+            _db.exec(
+                "CREATE TABLE IF NOT EXISTS users ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "name TEXT NOT NULL, "
+                "isRegistered BOOLEAN NOT NULL DEFAULT 0, "
+                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP"
+                ");");
             _db.exec(
                 "CREATE TABLE IF NOT EXISTS contacts ("
                 "user_id_1 INTEGER NOT NULL, "
@@ -41,12 +47,24 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     std::optional<uint64_t> SQLightWrapper::addUser(std::string name) {
-        SQLite::Statement query(_db, "INSERT INTO users (name) VALUES (?)");
+        SQLite::Statement query(_db, "INSERT INTO users (name, isRegistered) VALUES (?, ?)");
         query.bind(1, name);
+        query.bind(2, true);
         query.exec();
         logger::logger << logger::debug << "Add new user " << name << logger::endl;
         return getUserIdByName(name);
     }
+
+    bool SQLightWrapper::unregister(uint64_t userId) {
+        SQLite::Statement query(_db, "UPDATE users isRegistered = ? WHERE id = ?");
+
+        query.bind(1, false);
+        query.bind(2, uint32_t(userId));
+
+        query.exec();
+        return true;
+    }
+
     void SQLightWrapper::addContact(uint64_t userAId, uint64_t userBId) {
         SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1) VALUE (?), (user_id_2) VALUE (?)");
         query.bind(1, static_cast<uint32_t>(userAId));

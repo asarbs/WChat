@@ -30,6 +30,7 @@ namespace WChat::ChatServer::core::storage {
             virtual std::optional<uint64_t> getUserIdByName(const std::string& name) = 0;
             virtual void addContact(uint64_t userAId, uint64_t userBId)              = 0;
             virtual std::optional<uint64_t> addUser(std::string name)                = 0;
+            virtual bool unregister(uint64_t userId)                                 = 0;
 
         protected:
             Storage() = default;

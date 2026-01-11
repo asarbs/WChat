@@ -31,6 +31,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
             std::optional<uint64_t> getUserIdByName(const std::string& name) override;
             void addContact(uint64_t userAId, uint64_t userBId) override;
             std::optional<uint64_t> addUser(std::string name) override;
+            bool unregister(uint64_t userId) override;
 
         protected:
         private:
