@@ -93,8 +93,8 @@ clean:
 	${Q}rm -rf prof_app
 	${Q}rm -rf gmon.out
 	${Q}find . -name "*.o" | xargs -r rm
-	${Q}find . -name "*.conf" | xargs -r rm
-	${Q}find . -name "*.db" | xargs -r rm
+# 	${Q}find . -name "*.conf" | xargs -r rm
+# 	${Q}find . -name "*.db" | xargs -r rm
 	${Q}find . -name "*.pcm" | xargs -r rm
 	${Q}find . -name "*.pb.h" | xargs -r rm
 	${Q}find . -name "*.pb.cc" | xargs -r rm
