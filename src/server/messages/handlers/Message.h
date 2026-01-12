@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/messages/handlers/Handler.h"
+
 namespace WChat::ChatServer::messages::handlers {
     class Message : public Handler {
         public:

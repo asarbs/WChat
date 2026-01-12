@@ -11,6 +11,8 @@
 
 #include "SQLightWrapper.h"
 
+#include <utility>
+
 #include "logger.h"
 
 namespace WChat::ChatServer::core::storage::db::sqlite {
@@ -62,6 +64,16 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     SQLightWrapper& SQLightWrapper::instance() {
         static SQLightWrapper instance;
         return instance;
+    }
+
+    void SQLightWrapper::clean() {
+        SQLite::Transaction transaction(_db);
+
+        _db.exec("DELETE FROM messages;");
+        _db.exec("DELETE FROM contacts;");
+        _db.exec("DELETE FROM users;");
+
+        transaction.commit();
     }
 
     std::optional<uint64_t> SQLightWrapper::addUser(std::string name) {
@@ -206,6 +218,34 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         update.exec();
 
         return msg;
+    }
+
+    Contacts SQLightWrapper::getContacts(uint64_t userId) {
+        Contacts result;
+
+        SQLite::Statement query(_db,
+                                "SELECT u.id, u.name "
+                                "FROM contacts c "
+                                "JOIN users u ON u.id = "
+                                "   CASE "
+                                "       WHEN c.user_id_1 = ? THEN c.user_id_2 "
+                                "       ELSE c.user_id_1 "
+                                "   END "
+                                "WHERE c.user_id_1 = ? OR c.user_id_2 = ?;");
+
+        query.bind(1, static_cast<uint32_t>(userId));
+        query.bind(2, static_cast<uint32_t>(userId));
+        query.bind(3, static_cast<uint32_t>(userId));
+
+        while (query.executeStep()) {
+            ContactInfo info;
+            info.contact_id = static_cast<uint32_t>(query.getColumn(0).getInt64());
+            info.name       = query.getColumn(1).getString();
+
+            result.push_back(std::move(info));
+        }
+
+        return result;
     }
 
 };  // namespace WChat::ChatServer::core::storage::db::sqlite

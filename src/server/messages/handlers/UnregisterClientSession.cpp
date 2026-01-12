@@ -12,7 +12,6 @@
 #include "UnregisterClientSession.h"
 
 #include "logger.h"
-#include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 #include "server/messages/handlers/Handler.h"

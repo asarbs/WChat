@@ -28,6 +28,10 @@ namespace WChat::ChatServer::client {
     // ChatClientDatabase::~ChatClientDatabase() {
     // }
 
+    void ChatClientDatabase::clean() {
+        _storage->clean();
+    }
+
     uint64_t ChatClientDatabase::regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
         uint64_t uid = getUserIdByName(new_user_name);
         if (uid != UINT64_MAX) {
@@ -47,14 +51,6 @@ namespace WChat::ChatServer::client {
     bool ChatClientDatabase::unregiserClinet(uint64_t user_id) {
         _storage->unregister(user_id);
         return true;
-    }
-
-    std::shared_ptr<ChatClient> ChatClientDatabase::get(uint64_t user_id) {
-        // auto it = _chat_clients.find(user_id);
-        // if (it != _chat_clients.end()) {
-        //     return it->second;
-        // }
-        return nullptr;
     }
 
     websocketpp::connection_hdl ChatClientDatabase::connection(uint64_t user_id) {
@@ -91,6 +87,10 @@ namespace WChat::ChatServer::client {
 
     WChat::ChatServer::core::storage::MsgHolder ChatClientDatabase::popMsg(uint64_t user_id) {
         return _storage->popMsg(user_id);
+    }
+
+    WChat::ChatServer::core::storage::Contacts ChatClientDatabase::getContacts(uint64_t userId) {
+        return _storage->getContacts(userId);
     }
 
 };  // namespace WChat::ChatServer::client

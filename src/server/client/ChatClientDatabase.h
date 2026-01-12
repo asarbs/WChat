@@ -18,9 +18,9 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <websocketpp/server.hpp>
 
-#include "ChatClient.h"
 #include "server/core/storage/Storage.h"
 
 namespace WChat::ChatServer::client {
@@ -32,19 +32,19 @@ namespace WChat::ChatServer::client {
 
     class ChatClientDatabase {
         public:
-            static ChatClientDatabase& getInstance();
-            uint64_t regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name);
-            uint64_t regiserClinetSession(uint64_t user_id);
-            uint64_t getUserIdByName(const std::string& name);
-            bool unregiserClinet(uint64_t user_id);
-            std::shared_ptr<ChatClient> get(uint64_t user_id);
-            websocketpp::connection_hdl connection(uint64_t user_id);
+            bool createConnection(uint64_t from, uint64_t to);
             bool hasMsg(uint64_t userId);
             bool isRegistered(uint64_t userId);
-            void clean();
             bool saveMsg(uint64_t to, uint64_t from, const std::string& message, bool was_sent);
-            bool createConnection(uint64_t from, uint64_t to);
+            bool unregiserClinet(uint64_t user_id);
+            static ChatClientDatabase& getInstance();
+            uint64_t getUserIdByName(const std::string& name);
+            uint64_t regiserClinetSession(uint64_t user_id);
+            uint64_t regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name);
+            void clean();
+            WChat::ChatServer::core::storage::Contacts getContacts(uint64_t userId);
             WChat::ChatServer::core::storage::MsgHolder popMsg(uint64_t user_id);
+            websocketpp::connection_hdl connection(uint64_t user_id);
 
             size_t size() const {
                 return _storage->size();
@@ -54,6 +54,7 @@ namespace WChat::ChatServer::client {
             ChatClientDatabase& operator=(const ChatClientDatabase&) = delete;
 
         protected:
+            //
         private:
             ChatClientDatabase();
             ~ChatClientDatabase() = default;

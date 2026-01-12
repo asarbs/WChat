@@ -19,7 +19,6 @@
 
 #include "arguments.h"
 #include "logger.h"
-#include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/core/ServerConfig.h"
 #include "server/core/storage/db/sqlite/SQLightWrapper.h"

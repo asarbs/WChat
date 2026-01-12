@@ -26,6 +26,12 @@ namespace WChat::ChatServer::core::storage {
             std::string message;
     };
 
+    struct ContactInfo {
+            std::string name;
+            uint32_t contact_id;
+    };
+    using Contacts = std::vector<ContactInfo>;
+
     class Storage {
         public:
             virtual ~Storage() = default;
@@ -43,6 +49,8 @@ namespace WChat::ChatServer::core::storage {
             virtual bool saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) = 0;
             virtual bool createConnection(uint64_t from, uint64_t to)                                  = 0;
             virtual MsgHolder popMsg(uint64_t user_id)                                                 = 0;
+            virtual Contacts getContacts(uint64_t userId)                                              = 0;
+            virtual void clean()                                                                       = 0;
 
         protected:
             Storage() = default;

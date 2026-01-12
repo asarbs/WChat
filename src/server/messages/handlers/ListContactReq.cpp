@@ -15,7 +15,6 @@
 #include <utility>
 
 #include "logger.h"
-#include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 
@@ -33,7 +32,7 @@ namespace WChat::ChatServer::messages::handlers {
 
         uint64_t userId = std::move(msg.listcontactreq().user_id());
         logger::logger << logger::critical << "NOT IMPLEMENTED" << logger::endl;
-        // std::shared_ptr<WChat::ChatServer::client::ChatClient> user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(userId);
-        // send_user_contacts(s, hdl, user->contactsBegin(), user->contactsEnd());
+        WChat::ChatServer::core::storage::Contacts contacts = WChat::ChatServer::client::ChatClientDatabase::getInstance().getContacts(userId);
+        send_user_contacts(s, hdl, contacts);
     }
 };  // namespace WChat::ChatServer::messages::handlers

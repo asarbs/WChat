@@ -115,4 +115,11 @@ namespace WChat::ChatServer::core::storage::db {
         return MsgHolder{0, "TEST MSG"};
     }
 
+    Contacts Volatile::getContacts(uint64_t userId) {
+        return {};
+    }
+
+    void Volatile::clean() {
+    }
+
 }  // namespace WChat::ChatServer::core::storage::db

@@ -37,9 +37,12 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
             std::optional<uint64_t> getUserIdByName(const std::string& name) override;
             std::vector<uint64_t> getUserContacts(uint64_t userId) override;
             void addContact(uint64_t userAId, uint64_t userBId) override;
-            virtual MsgHolder popMsg(uint64_t user_id) override;
+            MsgHolder popMsg(uint64_t user_id) override;
+            Contacts getContacts(uint64_t userId) override;
+            void clean() override;
 
         protected:
+            //
         private:
             SQLightWrapper();
             ~SQLightWrapper() override;

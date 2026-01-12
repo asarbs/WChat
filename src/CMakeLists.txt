@@ -97,7 +97,6 @@ else()
 endif()
 
 add_executable(${TARGET_NAME_SERVER}
-    server/client/ChatClient.cpp
     server/client/ChatClientDatabase.cpp
     server/core/ServerConfig.cpp
     server/core/storage/db/sqlite/SQLightWrapper.cpp
