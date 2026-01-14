@@ -15,6 +15,7 @@ import os
 import signal
 import sys
 from constants import *
+from pathlib import Path
 
 CONFIGURATION = """
 # Host of server
@@ -29,7 +30,9 @@ Storage=db
 
 @pytest_asyncio.fixture(autouse=True)
 def run_server():
-    os.remove("WCHat.db")
+    db_path = Path("WCHat.db")
+    if db_path.exists():
+        db_path.unlink()
 
     proc = subprocess.Popen(PROGRAM_CMD, stdout=sys.stdout, stderr=sys.stderr)
 
