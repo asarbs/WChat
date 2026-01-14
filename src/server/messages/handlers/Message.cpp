@@ -31,9 +31,14 @@ namespace WChat::ChatServer::messages::handlers {
         uint64_t from       = msg.textmessage().from_user_id();
         uint64_t to         = msg.textmessage().to_user_id();
         std::string message = msg.textmessage().message();
+        logger::logger << logger::debug << "MessageHandler_Message::handle: send ack." << logger::endl;
+        // send_ack(s, hdl);
         send_msg_to_user(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(from), from, to, message);
+        logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message
+                       << "`. to is register = " << WChat::ChatServer::client::ChatClientDatabase::getInstance().isRegistered(to)
+                       << "`. from is register = " << WChat::ChatServer::client::ChatClientDatabase::getInstance().isRegistered(from) <<
 
-        logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
+            logger::endl;
 
         if (WChat::ChatServer::client::ChatClientDatabase::getInstance().isRegistered(to)) {
             send_msg_to_user(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(to), from, to, message);

@@ -37,7 +37,7 @@ namespace WChat::ChatServer::messages::handlers {
 
         while (WChat::ChatServer::client::ChatClientDatabase::getInstance().hasMsg(new_user_id)) {
             WChat::ChatServer::core::storage::MsgHolder tmpMsg = WChat::ChatServer::client::ChatClientDatabase::getInstance().popMsg(new_user_id);
-            logger::logger << logger::debug << "Send waiting msg from " << tmpMsg.from << ":" << tmpMsg.message << logger::endl;
+            logger::logger << logger::debug << "Send waiting msg from " << tmpMsg.from << ":" << new_user_id << " - \"" << tmpMsg.message << "\"" << logger::endl;
             send_msg_to_user(s, hdl, tmpMsg.from, new_user_id, tmpMsg.message);
         }
     }

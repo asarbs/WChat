@@ -22,14 +22,17 @@ host=localhost
 # Port number
 port=9002
 # Storage of serwer data
-Storage=volatile
+Storage=db
 """
 
 
 
 @pytest_asyncio.fixture(autouse=True)
 def run_server():
+    os.remove("WCHat.db")
+
     proc = subprocess.Popen(PROGRAM_CMD, stdout=sys.stdout, stderr=sys.stderr)
+
 
     with open("WChatServer.conf", "w") as conf_file:
         conf_file.write(CONFIGURATION)

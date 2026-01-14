@@ -33,15 +33,18 @@ namespace WChat::ChatServer::core::storage::db {
     std::optional<uint64_t> Volatile::addUser(std::string name) {
         _usersDb.emplace_back(_userCounter, name, true);
         _userCounter++;
+
         return _userCounter - 1;
     }
     bool Volatile::unregister(uint64_t userId) {
         auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
         auto it       = filtered.begin();
         if (it != filtered.end()) {
+            logger::logger << logger::debug << "registerUser userId = " << userId << ", it->userId=" << it->userId << " Success" << logger::endl;
             it->isRegistered = false;
             return true;
         }
+        logger::logger << logger::warning << "registerUser userId = " << userId << ", it->userId=" << it->userId << " Failed" << logger::endl;
         return false;
     }
 
@@ -49,9 +52,11 @@ namespace WChat::ChatServer::core::storage::db {
         auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
         auto it       = filtered.begin();
         if (it != filtered.end()) {
+            logger::logger << logger::debug << "registerUser userId = " << userId << ", it->userId=" << it->userId << " Success" << logger::endl;
             it->isRegistered = true;
             return true;
         }
+        logger::logger << logger::warning << "registerUser userId = " << userId << ", it->userId=" << it->userId << " Failed" << logger::endl;
         return false;
     }
     void Volatile::addContact(uint64_t userAId, uint64_t userBId) {
@@ -78,6 +83,7 @@ namespace WChat::ChatServer::core::storage::db {
     bool Volatile::isUserRegistered(const std::string& name) {
         auto filtered = _usersDb | std::ranges::views::filter([name](const UserInfo& ui) { return ui.name == name; });
         auto it       = filtered.begin();
+        logger::logger << logger::debug << "User name = " << name << " is registered" << logger::endl;
         if (it != filtered.end()) {
             return true;
         }
@@ -89,7 +95,8 @@ namespace WChat::ChatServer::core::storage::db {
         auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
         auto it       = filtered.begin();
         if (it != filtered.end()) {
-            return true;
+            logger::logger << logger::debug << "User id = " << userId << " is registered" << logger::endl;
+            return it->isRegistered;
         }
 
         return false;
@@ -120,6 +127,10 @@ namespace WChat::ChatServer::core::storage::db {
     }
 
     void Volatile::clean() {
+        _userCounter = 0;
+        _usersDb.clear();
+        _contacts.clear();
+        logger::logger << logger::debug << "Volatile::clean()" << logger::endl;
     }
 
 }  // namespace WChat::ChatServer::core::storage::db

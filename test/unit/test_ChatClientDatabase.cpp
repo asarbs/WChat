@@ -57,12 +57,12 @@ TEST_F(ChatClientDatabaseTest, register_10_and_unregiseter_5_clinet) {
         websocketpp::connection_hdl hdl;
         ChatClientDatabase::getInstance().regiserClinetSession(hdl, "asar" + std::to_string(i));
     }
-    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 11);
-    ChatClientDatabase::getInstance().unregiserClinet(5);
-    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 11);
+    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
+    ASSERT_TRUE(ChatClientDatabase::getInstance().unregiserClinet(5));
+    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
     ASSERT_FALSE(ChatClientDatabase::getInstance().isRegistered(5));
     ASSERT_TRUE(ChatClientDatabase::getInstance().isRegistered(4));
     ASSERT_TRUE(ChatClientDatabase::getInstance().isRegistered(6));
     ASSERT_TRUE(ChatClientDatabase::getInstance().isRegistered(4));
-    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 11);
+    ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
 }

@@ -86,7 +86,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     bool SQLightWrapper::unregister(uint64_t userId) {
-        SQLite::Statement query(_db, "UPDATE users isRegistered = ? WHERE id = ?");
+        SQLite::Statement query(_db, "UPDATE users SET isRegistered = ? WHERE id = ?");
 
         query.bind(1, false);
         query.bind(2, uint32_t(userId));
@@ -96,9 +96,9 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     bool SQLightWrapper::registerUser(uint64_t userId) {
-        SQLite::Statement query(_db, "UPDATE users isRegistered = ? WHERE id = ?");
+        SQLite::Statement query(_db, "UPDATE users SET isRegistered = ? WHERE id = ?");
 
-        query.bind(1, false);
+        query.bind(1, true);
         query.bind(2, uint32_t(userId));
 
         query.exec();
@@ -106,7 +106,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     void SQLightWrapper::addContact(uint64_t userAId, uint64_t userBId) {
-        SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1) VALUE (?), (user_id_2) VALUE (?)");
+        SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1, user_id_2) VALUES (?, ?)");
         query.bind(1, static_cast<uint32_t>(userAId));
         query.bind(2, static_cast<uint32_t>(userBId));
         logger::logger << logger::debug << "Add Contact from " << userAId << " to " << userBId << logger::endl;
@@ -161,6 +161,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         query.bind(1, static_cast<uint32_t>(userId));
         if (query.executeStep()) {
             uint32_t isRegistered = query.getColumn(0).getUInt();
+            logger::logger << logger::warning << "Check users.id=" << userId << " isRegistered=" << isRegistered << logger::endl;
             return isRegistered == 1;
         }
         return false;
@@ -177,7 +178,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     bool SQLightWrapper::saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) {
-        SQLite::Statement query(_db, "INSERT INTO messages (user_from, user_to, , msg_text, was_sent) VALUE (?, ?, ?, ?)");
+        SQLite::Statement query(_db, "INSERT INTO messages (user_from, user_to, msg_text, was_sent) VALUES (?, ?, ?, ?)");
         query.bind(1, static_cast<uint32_t>(from));
         query.bind(2, static_cast<uint32_t>(to));
         query.bind(3, message);
@@ -188,7 +189,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     bool SQLightWrapper::createConnection(uint64_t from, uint64_t to) {
-        SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1, user_id_2) VALUE (?, ?)");
+        SQLite::Statement query(_db, "INSERT INTO contacts (user_id_1, user_id_2) VALUES (?, ?)");
         query.bind(1, static_cast<uint32_t>(from));
         query.bind(2, static_cast<uint32_t>(to));
         logger::logger << logger::debug << "Add Contacts fron " << from << " to " << to << " saved" << logger::endl;
@@ -200,7 +201,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         SQLite::Statement query(_db,
                                 "SELECT id, user_from, msg_text "
                                 "FROM messages "
-                                "WHERE user_to = ? AND was_delivered = 0 "
+                                "WHERE user_to = ? AND was_delivered = 0 AND  was_sent = 0 "
                                 "ORDER BY id ASC "
                                 "LIMIT 1");
         query.bind(1, static_cast<uint32_t>(user_id));

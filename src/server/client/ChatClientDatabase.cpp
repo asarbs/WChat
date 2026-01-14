@@ -49,8 +49,7 @@ namespace WChat::ChatServer::client {
     }
 
     bool ChatClientDatabase::unregiserClinet(uint64_t user_id) {
-        _storage->unregister(user_id);
-        return true;
+        return _storage->unregister(user_id);
     }
 
     websocketpp::connection_hdl ChatClientDatabase::connection(uint64_t user_id) {
