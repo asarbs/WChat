@@ -29,12 +29,12 @@ async def test_register_user(ws_client):
     assert response.version  == 1
     assert response.type     == messeges_pb2.MessageType.REGISTER_SESSION_RES
     assert response.registerSessionRes.status  == messeges_pb2.Response.ACK
-    assert response.registerSessionRes.user_id == 0
+    assert response.registerSessionRes.user_id == 1
 
 @pytest.mark.asyncio
 async def test_register_multiple_users(ws_client1, ws_client2):
-    assert await act.register_user(ws_client1, "Asar1") == 0
-    assert await act.register_user(ws_client2, "Asar2") == 1
+    assert await act.register_user(ws_client1, "Asar1") == 1
+    assert await act.register_user(ws_client2, "Asar2") == 2
 
 @pytest.mark.asyncio
 async def test_register_unregister_users(ws_client1):
@@ -44,9 +44,9 @@ async def test_register_unregister_users(ws_client1):
 @pytest.mark.asyncio
 async def test_register_reregister_users(ws_client1):
     uid = await act.register_user(ws_client1, "Asar1")
-    assert uid == 0
+    assert uid == 1
     await act.unregister_user(ws_client1, uid)
-    assert await act.register_user(ws_client1, "Asar1") == 0
+    assert await act.register_user(ws_client1, "Asar1") == 1
 
 @pytest.mark.asyncio
 async def test_add_contact_positive_scenario(ws_client1, ws_client2):
@@ -94,6 +94,6 @@ async def test_get_contact_list(ws_client1, ws_client2):
     assert contacts[0]['name'] == "Rasa1" , (f"{contacts[0]['name']} == `Rasa1`")
     assert contacts[1]['name'] == "Rasa2" , (f"{contacts[1]['name']} == `Rasa2`")
     assert contacts[2]['name'] == "Rasa3" , (f"{contacts[2]['name']} == `Rasa3`")
-    assert contacts[0]['id'] == 1 , (f"{contacts[0]['id']} == {1}")
-    assert contacts[1]['id'] == 2 , (f"{contacts[1]['id']} == {2}")
-    assert contacts[2]['id'] == 3 , (f"{contacts[2]['id']} == {3}")
+    assert contacts[0]['id'] == 2 , (f"{contacts[0]['id']} == {2}")
+    assert contacts[1]['id'] == 3 , (f"{contacts[1]['id']} == {3}")
+    assert contacts[2]['id'] == 4 , (f"{contacts[2]['id']} == {4}")

@@ -28,6 +28,10 @@ namespace WChat::ChatServer::client {
     // ChatClientDatabase::~ChatClientDatabase() {
     // }
 
+    void ChatClientDatabase::clean() {
+        _storage->clean();
+    }
+
     uint64_t ChatClientDatabase::regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
         uint64_t uid = getUserIdByName(new_user_name);
         if (uid != UINT64_MAX) {
@@ -38,26 +42,14 @@ namespace WChat::ChatServer::client {
         if (!userId) {
             userId = _storage->addUser(new_user_name);
         }
-        std::shared_ptr<ChatClient> cc = std::make_shared<ChatClient>(*userId, new_user_name);
-        cc->registerClient();
-        _connections[*userId]  = hdl;
-        _chat_clients[*userId] = cc;
+        _connections[*userId] = hdl;
+        _storage->registerUser(*userId);
         logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << *userId << "." << logger::endl;
         return *userId;
     }
 
     bool ChatClientDatabase::unregiserClinet(uint64_t user_id) {
-        std::shared_ptr<ChatClient> cc = get(user_id);
-        cc->unregister();
-        return true;
-    }
-
-    std::shared_ptr<ChatClient> ChatClientDatabase::get(uint64_t user_id) {
-        auto it = _chat_clients.find(user_id);
-        if (it != _chat_clients.end()) {
-            return it->second;
-        }
-        return nullptr;
+        return _storage->unregister(user_id);
     }
 
     websocketpp::connection_hdl ChatClientDatabase::connection(uint64_t user_id) {
@@ -68,16 +60,36 @@ namespace WChat::ChatServer::client {
         return {};
     }
 
-    void ChatClientDatabase::clean() {  // cppcheck-suppress unusedFunction
-        _chat_clients.clear();
+    uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
+        auto userId = _storage->getUserIdByName(uname);
+        if (!userId) {
+            return UINT64_MAX;
+        }
+        return *userId;
     }
 
-    uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
-        for (auto cc : _chat_clients) {
-            if (cc.second->getName() == uname) {
-                return cc.first;
-            }
-        }
-        return UINT64_MAX;
+    bool ChatClientDatabase::hasMsg(uint64_t userId) {
+        return _storage->hasMsg(userId);
     }
+
+    bool ChatClientDatabase::isRegistered(uint64_t userId) {
+        return _storage->isUserRegistered(userId);
+    }
+
+    bool ChatClientDatabase::saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) {
+        return _storage->saveMsg(to, from, message, wasSend);
+    }
+
+    bool ChatClientDatabase::createConnection(uint64_t from, uint64_t to) {
+        return _storage->createConnection(from, to);
+    }
+
+    WChat::ChatServer::core::storage::MsgHolder ChatClientDatabase::popMsg(uint64_t user_id) {
+        return _storage->popMsg(user_id);
+    }
+
+    WChat::ChatServer::core::storage::Contacts ChatClientDatabase::getContacts(uint64_t userId) {
+        return _storage->getContacts(userId);
+    }
+
 };  // namespace WChat::ChatServer::client

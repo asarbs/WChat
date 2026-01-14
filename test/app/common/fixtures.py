@@ -15,6 +15,7 @@ import os
 import signal
 import sys
 from constants import *
+from pathlib import Path
 
 CONFIGURATION = """
 # Host of server
@@ -22,14 +23,19 @@ host=localhost
 # Port number
 port=9002
 # Storage of serwer data
-Storage=volatile
+Storage=db
 """
 
 
 
 @pytest_asyncio.fixture(autouse=True)
 def run_server():
+    db_path = Path("WCHat.db")
+    if db_path.exists():
+        db_path.unlink()
+
     proc = subprocess.Popen(PROGRAM_CMD, stdout=sys.stdout, stderr=sys.stderr)
+
 
     with open("WChatServer.conf", "w") as conf_file:
         conf_file.write(CONFIGURATION)

@@ -80,18 +80,18 @@ namespace WChat::ChatServer::messages::handlers {
         msg_resp.SerializeToString(&serialized);
         s->send(hdl, serialized, websocketpp::frame::opcode::binary);
     }
-    void send_user_contacts(websocket_server* s, websocketpp::connection_hdl hdl, std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator begin,
-                            std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator end) {
+
+    void send_user_contacts(websocket_server* s, websocketpp::connection_hdl hdl, WChat::ChatServer::core::storage::Contacts contacts) {
         WChat::Msg msg_resp;
         msg_resp.set_version(1);
         msg_resp.set_type(WChat::MessageType::LIST_CONTACT_RES);
         WChat::ListContactRes* listContactRes = msg_resp.mutable_listcontactres();
 
-        for (std::map<uint64_t, std::shared_ptr<WChat::ChatServer::client::ChatClient>>::iterator iter = begin; iter != end; ++iter) {
+        for (WChat::ChatServer::core::storage::Contacts::iterator iter = contacts.begin(); iter != contacts.end(); ++iter) {
             WChat::UserInfo* u_info = listContactRes->add_contacts();
-            u_info->set_user_name(iter->second->getName());
-            u_info->set_user_id(iter->second->getUserId());
-            logger::logger << logger::debug << "Contact[name:" << iter->second->getName() << ";id:" << iter->second->getUserId() << "]" << logger::endl;
+            u_info->set_user_name(iter->name);
+            u_info->set_user_id(iter->contact_id);
+            logger::logger << logger::debug << "Contact[name:" << iter->name << "; id:" << iter->contact_id << "]" << logger::endl;
         }
         std::string serialized;
         msg_resp.SerializeToString(&serialized);

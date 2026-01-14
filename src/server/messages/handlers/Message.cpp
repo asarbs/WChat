@@ -15,7 +15,6 @@
 #include <string>
 
 #include "logger.h"
-#include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 namespace WChat::ChatServer::messages::handlers {
@@ -32,26 +31,20 @@ namespace WChat::ChatServer::messages::handlers {
         uint64_t from       = msg.textmessage().from_user_id();
         uint64_t to         = msg.textmessage().to_user_id();
         std::string message = msg.textmessage().message();
+        logger::logger << logger::debug << "MessageHandler_Message::handle: send ack." << logger::endl;
+        // send_ack(s, hdl);
+        send_msg_to_user(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(from), from, to, message);
+        logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message
+                       << "`. to is register = " << WChat::ChatServer::client::ChatClientDatabase::getInstance().isRegistered(to)
+                       << "`. from is register = " << WChat::ChatServer::client::ChatClientDatabase::getInstance().isRegistered(from) <<
 
-        std::shared_ptr<WChat::ChatServer::client::ChatClient> from_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(from);
-        if (from_user == nullptr) {
-            logger::logger << logger::warning << "Can't find addressee user with id `" << to << "`" << logger::endl;
-            send_nack(s, hdl);
-            return;
-        }
-        send_msg_to_user(s, hdl, from, to, message);
+            logger::endl;
 
-        logger::logger << logger::debug << "MessageHandler_Message::handle: from=`" << from << "`; to=`" << to << "`; msg=`" << message << "`." << logger::endl;
-        std::shared_ptr<WChat::ChatServer::client::ChatClient> to_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(to);
-        if (to_user == nullptr) {
-            logger::logger << logger::warning << "Can't find addressee user with id `" << to << "`" << logger::endl;
-            return;
-        }
-
-        if (to_user->isRegistered()) {
+        if (WChat::ChatServer::client::ChatClientDatabase::getInstance().isRegistered(to)) {
             send_msg_to_user(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(to), from, to, message);
+            WChat::ChatServer::client::ChatClientDatabase::getInstance().saveMsg(to, from, message, true);
         } else {
-            to_user->saveMsg(from, message);
+            WChat::ChatServer::client::ChatClientDatabase::getInstance().saveMsg(to, from, message, false);
         }
     }
 }  // namespace WChat::ChatServer::messages::handlers

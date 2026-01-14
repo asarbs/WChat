@@ -15,7 +15,6 @@
 #include <utility>
 
 #include "logger.h"
-#include "server/client/ChatClient.h"
 #include "server/client/ChatClientDatabase.h"
 #include "server/errors/ErrorHandlers.h"
 
@@ -36,12 +35,10 @@ namespace WChat::ChatServer::messages::handlers {
         uint64_t from_user_id  = std::move(msg.contactconnectionres().from_user_id());
         logger::logger << logger::info << "status=" << status << "; to_user_id=" << to_user_id << "; from_user_id=" << from_user_id << logger::endl;
         if (status == WChat::Response::ACK) {
+            WChat::ChatServer::client::ChatClientDatabase::getInstance().createConnection(from_user_id, to_user_id);
             send_ack(s, hdl);
-            std::shared_ptr<WChat::ChatServer::client::ChatClient> from_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(from_user_id);
             send_msg(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(from_user_id), msg);
-            std::shared_ptr<WChat::ChatServer::client::ChatClient> to_user = WChat::ChatServer::client::ChatClientDatabase::getInstance().get(to_user_id);
-            from_user->addContect(to_user);
-            to_user->addContect(from_user);
+
         } else {
             send_nack(s, hdl);
             send_msg(s, WChat::ChatServer::client::ChatClientDatabase::getInstance().connection(from_user_id), msg);
