@@ -66,3 +66,68 @@ TEST_F(ChatClientDatabaseTest, register_10_and_unregiseter_5_clinet) {
     ASSERT_TRUE(ChatClientDatabase::getInstance().isRegistered(4));
     ASSERT_EQ(ChatClientDatabase::getInstance().size(), 10);
 }
+
+TEST_F(ChatClientDatabaseTest, create_connection_between_clients) {
+    websocketpp::connection_hdl hdl1, hdl2;
+    uint32_t user1 = ChatClientDatabase::getInstance().regiserClinetSession(hdl1, "user1");
+    uint32_t user2 = ChatClientDatabase::getInstance().regiserClinetSession(hdl2, "user2");
+    
+    ASSERT_TRUE(ChatClientDatabase::getInstance().createConnection(user1, user2));
+}
+
+TEST_F(ChatClientDatabaseTest, create_connection_with_nonexistent_client) {
+    ASSERT_FALSE(ChatClientDatabase::getInstance().createConnection(999, 1000));
+}
+
+TEST_F(ChatClientDatabaseTest, save_and_check_messages) {
+    websocketpp::connection_hdl hdl1, hdl2;
+    uint32_t user1 = ChatClientDatabase::getInstance().regiserClinetSession(hdl1, "sender");
+    uint32_t user2 = ChatClientDatabase::getInstance().regiserClinetSession(hdl2, "receiver");
+    
+    ASSERT_TRUE(ChatClientDatabase::getInstance().saveMsg(user2, user1, "Hello", false));
+    ASSERT_TRUE(ChatClientDatabase::getInstance().hasMsg(user2));
+    ASSERT_FALSE(ChatClientDatabase::getInstance().hasMsg(user1));
+}
+
+TEST_F(ChatClientDatabaseTest, pop_message_from_queue) {
+    websocketpp::connection_hdl hdl1, hdl2;
+    uint32_t user1 = ChatClientDatabase::getInstance().regiserClinetSession(hdl1, "sender");
+    uint32_t user2 = ChatClientDatabase::getInstance().regiserClinetSession(hdl2, "receiver");
+    
+    ChatClientDatabase::getInstance().saveMsg(user2, user1, "Test message", false);
+    ASSERT_TRUE(ChatClientDatabase::getInstance().hasMsg(user2));
+    
+    auto msgHolder = ChatClientDatabase::getInstance().popMsg(user2);
+    ASSERT_EQ(msgHolder.from, user1);
+    ASSERT_EQ(msgHolder.message, "Test message");
+}
+
+TEST_F(ChatClientDatabaseTest, get_client_contacts) {
+    websocketpp::connection_hdl hdl1, hdl2;
+    uint32_t user1 = ChatClientDatabase::getInstance().regiserClinetSession(hdl1, "user1");
+    uint32_t user2 = ChatClientDatabase::getInstance().regiserClinetSession(hdl2, "user2");
+    
+    ChatClientDatabase::getInstance().createConnection(user1, user2);
+    auto contacts = ChatClientDatabase::getInstance().getContacts(user1);
+    ASSERT_GT(contacts.size(), 0);
+}
+
+TEST_F(ChatClientDatabaseTest, get_websocket_connection) {
+    // Test that connection method returns something (even if empty)
+    // In real scenario this would return the stored connection
+    uint32_t nonexistent_user = 999;
+    auto connection = ChatClientDatabase::getInstance().connection(nonexistent_user);
+    auto retrievedHdl = connection.lock();
+    ASSERT_TRUE(retrievedHdl == nullptr);  // Should be null for nonexistent user
+}
+
+TEST_F(ChatClientDatabaseTest, get_connection_for_nonexistent_user) {
+    auto connection = ChatClientDatabase::getInstance().connection(999);
+    ASSERT_TRUE(connection.lock() == nullptr);
+}
+
+TEST_F(ChatClientDatabaseTest, register_client_session_by_id) {
+    uint32_t user_id = 12345;
+    uint32_t result = ChatClientDatabase::getInstance().regiserClinetSession(user_id);
+    ASSERT_EQ(result, user_id);
+}

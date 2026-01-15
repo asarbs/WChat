@@ -17,7 +17,7 @@
 #include <string>
 #include <variant>
 
-#include "proto/messeges.pb.h"
+#include "proto/messages.pb.h"
 
 namespace WChat::ChatClient::server::api {
     using ProtoBuffer     = std::string;

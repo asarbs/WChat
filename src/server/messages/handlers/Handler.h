@@ -22,7 +22,7 @@
 #include <websocketpp/server.hpp>
 
 #include "server/client/ChatClientDatabase.h"
-#include "server/proto/messeges.pb.h"
+#include "server/proto/messages.pb.h"
 
 typedef websocketpp::server<websocketpp::config::asio> websocket_server;
 

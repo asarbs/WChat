@@ -18,7 +18,7 @@
 #include <nlohmann/json.hpp>
 
 #include "server/messages/handlers/Handler.h"
-#include "server/proto/messeges.pb.h"
+#include "server/proto/messages.pb.h"
 
 #pragma once
 namespace WChat::ChatServer::messages {

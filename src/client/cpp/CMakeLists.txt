@@ -90,7 +90,7 @@ add_executable(${TARGET_NAME_CLIENT}
     internal/CommandsExcutor/SendMsg.cpp
     internal/CUI.cpp
     internal/Message.cpp
-    proto/messeges.pb.cc
+    proto/messages.pb.cc
     server/api/ProtoDecoder.cpp
     server/api/ProtoWrapper.cpp
     server/connection/MessagesReceiver.cpp

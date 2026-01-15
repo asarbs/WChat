@@ -107,29 +107,54 @@ namespace WChat::ChatServer::core::storage::db {
     }
 
     bool Volatile::hasMsg(uint64_t userId) {
-        return false;
+        auto filtered = _messages | std::ranges::views::filter([userId](const MessageInfo& msg) { return msg.to == userId; });
+        return !filtered.empty();
     }
 
     bool Volatile::saveMsg(uint64_t to, uint64_t from, const std::string& message, bool wasSend) {
-        return false;
+        _messages.emplace_back(to, from, message, wasSend);
+        return true;
     }
 
     bool Volatile::createConnection(uint64_t from, uint64_t to) {
+        auto fromUser = std::find_if(_usersDb.begin(), _usersDb.end(), [from](const UserInfo& ui) { return ui.userId == from && ui.isRegistered; });
+        auto toUser   = std::find_if(_usersDb.begin(), _usersDb.end(), [to](const UserInfo& ui) { return ui.userId == to && ui.isRegistered; });
+
+        if (fromUser != _usersDb.end() && toUser != _usersDb.end()) {
+            _contacts.emplace_back(from, to);
+            return true;
+        }
         return false;
     }
 
     MsgHolder Volatile::popMsg(uint64_t user_id) {
-        return MsgHolder{0, "TEST MSG"};
+        auto it = std::find_if(_messages.begin(), _messages.end(), [user_id](const MessageInfo& msg) { return msg.to == user_id; });
+        if (it != _messages.end()) {
+            MsgHolder result{it->from, it->message};
+            _messages.erase(it);
+            return result;
+        }
+        return MsgHolder{0, ""};
     }
 
     Contacts Volatile::getContacts(uint64_t userId) {
-        return {};
+        Contacts result;
+        auto contactIds = getUserContacts(userId);
+
+        for (auto contactId : contactIds) {
+            auto userIt = std::find_if(_usersDb.begin(), _usersDb.end(), [contactId](const UserInfo& ui) { return ui.userId == contactId; });
+            if (userIt != _usersDb.end()) {
+                result.emplace_back(userIt->name, static_cast<uint32_t>(userIt->userId));
+            }
+        }
+        return result;
     }
 
     void Volatile::clean() {
         _userCounter = 0;
         _usersDb.clear();
         _contacts.clear();
+        _messages.clear();
         logger::logger << logger::debug << "Volatile::clean()" << logger::endl;
     }
 

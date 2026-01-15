@@ -112,7 +112,7 @@ add_executable(${TARGET_NAME_SERVER}
     server/messages/handlers/RegisterClientSession.cpp
     server/messages/handlers/UnregisterClientSession.cpp
     server/messages/Manager.cpp
-    server/proto/messeges.pb.cc
+    server/proto/messages.pb.cc
     server/server.cpp
 )
 
