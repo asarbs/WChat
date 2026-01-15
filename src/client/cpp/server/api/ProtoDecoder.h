@@ -19,7 +19,7 @@
 #include <string>
 #include <variant>
 
-#include "proto/messeges.pb.h"
+#include "proto/messages.pb.h"
 #include "server/connection/ThreadSafeQueue.h"
 
 namespace WChat::ChatClient::server::api {

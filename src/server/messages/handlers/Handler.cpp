@@ -18,7 +18,7 @@
 #include <string>
 
 #include "logger.h"
-#include "server/proto/messeges.pb.h"
+#include "server/proto/messages.pb.h"
 
 namespace WChat::ChatServer::messages::handlers {
     Handler::Handler() {

@@ -30,7 +30,7 @@
 #include "server/messages/handlers/Message.h"
 #include "server/messages/handlers/RegisterClientSession.h"
 #include "server/messages/handlers/UnregisterClientSession.h"
-#include "server/proto/messeges.pb.h"
+#include "server/proto/messages.pb.h"
 
 // std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> clients;
 

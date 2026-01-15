@@ -119,13 +119,13 @@ test: test-unit test-app
 
 compile-proto-cpp:
 	@echo 'Compile proto-cpp'
-	${Q}protoc -I=${PROTO_DIR} --cpp_out=${PROTO_DIR} ${PROTO_DIR}/messeges.proto
+	${Q}protoc -I=${PROTO_DIR} --cpp_out=${PROTO_DIR} ${PROTO_DIR}/messages.proto
 	${Q}mkdir -p src/client/cpp/proto
 	${Q}cp -r src/server/proto/* src/client/cpp/proto
 
 compile-proto-python:
 	@echo 'Compile proto-python'
-	${Q}protoc -I=${PROTO_DIR} --python_out=test/app ${PROTO_DIR}/messeges.proto
+	${Q}protoc -I=${PROTO_DIR} --python_out=test/app ${PROTO_DIR}/messages.proto
 
 compile-proto: compile-proto-cpp compile-proto-python
 

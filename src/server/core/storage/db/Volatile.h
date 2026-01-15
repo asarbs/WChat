@@ -57,9 +57,16 @@ namespace WChat::ChatServer::core::storage::db {
                     std::string name;
                     bool isRegistered;
             };
+            struct MessageInfo {
+                    uint64_t to;
+                    uint64_t from;
+                    std::string message;
+                    bool wasSent;
+            };
             inline static uint64_t _userCounter = 0;
             std::list<UserInfo> _usersDb;
             std::vector<std::pair<uint64_t, uint64_t>> _contacts;
+            std::list<MessageInfo> _messages;
     };
 };  // namespace WChat::ChatServer::core::storage::db
 #endif

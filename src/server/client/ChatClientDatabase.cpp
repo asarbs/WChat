@@ -35,6 +35,9 @@ namespace WChat::ChatServer::client {
     uint64_t ChatClientDatabase::regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name) {
         uint64_t uid = getUserIdByName(new_user_name);
         if (uid != UINT64_MAX) {
+            _connections[uid] = hdl;
+            _storage->registerUser(uid);
+            logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << uid << "." << logger::endl;
             return uid;
         }
 
@@ -90,6 +93,12 @@ namespace WChat::ChatServer::client {
 
     WChat::ChatServer::core::storage::Contacts ChatClientDatabase::getContacts(uint64_t userId) {
         return _storage->getContacts(userId);
+    }
+
+    uint64_t ChatClientDatabase::regiserClinetSession(uint64_t user_id) {
+        _storage->registerUser(user_id);
+        logger::logger << logger::debug << "ChatClientDatabase::regiserClinetSession with id = " << user_id << "." << logger::endl;
+        return user_id;
     }
 
 };  // namespace WChat::ChatServer::client

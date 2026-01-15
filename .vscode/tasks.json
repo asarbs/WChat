@@ -2,9 +2,62 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "Build All",
+            "type": "shell",
             "command": "make",
-            "args": ["build"]
+            "args": ["compile"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": ["$gcc"]
         },
+        {
+            "label": "Build Server",
+            "type": "shell",
+            "command": "make",
+            "args": ["compile-server"],
+            "group": "build"
+        },
+        {
+            "label": "Build Client",
+            "type": "shell",
+            "command": "make",
+            "args": ["compile-client"],
+            "group": "build"
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "make",
+            "args": ["test"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "make",
+            "args": ["clang-reformat"],
+            "group": "build"
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "make",
+            "args": ["clean"],
+            "group": "build"
+        }
     ]
 }
