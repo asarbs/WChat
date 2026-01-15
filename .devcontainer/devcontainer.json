@@ -37,8 +37,31 @@
 				"josetr.cmake-language-support-vscode",
 				"afmicc.GetterAndSetterGenerator",
 				"janisdd.vscode-edit-csv",
-				"zxh404.vscode-proto3"
-			]
+				"zxh404.vscode-proto3",
+				"streetsidesoftware.code-spell-checker",
+				"streetsidesoftware.code-spell-checker-polish",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"ms-vscode.cmake-tools"
+			],
+			"settings": {
+				"cSpell.enabled": true,
+				"cSpell.words": [
+					"WChat",
+					"websocketpp", 
+					"protobuf",
+					"SQLiteCpp", 
+					"logger",
+					"Volatile",
+					"cpplint",
+					"cppcheck",
+					"clangd",
+					"cmake"
+				],
+				"C_Cpp.intelliSenseEngine": "disabled",
+				"editor.formatOnSave": true,
+				"C_Cpp.clang_format_path": "/usr/bin/clang-format-18",
+				"clang-format.executable": "/usr/bin/clang-format-18"
+			}
 		}
 	},
 	"portsAttributes": {
