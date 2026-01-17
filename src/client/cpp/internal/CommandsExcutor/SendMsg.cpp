@@ -49,10 +49,11 @@ namespace WChat::internal::cui::excutor {
         std::string::size_type sz = args.find_first_of(" ");
         std::string addressee     = args.substr(0, sz);
         std::string message       = args.substr(sz);
+        uint64_t addresseeId      = _client->getContactId(addressee);
 
-        logger::logger << logger::info << addressee << "->" << message << logger::endl;
+        logger::logger << logger::info << addressee << "[" << addresseeId << "]->" << message << logger::endl;
 
-        WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildTestMsg(_client->getUserId(), 1, message);
+        WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildTestMsg(_client->getUserId(), addresseeId, message);
         _toServerQueue->push(buff);
 
         return true;

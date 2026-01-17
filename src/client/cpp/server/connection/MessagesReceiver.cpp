@@ -53,8 +53,8 @@ namespace WChat::server::connection {
                 _handelIncommingMessage(m);
                 logger::logger << logger::debug << "Got TextMessage" << logger::endl;
             } else if (std::holds_alternative<WChat::ListContactRes>(msg)) {
-                // const WChat::ListContactRes& m = std::get<WChat::ListContactRes>(msg);
-                logger::logger << logger::debug << "Got ListContactRes" << logger::endl;
+                const WChat::ListContactRes& m = std::get<WChat::ListContactRes>(msg);
+                _handelContactList(m);
             } else {
                 logger::logger << logger::error << "Code should not be here" << logger::endl;
             }
@@ -71,6 +71,16 @@ namespace WChat::server::connection {
                        << "To ID:" << m.to_user_id() << ", "      //
                        << "Message: `" << m.message() << "`."     //
                        << logger::endl;
+    }
+
+    void MessagesReceiver::_handelContactList(const WChat::ListContactRes& m) {
+        logger::logger << logger::debug << "Number of contacts " << m.contacts_size() << logger::endl;
+
+        for (uint32_t contactIndex = 0; contactIndex < m.contacts_size(); contactIndex++) {
+            const ::WChat::UserInfo& contact = m.contacts(contactIndex);
+            logger::logger << logger::debug << "contact Index:" << contactIndex << " user=" << contact.user_id() << ":" << contact.user_name() << logger::endl;
+            _client->addContact(contact.user_id(), contact.user_name());
+        }
     }
 
 };  // namespace WChat::server::connection

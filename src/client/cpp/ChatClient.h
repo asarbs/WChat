@@ -16,6 +16,7 @@
 
 #include <cstdint>
 #include <string>
+#include <unordered_map>
 
 namespace WChat::ChatClient {
     class ChatClient {
@@ -34,11 +35,21 @@ namespace WChat::ChatClient {
             const std::string& getName() const;
             bool hasName() const;
 
+            void addContact(uint64_t contactId, const std::string& contactName) {
+                _contacts.insert({contactName, contactId});
+            }
+
+            uint64_t getContactId(const std::string& contactName) {
+                return _contacts.at(contactName);
+            }
+
         protected:
             //
         private:
             uint64_t _userId;
             std::string _name;
+
+            std::unordered_map<std::string, uint64_t> _contacts;
     };
 };  // namespace WChat::ChatClient
 #endif

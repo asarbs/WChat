@@ -46,6 +46,7 @@ namespace WChat::server::connection {
 
             void _handelRegisterSessionRes(const WChat::RegisterSessionRes& m);
             void _handelIncommingMessage(const WChat::TextMessage& m);
+            void _handelContactList(const WChat::ListContactRes& m);
     };
 };  // namespace WChat::server::connection
 #endif
