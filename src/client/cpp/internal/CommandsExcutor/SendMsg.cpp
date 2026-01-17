@@ -48,7 +48,7 @@ namespace WChat::internal::cui::excutor {
         logger::logger << logger::info << args << logger::endl;
         std::string::size_type sz = args.find_first_of(" ");
         std::string addressee     = args.substr(0, sz);
-        std::string message       = args.substr(sz);
+        std::string message       = args.substr(sz + 1);
         uint64_t addresseeId      = _client->getContactId(addressee);
 
         logger::logger << logger::info << addressee << "[" << addresseeId << "]->" << message << logger::endl;
