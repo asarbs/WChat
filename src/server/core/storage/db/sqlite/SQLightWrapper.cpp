@@ -161,14 +161,14 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         query.bind(1, static_cast<uint32_t>(userId));
         if (query.executeStep()) {
             uint32_t isRegistered = query.getColumn(0).getUInt();
-            logger::logger << logger::warning << "Check users.id=" << userId << " isRegistered=" << isRegistered << logger::endl;
+            // logger::logger << logger::warning << "Check users.id=" << userId << " isRegistered=" << isRegistered << logger::endl;
             return isRegistered == 1;
         }
         return false;
     }
 
     bool SQLightWrapper::hasMsg(uint64_t userId) {
-        SQLite::Statement query(_db, "SELECT COUNT(*) FROM messages WHERE user_to = ?");
+        SQLite::Statement query(_db, "SELECT COUNT(*) FROM messages WHERE user_to = ? AND was_sent = 0");
         query.bind(1, static_cast<uint32_t>(userId));
         if (query.executeStep()) {
             size_t count = query.getColumn(0).getUInt();
@@ -232,11 +232,10 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
                                 "       WHEN c.user_id_1 = ? THEN c.user_id_2 "
                                 "       ELSE c.user_id_1 "
                                 "   END "
-                                "WHERE c.user_id_1 = ? OR c.user_id_2 = ?;");
+                                "WHERE c.user_id_1 = ?;");
 
         query.bind(1, static_cast<uint32_t>(userId));
         query.bind(2, static_cast<uint32_t>(userId));
-        query.bind(3, static_cast<uint32_t>(userId));
 
         while (query.executeStep()) {
             ContactInfo info;
