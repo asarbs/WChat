@@ -4,8 +4,8 @@
         {
             "label": "Build All",
             "type": "shell",
-            "command": "make",
-            "args": ["compile"],
+            "command": "cmake",
+            "args": ["--build", "build/linux", "--config", "Debug"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -17,6 +17,15 @@
                 "panel": "shared"
             },
             "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Configure CMake",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["-B", "build/linux", "-DCMAKE_BUILD_TYPE=Debug"],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Configure CMake project"
         },
         {
             "label": "Build Server",

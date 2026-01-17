@@ -3,7 +3,7 @@
     {
       "name": "Linux",
 "intelliSenseMode": "linux-clang-x64",
-    "compilerPath": "/usr/bin/clang++-18",
+    "compilerPath": "/usr/bin/clang++-19",
       "compileCommands": "${workspaceFolder}/build/linux/compile_commands.json",
       "includePath": [
         "${workspaceFolder}/**"
