@@ -43,6 +43,8 @@ namespace WChat::ChatClient {
                 return _contacts.at(contactName);
             }
 
+            const std::unordered_map<std::string, uint64_t>& getContacts() const;
+
         protected:
             //
         private:

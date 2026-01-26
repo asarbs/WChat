@@ -1,11 +1,22 @@
 CompileFlags:
-  Add: [-std=c++20, -Wall, -Wextra, -Wpedantic]
+  Add: [-std=c++23, -Wall, -Wextra, -Wpedantic, -Wno-everything]
 Diagnostics:
   UnusedIncludes: Strict
   ClangTidy:
     Add: [modernize-*, performance-*, readability-*]
     Remove: [modernize-use-trailing-return-type]
+InlayHints:
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
+  Designators: Yes
+  BlockEnd: Yes
+  TypeNameLimits: Yes
 Index:
   Background: true
+  StandardLibrary: Yes
 Completion:
+  AllScopes: Yes
   Style: Detailed
+Style:
+  FullyQualifiedNames: Yes

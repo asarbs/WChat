@@ -72,4 +72,8 @@ namespace WChat::ChatClient {
     bool ChatClient::hasName() const {
         return _name == "username";
     }
+
+    const std::unordered_map<std::string, uint64_t>& ChatClient::getContacts() const {
+        return _contacts;
+    }
 };  // namespace WChat::ChatClient

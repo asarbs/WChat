@@ -88,6 +88,7 @@ add_executable(${TARGET_NAME_CLIENT}
     client.cpp
     internal/CommandsExcutor/RegisterSession.cpp
     internal/CommandsExcutor/SendMsg.cpp
+    internal/CommandsExcutor/Contacts.cpp
     internal/CUI.cpp
     internal/Message.cpp
     proto/messages.pb.cc

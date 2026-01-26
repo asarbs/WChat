@@ -19,6 +19,7 @@
 #include "arguments.h"
 #include "internal/CUI.h"
 #include "internal/ClientConfig.h"
+#include "internal/CommandsExcutor/Contacts.h"
 #include "internal/CommandsExcutor/RegisterSession.h"
 #include "internal/CommandsExcutor/SendMsg.h"
 #include "logger.h"
@@ -63,6 +64,7 @@ int main(int argc, char* argv[]) {
     sockertWorker.start();
     cui.registerCommand("reg", WChat::internal::cui::excutor::RegisterSession{toQueue, client});
     cui.registerCommand("msg", WChat::internal::cui::excutor::SendMsg{toQueue, client});
+    cui.registerCommand("contacts", WChat::internal::cui::excutor::Contacts{toQueue, client});
     cui.start();
 
     WChat::server::connection::MessagesReceiver receiver(fromQueue, client);
