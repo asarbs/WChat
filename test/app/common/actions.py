@@ -20,11 +20,14 @@ async def __send_text_msg(ws1, uid1, uid2, msg):
     pmsg.textMessage.message = msg
     await ws1.send(pmsg.SerializeToString())
 
-async def register_user(ws_client, user_name:str) -> int:
+async def register_user(ws_client, user_name:str, password:str) -> int:
+    assert user_name is not None
+    assert password  is not None
     msg = messages_pb2.Msg()
     msg.version = 1
     msg.type    = messages_pb2.MessageType.REGISTER_SESSION_REQ
     msg.registerSessionReq.user_name = user_name
+    msg.registerSessionReq.password_hash = password
     await ws_client.send(msg.SerializeToString())
 
     raw_data = await asyncio.wait_for(ws_client.recv(), timeout=2)

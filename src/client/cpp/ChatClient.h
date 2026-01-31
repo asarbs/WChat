@@ -33,6 +33,7 @@ namespace WChat::ChatClient {
             uint64_t getUserId() const;
             void setName(const std::string& name);
             const std::string& getName() const;
+            const std::string& getPassword() const;
             bool hasName() const;
 
             void addContact(uint64_t contactId, const std::string& contactName) {
@@ -50,6 +51,7 @@ namespace WChat::ChatClient {
         private:
             uint64_t _userId;
             std::string _name;
+            std::string _password;
 
             std::unordered_map<std::string, uint64_t> _contacts;
     };

@@ -35,7 +35,7 @@ void registerClient(std::shared_ptr<WChat::ChatClient::ChatClient> client, std::
     }
     logger::logger << logger::info << "Register saved username: " << client->getName() << logger::endl;
 
-    WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildRegisterSessionReq(client->getName());
+    WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildRegisterSessionReq(client->getName(), client->getPassword());
     toQueue->push(buff);
 }
 

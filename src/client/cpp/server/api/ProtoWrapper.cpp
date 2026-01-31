@@ -16,12 +16,13 @@
 constexpr uint32_t ProtoAPIVersion = 1;
 
 namespace WChat::ChatClient::server::api {
-    ProtoBuffer buildRegisterSessionReq(const std::string& userName) {
+    ProtoBuffer buildRegisterSessionReq(const std::string& userName, const std::string& password) {
         WChat::Msg msg;
         msg.set_version(ProtoAPIVersion);
         msg.set_type(WChat::MessageType::REGISTER_SESSION_REQ);
         WChat::RegisterSessionReq* req = msg.mutable_registersessionreq();
         req->set_user_name(userName);
+        req->set_password_hash(password);
 
         std::string serialized;
         msg.SerializeToString(&serialized);

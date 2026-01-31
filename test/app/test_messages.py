@@ -17,8 +17,8 @@ from common.conditions import *
 
 @pytest.mark.asyncio
 async def test_register_user_and_send_msg(ws_client1, ws_client2):
-    user_A1_id =  await register_user(ws_client=ws_client1, user_name="A1")
-    user_A2_id =  await register_user(ws_client=ws_client2, user_name="A2")
+    user_A1_id =  await register_user(ws_client=ws_client1, user_name="A1", password="password")
+    user_A2_id =  await register_user(ws_client=ws_client2, user_name="A2", password="password")
 
     msg = messages_pb2.Msg()
     msg.version    = 1
@@ -48,27 +48,27 @@ async def test_register_user_and_send_msg(ws_client1, ws_client2):
 
 @pytest.mark.asyncio
 async def test_send_msg_to_unregistered_user(ws_client1):
-    uid1 =  await register_user(ws_client=ws_client1, user_name="A1")
+    uid1 =  await register_user(ws_client=ws_client1, user_name="A1", password="password")
     await send_message_and_expect_response(ws1=ws_client1, uid1=uid1, uid2=42, msg="Lorem ipsum dolor sit ac.")
 
 
 @pytest.mark.asyncio
 async def test_double_registered_user(ws_client1):
-    uidA1_1 =  await register_user(ws_client=ws_client1, user_name="A1")
+    uidA1_1 =  await register_user(ws_client=ws_client1, user_name="A1", password="password")
     await unregister_user(ws_client1, uidA1_1);
-    uidA1_2 =  await register_user(ws_client=ws_client1, user_name="A1")
+    uidA1_2 =  await register_user(ws_client=ws_client1, user_name="A1", password="password")
     assert uidA1_1 == uidA1_2
 
 
 # @pytest.mark.xfail(reason="Not implemented yet")
 @pytest.mark.asyncio
 async def test_user_get_waiting_msg(ws_client1, ws_client2):
-    uid1 =  await register_user(ws_client=ws_client1, user_name="A1")
-    uidA2_1 =  await register_user(ws_client=ws_client2, user_name="A2")
+    uid1 =  await register_user(ws_client=ws_client1,    user_name="A1", password="A1password")
+    uidA2_1 =  await register_user(ws_client=ws_client2, user_name="A2", password="A2password")
     await unregister_user(ws_client1, uidA2_1)
     await send_message_and_expect_response(ws1=ws_client1, uid1=uid1, uid2=uidA2_1, msg="Lorem ipsum dolor sit ac.")
 
-    uidA2_2 =  await register_user(ws_client=ws_client2, user_name="A2")
+    uidA2_2 =  await register_user(ws_client=ws_client2, user_name="A2", password="A2password")
     assert uidA2_1 == uidA2_2
     await expect_incoming_message(ws_client2, uid1, uidA2_2, "Lorem ipsum dolor sit ac.")
 

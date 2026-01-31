@@ -21,11 +21,13 @@
 
 namespace WChat::ChatClient {
     ChatClient::ChatClient() : _userId(UINT64_MAX) {
-        std::string confFileName = WChat::internal::Config::ClientConfig::instance().value<std::string>(WChat::internal::Config::ParamKey::UserName);
+        std::string confFileName     = WChat::internal::Config::ClientConfig::instance().value<std::string>(WChat::internal::Config::ParamKey::UserName);
+        std::string confFilePassword = WChat::internal::Config::ClientConfig::instance().value<std::string>(WChat::internal::Config::ParamKey::Password);
         if (confFileName == "username") {
             logger::logger << logger::info << "Please regiser in server with 'reg' command" << logger::endl;
         } else {
-            _name = confFileName;
+            _name     = confFileName;
+            _password = confFilePassword;
         }
     }
 
@@ -68,7 +70,9 @@ namespace WChat::ChatClient {
     const std::string& ChatClient::getName() const {
         return _name;
     }
-
+    const std::string& ChatClient::getPassword() const {
+        return _password;
+    }
     bool ChatClient::hasName() const {
         return _name == "username";
     }

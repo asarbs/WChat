@@ -49,12 +49,17 @@ namespace WChat::internal::cui::excutor {
     }
 
     bool RegisterSession::operator()(const std::string& args) {
-        _client->setName(args);
+        logger::logger << logger::info << args << logger::endl;
+        std::string::size_type sz = args.find_first_of(" ");
+        std::string username      = args.substr(0, sz);
+        std::string password      = args.substr(sz + 1);
+
+        _client->setName(username);
         std::shared_ptr<cpp_config::ConfigParameter> userNameParam = WChat::internal::Config::ClientConfig::instance().get(WChat::internal::Config::ParamKey::UserName);
         userNameParam->set(_client->getName());
         WChat::internal::Config::ClientConfig::instance().saveToFile();
 
-        WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildRegisterSessionReq(args);
+        WChat::ChatClient::server::api::ProtoBuffer buff = WChat::ChatClient::server::api::buildRegisterSessionReq(username, password);
 
         _toServerQueue->push(buff);
         return true;

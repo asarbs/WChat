@@ -78,12 +78,13 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
     }
 
     std::optional<uint64_t> SQLightWrapper::addUser(std::string name, std::string password_hash) {
-        SQLite::Statement query(_db, "INSERT INTO users (name, password_hash, isRegistered) VALUES (?, ?)");
+        logger::logger << logger::debug << "Add new user " << name << "; password=" << password_hash << logger::endl;
+        SQLite::Statement query(_db, "INSERT INTO users (name, password_hash, isRegistered) VALUES (?, ?, ?)");
         query.bind(1, name);
         query.bind(2, password_hash);
         query.bind(3, true);
         query.exec();
-        logger::logger << logger::debug << "Add new user " << name << logger::endl;
+
         return getUserIdByName(name, password_hash);
     }
 
