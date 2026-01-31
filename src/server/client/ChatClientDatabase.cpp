@@ -33,7 +33,7 @@ namespace WChat::ChatServer::client {
     }
 
     uint64_t ChatClientDatabase::regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name, const std::string& password_hash) {
-        uint64_t uid = getUserIdByName(new_user_name);
+        uint64_t uid = getUserIdByName(new_user_name, password_hash);
         if (uid != UINT64_MAX) {
             _connections[uid] = hdl;
             _storage->registerUser(uid);
@@ -41,7 +41,7 @@ namespace WChat::ChatServer::client {
             return uid;
         }
 
-        std::optional<uint64_t> userId = _storage->getUserIdByName(new_user_name);
+        std::optional<uint64_t> userId = _storage->getUserIdByName(new_user_name, password_hash);
         if (!userId) {
             userId = _storage->addUser(new_user_name, password_hash);
         }
@@ -63,8 +63,8 @@ namespace WChat::ChatServer::client {
         return {};
     }
 
-    uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname) {
-        auto userId = _storage->getUserIdByName(uname);
+    uint64_t ChatClientDatabase::getUserIdByName(const std::string& uname, const std::string& password_hash) {
+        auto userId = _storage->getUserIdByName(uname, password_hash);
         if (!userId) {
             return UINT64_MAX;
         }

@@ -15,7 +15,13 @@
         "cpplint",
         "cppcheck",
         "clangd",
-        "cmake"
+        "cmake",
+        "Asar",
+        "Miniatures",
+        "regiserClinetSession",
+        "regiser",
+        "unregiser",
+        "Clinet"
     ],
     "C_Cpp.intelliSenseEngine": "default",
     "editor.formatOnSave": true,
@@ -118,7 +124,7 @@
     "cpp.creator.headerFileContentPreset": "/*\n * World VTT\n *\n * Copyright (C) 2025, Asar Miniatures\n * All rights reserved.\n *\n * This file is part of the [Project Name] project. It may be used, modified,\n * and distributed under the terms specified by the copyright holder.\n *\n */\n\n#ifndef {{*CLASSNAMEUPPER*}}_H\n#define {{*CLASSNAMEUPPER*}}_H\n\n#pragma once\n\nclass {{*CLASSNAME*}}\n{\n    public:\n        {{*CLASSNAME*}}();\n        virtual ~{{*CLASSNAME*}}();\n        {{*CLASSNAME*}}(const {{*CLASSNAME*}}& rhs);\n        {{*CLASSNAME*}}(const {{*CLASSNAME*}}&& rhs);\n        {{*CLASSNAME*}}& operator=(const {{*CLASSNAME*}}& rhs);\n        {{*CLASSNAME*}}& operator=(const {{*CLASSNAME*}}&& rhs);\nprotected:\n\nprivate:\n};\n\n#endif",
     "cpp.creator.sourceFileContentPreset": "/*\n * World VTT\n *\n * Copyright (C) 2025, Asar Miniatures\n * All rights reserved.\n *\n * This file is part of the [Project Name] project. It may be used, modified,\n * and distributed under the terms specified by the copyright holder.\n *\n */\n\n#include \"{{*HEADERFILENAME*}}\"\n\n#include \"logger.h\"\n\n{{*CLASSNAME*}}::{{*CLASSNAME*}}()\n{\n}\n   \n{{*CLASSNAME*}}::~{{*CLASSNAME*}}()\n{\n}\n\n{{*CLASSNAME*}}::{{*CLASSNAME*}}(const {{*CLASSNAME*}}& rhs) {\n}\n\n{{*CLASSNAME*}}::{{*CLASSNAME*}}(const {{*CLASSNAME*}}&& rhs) {\n}\n\n{{*CLASSNAME*}}& {{*CLASSNAME*}}::operator=(const {{*CLASSNAME*}}& rhs) {\n    if (this != &rhs) {\n    }\n    return *this;\n}\n\n{{*CLASSNAME*}}& {{*CLASSNAME*}}::operator=(const {{*CLASSNAME*}}&& rhs) {\n    if (this != &rhs) {\n    }\n    return *this;\n}",
     "C_Cpp.errorSquiggles": "enabled",
-    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.default.cppStandard": "c++20",
     "C_Cpp.default.intelliSenseMode": "linux-clang-x64",
     "C_Cpp.autocomplete": "default",
     "C_Cpp.enhancedColorization": "enabled",

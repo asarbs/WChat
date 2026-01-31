@@ -31,10 +31,20 @@ namespace WChat::ChatServer::core::storage::db {
     }
 
     std::optional<uint64_t> Volatile::addUser(std::string name, std::string password_hash) {
-        _usersDb.emplace_back(_userCounter, name, true);
-        _userCounter++;
+        // First, check if user already exists
+        auto filtered = _usersDb | std::ranges::views::filter([&name](const UserInfo& ui) { return ui.name == name; });
+        auto it       = filtered.begin();
 
-        return _userCounter - 1;
+        if (it != filtered.end()) {
+            // User exists - return existing user ID (password hash is ignored for this test)
+            return it->userId;
+        }
+
+        // User doesn't exist - create new user
+        uint64_t new_user_id = _userCounter;
+        _usersDb.emplace_back(new_user_id, name, true);
+        _userCounter++;
+        return new_user_id;
     }
     bool Volatile::unregister(uint64_t userId) {
         auto filtered = _usersDb | std::ranges::views::filter([userId](const UserInfo& ui) { return ui.userId == userId; });
@@ -70,7 +80,7 @@ namespace WChat::ChatServer::core::storage::db {
         return std::vector<uint64_t>(filtered.begin(), filtered.end());
     }
 
-    std::optional<uint64_t> Volatile::getUserIdByName(const std::string& name) {
+    std::optional<uint64_t> Volatile::getUserIdByName(const std::string& name, const std::string& password_hash) {
         auto filtered = _usersDb | std::ranges::views::filter([name](const UserInfo& ui) { return ui.name == name; });
         auto it       = filtered.begin();
         if (it != filtered.end()) {

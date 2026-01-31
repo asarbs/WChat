@@ -84,7 +84,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         query.bind(3, true);
         query.exec();
         logger::logger << logger::debug << "Add new user " << name << logger::endl;
-        return getUserIdByName(name);
+        return getUserIdByName(name, password_hash);
     }
 
     bool SQLightWrapper::unregister(uint64_t userId) {
@@ -127,9 +127,10 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         return contacts;
     }
 
-    std::optional<uint64_t> SQLightWrapper::getUserIdByName(const std::string& name) {
-        SQLite::Statement query(_db, "SELECT id FROM users WHERE name = ?");
+    std::optional<uint64_t> SQLightWrapper::getUserIdByName(const std::string& name, const std::string& password_hash) {
+        SQLite::Statement query(_db, "SELECT id FROM users WHERE name = ? AND password_hash = ?");
         query.bind(1, name);
+        query.bind(2, password_hash);
 
         if (query.executeStep()) {
             int id = query.getColumn(0).getInt();

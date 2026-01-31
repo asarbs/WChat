@@ -6,12 +6,43 @@
       "compilerPath": "/usr/bin/clang++-19",
       "compileCommands": "${workspaceFolder}/build/linux/compile_commands.json",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/build/linux/_deps/websocketpp-src",
+        "${workspaceFolder}/build/linux/_deps/websocketpp-src/websocketpp",
+        "${workspaceFolder}/build/linux/_deps/websocketpp-src/websocketpp/config",
+        "${workspaceFolder}/build/linux/_deps/nlohmann_json-src/include",
+        "${workspaceFolder}/build/linux/_deps/protobuf-src/src",
+        "${workspaceFolder}/build/linux/_deps/sqlitecpp-src/include",
+        "${workspaceFolder}/build/linux/_deps/cpp_logger-src",
+        "${workspaceFolder}/build/linux/_deps/cpp_config-src/include",
+        "${workspaceFolder}/build/linux/_deps/cpp_arguments-src/libs",
+        "${workspaceFolder}/build/linux/_deps/cpp_arguments-src/libs/logger",
+        "${workspaceFolder}/build/linux/_deps/sqlight-src/include",
+        "${workspaceFolder}/build/linux/_deps/boost-src",
+        "/usr/include",
+        "/usr/include/c++/14"
       ],
-      "defines": [],
+      "defines": [
+        "_DEBUG",
+        "WEBOCKETPP_CPP11_STL",
+        "LOGGER_EXPORTS",
+        "CPP_LOGGER_EXPORTS",
+        "CPP_CONFIG_EXPORTS",
+        "CPP_ARGUMENTS_EXPORTS"
+      ],
       "cStandard": "c23",
       "cppStandard": "c++23",
-      "configurationProvider": "ms-vscode.cpptools"
+      "configurationProvider": "ms-vscode.cpptools",
+      "forceInclude": [
+        "${workspaceFolder}/src/**"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/build/linux/_deps/**",
+          "${workspaceFolder}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
     }
   ],
   "version": 4

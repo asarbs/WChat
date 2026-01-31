@@ -38,7 +38,7 @@ namespace WChat::ChatServer::client {
             bool saveMsg(uint64_t to, uint64_t from, const std::string& message, bool was_sent);
             bool unregiserClinet(uint64_t user_id);
             static ChatClientDatabase& getInstance();
-            uint64_t getUserIdByName(const std::string& name);
+            uint64_t getUserIdByName(const std::string& name, const std::string& password_hash);
             uint64_t regiserClinetSession(uint64_t user_id);
             uint64_t regiserClinetSession(websocketpp::connection_hdl hdl, const std::string& new_user_name, const std::string& password_hash);
             void clean();

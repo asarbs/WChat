@@ -35,7 +35,7 @@ TEST_F(ChatClientDatabaseTest, get_clinet_reference_db) {
     websocketpp::connection_hdl hdl;
     ChatClientDatabase::getInstance().regiserClinetSession(hdl, "asar", "password");
     ASSERT_TRUE(ChatClientDatabase::getInstance().isRegistered(0));
-    ASSERT_EQ(ChatClientDatabase::getInstance().getUserIdByName("asar"), 0);
+    ASSERT_EQ(ChatClientDatabase::getInstance().getUserIdByName("asar", "password"), 0);
 }
 
 TEST_F(ChatClientDatabaseTest, get_unregistered_clinet) {
