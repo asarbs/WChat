@@ -30,7 +30,7 @@ namespace WChat::ChatServer::core::storage::db {
         return instance;
     }
 
-    std::optional<uint64_t> Volatile::addUser(std::string name) {
+    std::optional<uint64_t> Volatile::addUser(std::string name, std::string password_hash) {
         _usersDb.emplace_back(_userCounter, name, true);
         _userCounter++;
 
@@ -80,7 +80,7 @@ namespace WChat::ChatServer::core::storage::db {
         return {};
     }
 
-    bool Volatile::isUserRegistered(const std::string& name) {
+    bool Volatile::isUserRegistered(const std::string& name, std::string password_hash) {
         auto filtered = _usersDb | std::ranges::views::filter([name](const UserInfo& ui) { return ui.name == name; });
         auto it       = filtered.begin();
         logger::logger << logger::debug << "User name = " << name << " is registered" << logger::endl;

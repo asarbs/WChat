@@ -23,6 +23,7 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
                 "CREATE TABLE IF NOT EXISTS users ("
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 "name TEXT NOT NULL, "
+                "password_hash TEXT NOT NULL, "
                 "isRegistered INTEGER NOT NULL DEFAULT 0, "
                 "created_at DATETIME DEFAULT CURRENT_TIMESTAMP"
                 ");");
@@ -76,10 +77,11 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         transaction.commit();
     }
 
-    std::optional<uint64_t> SQLightWrapper::addUser(std::string name) {
-        SQLite::Statement query(_db, "INSERT INTO users (name, isRegistered) VALUES (?, ?)");
+    std::optional<uint64_t> SQLightWrapper::addUser(std::string name, std::string password_hash) {
+        SQLite::Statement query(_db, "INSERT INTO users (name, password_hash, isRegistered) VALUES (?, ?)");
         query.bind(1, name);
-        query.bind(2, true);
+        query.bind(2, password_hash);
+        query.bind(3, true);
         query.exec();
         logger::logger << logger::debug << "Add new user " << name << logger::endl;
         return getUserIdByName(name);
@@ -146,9 +148,10 @@ namespace WChat::ChatServer::core::storage::db::sqlite {
         return 0;
     }
 
-    bool SQLightWrapper::isUserRegistered(const std::string& name) {
-        SQLite::Statement query(_db, "SELECT isRegistered FROM users WHERE name = (?)");
+    bool SQLightWrapper::isUserRegistered(const std::string& name, std::string password_hash) {
+        SQLite::Statement query(_db, "SELECT isRegistered FROM users WHERE name = (?) AND password_hash = (?);");
         query.bind(1, name);
+        query.bind(2, password_hash);
         if (query.executeStep()) {
             uint32_t isRegistered = query.getColumn(0).getUInt();
             return isRegistered == 1;

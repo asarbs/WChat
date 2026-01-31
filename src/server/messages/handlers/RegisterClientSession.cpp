@@ -30,8 +30,9 @@ namespace WChat::ChatServer::messages::handlers {
         if (!msg.has_registersessionreq()) {
             throw WChat::ChatServer::errors::ProtoculError("Msg don't contain RegisterSessionReq");
         }
-        std::string user_name = msg.registersessionreq().user_name();
-        uint64_t new_user_id  = WChat::ChatServer::client::ChatClientDatabase::getInstance().regiserClinetSession(hdl, user_name);
+        const std::string user_name     = msg.registersessionreq().user_name();
+        const std::string password_hash = msg.registersessionreq().password_hash();
+        uint64_t new_user_id            = WChat::ChatServer::client::ChatClientDatabase::getInstance().regiserClinetSession(hdl, user_name, password_hash);
         logger::logger << logger::debug << "Register new Client: user_name=" << user_name << "; DB ID=" << new_user_id << logger::endl;
         send_user_registration(s, hdl, user_name, new_user_id);
 

@@ -36,13 +36,13 @@ namespace WChat::ChatServer::core::storage {
         public:
             virtual ~Storage() = default;
 
-            virtual bool isUserRegistered(const std::string& name)                                     = 0;
+            virtual bool isUserRegistered(const std::string& name, std::string password_hash)          = 0;
             virtual bool isUserRegistered(uint64_t userId)                                             = 0;
             virtual size_t size()                                                                      = 0;
             virtual std::vector<uint64_t> getUserContacts(uint64_t userId)                             = 0;
             virtual std::optional<uint64_t> getUserIdByName(const std::string& name)                   = 0;
             virtual void addContact(uint64_t userAId, uint64_t userBId)                                = 0;
-            virtual std::optional<uint64_t> addUser(std::string name)                                  = 0;
+            virtual std::optional<uint64_t> addUser(std::string name, std::string password_hash)       = 0;
             virtual bool unregister(uint64_t userId)                                                   = 0;
             virtual bool registerUser(uint64_t userId)                                                 = 0;
             virtual bool hasMsg(uint64_t userId)                                                       = 0;
