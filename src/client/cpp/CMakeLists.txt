@@ -16,6 +16,9 @@ FetchContent_Declare(cpp_logger
     EXCLUDE_FROM_ALL
     SYSTEM)
 FetchContent_MakeAvailable(cpp_logger)
+if(TARGET cpp_logger_lib)
+    target_include_directories(cpp_logger_lib PUBLIC ${cpp_logger_SOURCE_DIR})
+endif()
 
 FetchContent_Declare(cpp_arguments
     GIT_REPOSITORY https://github.com/asarbs/cpp_arguments.git
@@ -24,6 +27,9 @@ FetchContent_Declare(cpp_arguments
     EXCLUDE_FROM_ALL
     SYSTEM)
 FetchContent_MakeAvailable(cpp_arguments)
+if(TARGET cpp_arguments_lib)
+    target_include_directories(cpp_arguments_lib PUBLIC ${cpp_arguments_SOURCE_DIR})
+endif()
 
 FetchContent_Declare(
     ixwebsocket
@@ -66,22 +72,13 @@ FetchContent_Declare(cpp_config
     SYSTEM)
 FetchContent_MakeAvailable(cpp_config)
 
-find_package(Boost REQUIRED)
-
-message(STATUS "Application name: ${TARGET_NAME_CLIENT}")
-
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost REQUIRED COMPONENTS system)
 
-if(Boost_FOUND)
-    message(STATUS "Boost found: ${Boost_INCLUDE_DIRS}")
-    include_directories(${Boost_INCLUDE_DIRS})
-else()
-    message(FATAL_ERROR "Boost not found!")
-endif()
+message(STATUS "Application name: ${TARGET_NAME_CLIENT}")
 
 add_executable(${TARGET_NAME_CLIENT}
     ChatClient.cpp
@@ -121,11 +118,4 @@ target_include_directories(${TARGET_NAME_CLIENT}
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/client/cpp
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_logger-src
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_arguments-src
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
-        ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/sqlight-src/include/
-        ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_config-src/include
 )
-

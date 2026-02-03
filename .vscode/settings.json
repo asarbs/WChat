@@ -2,8 +2,24 @@
     "files.insertFinalNewline":true,
     "files.trimTrailingWhitespace": true,
     "files.autoSave": "onFocusChange",
-    "C_Cpp.default.configurationProvider": "ms-vscode.cpptools",
+
+    "cmake.configureOnOpen": true,
     "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.buildDirectory": "${workspaceFolder}/build/linux",
+    "cmake.generator": "Unix Makefiles",
+    "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+    },
+
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/linux/compile_commands.json",
+
+    "clangd.arguments": [
+        "--compile-commands-dir=build/linux",
+        "--query-driver=/usr/bin/*++"
+    ],
+
     "cSpell.enabled": true,
     "cSpell.words": [
         "WChat",

@@ -32,15 +32,11 @@ target_link_libraries(unit_tests PRIVATE
     pthread
     protobuf
     SQLiteCpp
+    websocketpp
 )
 
 add_test(NAME unit_tests COMMAND unit_tests --gtest_catch_exceptions=0)
 
 target_include_directories(unit_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/build/linux/_deps/websocketpp-src
-    ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_logger-src
-    ${CMAKE_SOURCE_DIR}/build/linux/_deps/cpp_arguments-src
-    ${CMAKE_SOURCE_DIR}build/linux/_deps/protobuf-src/src
-    ${CMAKE_SOURCE_DIR}/build/linux/_deps/sqlight-src/include/
 )
